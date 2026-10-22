@@ -1,15 +1,16 @@
 // Shared card styling for the architecture and workflow renderers. Every
 // preset gets the cleaner cards and label chips; blueprint keeps its drafting
-// dash patterns and square corners.
+// dash patterns and square corners, and the Hadrian preset squares every chip.
 const TONES = ['frontend', 'backend', 'database', 'cloud', 'security', 'messagebus', 'external'];
 
 export const NODE_CARD_ATTR = 'data-node-ui=""';
 
 export function nodeCardStyle() {
   const all = 'svg[data-node-ui]';
-  const solid = `${all}:is([data-preset="classic"], [data-preset="signal-flow"], [data-preset="editorial"])`;
+  const solid = `${all}:is([data-preset="classic"], [data-preset="signal-flow"], [data-preset="editorial"], [data-preset="hadrian"])`;
   const blueprint = `${all}[data-preset="blueprint"]`;
   const editorial = `${all}[data-preset="editorial"]`;
+  const hadrian = `${all}[data-preset="hadrian"]`;
   const dark = `:is([data-theme="dark"] ${all}, ${all}[data-theme="dark"])`;
   const node = '[data-node-id] > rect:not(.c-mask)';
   const frameLabel = '[data-graph-role="structural-frame-label-mask"]';
@@ -28,5 +29,6 @@ ${TONES.map((tone) => `          ${dark} ${node}.c-${tone} { fill: color-mix(in 
           ${all} ${edgeLabel} { rx: 7px; stroke: var(--lane-stroke); stroke-width: .75px; }
           ${blueprint} :is(${frameLabel}, ${edgeLabel}, .phase-chip) { rx: 2px; }
           ${editorial} :is(${frameLabel}, ${edgeLabel}, .phase-chip) { rx: 3px; }
+          ${hadrian} :is(${frameLabel}, ${edgeLabel}, .phase-chip) { rx: 0; }
         </style>`;
 }

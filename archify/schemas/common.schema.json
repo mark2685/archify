@@ -22,7 +22,7 @@
       "enum": ["trace", "none"]
     },
     "visualPreset": {
-      "enum": ["classic", "signal-flow", "blueprint", "editorial"]
+      "enum": ["hadrian", "classic", "signal-flow", "blueprint", "editorial"]
     },
     "qualityProfile": {
       "enum": ["standard", "showcase"]

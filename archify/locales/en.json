@@ -72,6 +72,8 @@
   "viewer.preset.menu": "Visual style",
   "viewer.preset.identity": "Visual identity",
   "viewer.preset.cycles": "to cycle",
+  "viewer.preset.hadrian": "Hadrian",
+  "viewer.preset.hadrian.hint": "Hadrian brand, light and dark",
   "viewer.preset.classic": "Classic",
   "viewer.preset.classic.short": "Classic",
   "viewer.preset.classic.hint": "Stable technical default",

@@ -153,7 +153,7 @@ export function applyTemplate(template, {
   svg,
   cards,
   locale,
-  visualPreset = 'classic',
+  visualPreset = 'hadrian',
   sourceEvidence = null,
 }) {
   if (!SVG_SLOT_RE.test(template)) {

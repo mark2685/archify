@@ -119,7 +119,7 @@ test('Lifecycle notes retain their content and reading depth with readable Full-
           }) };
       })()`);
       assert.equal(full.theme, theme);
-      assert.equal(full.preset, 'classic');
+      assert.equal(full.preset, 'hadrian');
       assert.equal(full.detail, 'full');
       assertPrimaryLabel(full.primary);
       assert.deepEqual(full.notes.map(({ id, label, note }) => ({ id, label, note })), expected);

@@ -313,7 +313,7 @@
         function resolveVars(themeAttr) {
           var probe = document.createElement('div');
           probe.setAttribute('data-theme', themeAttr);
-          probe.setAttribute('data-preset', document.documentElement.getAttribute('data-preset') || 'classic');
+          probe.setAttribute('data-preset', document.documentElement.getAttribute('data-preset') || 'hadrian');
           probe.style.cssText = 'position:absolute;width:0;height:0;visibility:hidden;';
           document.body.appendChild(probe);
           try {

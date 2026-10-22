@@ -239,7 +239,7 @@ export function writeDiagram({ outPath, template, diagramType, meta, svg, cards,
     svg,
     cards: renderCards(cards),
     locale: meta.locale,
-    visualPreset: meta.visual_preset || 'classic',
+    visualPreset: meta.visual_preset || 'hadrian',
     sourceEvidence,
   });
   let candidatePath;
@@ -360,7 +360,7 @@ export function validateCrossCollectionContracts(diagramType, diagram) {
 export function svgRootAttrs(meta, explicitQualityProfile) {
   // Motion is a Viewer capability for every diagram; Live/Still controls playback.
   const animation = ' data-animation="trace"';
-  const preset = ` data-preset="${esc(meta.visual_preset || 'classic')}"`;
+  const preset = ` data-preset="${esc(meta.visual_preset || 'hadrian')}"`;
   const engineeringProfile = meta.engineering_profile
     ? ` data-engineering-profile="${esc(meta.engineering_profile)}"`
     : '';

@@ -45,7 +45,7 @@ valid `translations` value → bundled catalog for `locale` → English. An
 unrecognized key or mismatched placeholders never replaces a valid
 lower-priority message and fails no render; `validate`/`render`/`deliver`
 report rejected entries and the final resolved coverage to stderr.
-`visual_preset` accepts `classic` (the stable default), `signal-flow` (luminous
+`visual_preset` accepts `hadrian` (the default: the Hadrian brand in light and dark), `classic` (upstream's technical default), `signal-flow` (luminous
 motion-forward presentation), `blueprint` (high-contrast engineering review),
 or `editorial` (warm publication-style design review and documentation).
 Presets change only viewer styling; they do not alter semantic IDs or geometry.

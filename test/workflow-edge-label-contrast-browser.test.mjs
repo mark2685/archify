@@ -136,7 +136,7 @@ test('workflow default labels and lane headings remain readable without recolori
       assert.equal(evaluated.exceptionDetails, undefined, evaluated.exceptionDetails?.exception?.description);
       const observed = evaluated.result.value;
       assert.equal(observed.theme, theme);
-      assert.equal(observed.preset, 'classic');
+      assert.equal(observed.preset, 'hadrian');
       assert.equal(observed.motion, 'still');
       assert.equal(observed.detail, 'full');
       assert.equal(observed.scale, 1);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-preset="classic">
+<html lang="en" data-theme="dark" data-preset="hadrian">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -5083,6 +5083,285 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       svg [data-node-id], svg [data-edge-from], svg [data-detail], svg [data-detail-anchor], svg [data-legend-hit], svg { transition: none !important; }
     }
   </style>
+  <style>
+    /* ==========================================================
+       HADRIAN — the fork's default visual preset.
+
+       Every colour comes from the Hadrian design hub (Hadrian-MTV/design,
+       src/index.css @theme and the registry-seed colour records); the hex
+       literals live only in the --color-* tokens below and everything else
+       reaches colour through var(). Derived colours (the hub's white alpha stops
+       on navy, category tints and shades, node fills) are precomputed tokens
+       whose derivation is recorded beside them and verified by test. Corners are square, nothing casts a shadow or glow,
+       every edge is a 1px hairline, and Stratosphere Blue appears only as the
+       keyboard-focus ring on navy. test/hadrian-tokens.test.mjs,
+       test/hadrian-shape-browser.test.mjs and test/hadrian-contrast.test.mjs
+       guard these rules; FORK.md records the category mapping and why.
+
+       The variables also target a standalone exported SVG, whose root carries
+       data-preset and data-theme directly, so the same selectors serve the page
+       and every export. The tokens sit on :root as well so the style picker can
+       preview Hadrian while another preset is active.
+       ========================================================== */
+    /* Derived tokens are written as hex because the Viewer measures opaque ink
+       and exported SVGs must stay plain colours; each one records the hub mix it
+       equals, and test/hadrian-tokens.test.mjs recomputes that mix from the hub
+       literals and fails on drift. */
+    :root,
+    [data-preset="hadrian"] {
+      /* Brand palette */
+      --color-navy: #002548;
+      --color-heritage: #13497d;
+      --color-strato: #70b8fd;
+      --color-gold: #f3a000;
+      --color-gray-alloy: #889199;
+      --color-defense-green: #817d51;
+      --color-white: #ffffff;
+      --color-black: #000000;
+      /* Navy surfaces */
+      --color-raised: #062e54;
+      --color-raised-hi: #0b3a66;
+      /* Ramps */
+      --color-blue-200: #a2cef7;
+      --color-blue-600: #0258ab;
+      --color-gold-400: #ffb830;
+      --color-gold-700: #8c5d01;
+      --color-gray-100: #f4f6f9;
+      --color-gray-200: #e2e7ea;
+      --color-gray-300: #c6cacd;
+      --color-gray-400: #a5aeb6;
+      --color-gray-700: #5c6167;
+      --color-gray-800: #414448;
+      /* Operational status: completed and declined work */
+      --color-status-green: #9bc08f;
+      --color-status-red: #e79089;
+
+      /* Derived: the hub's white alpha stops composited on navy. */
+      --color-ink-dim-navy: #b8c2cc; /* derived: white 72% over navy */
+      --color-hairline-navy: #294865; /* derived: white 16% over navy */
+      --color-hairline-strong-navy: #526b83; /* derived: white 32% over navy */
+      /* Derived: category inks that need a tint or shade to clear 4.5:1. */
+      --color-defense-green-tint: #b3b197; /* derived: defense-green 60% over white */
+      --color-defense-green-shade: #615e3d; /* derived: defense-green 75% over black */
+      --color-status-green-shade: #4e6048; /* derived: status-green 50% over black */
+      --color-status-red-shade: #8b5652; /* derived: status-red 60% over black */
+      /* Derived: node fills, 13% of the stroke over the raised navy. */
+      --color-fill-frontend-navy: #1a4369; /* derived: blue-200 13% over raised */
+      --color-fill-backend-navy: #19415c; /* derived: status-green 13% over raised */
+      --color-fill-database-navy: #1c3f5d; /* derived: defense-green-tint 13% over raised */
+      --color-fill-messagebus-navy: #26404f; /* derived: gold-400 13% over raised */
+      --color-fill-security-navy: #233b5b; /* derived: status-red 13% over raised */
+      --color-fill-cloud-navy: #1b3f61; /* derived: gray-400 13% over raised */
+      --color-fill-external-navy: #1f4264; /* derived: gray-300 13% over raised */
+      /* Derived: node fills, 10% of the stroke over white. */
+      --color-fill-frontend-light: #e7edf2; /* derived: heritage 10% over white */
+      --color-fill-backend-light: #edefed; /* derived: status-green-shade 10% over white */
+      --color-fill-database-light: #efefec; /* derived: defense-green-shade 10% over white */
+      --color-fill-messagebus-light: #f4efe6; /* derived: gold-700 10% over white */
+      --color-fill-security-light: #f3eeee; /* derived: status-red-shade 10% over white */
+      --color-fill-cloud-light: #efeff0; /* derived: gray-700 10% over white */
+      --color-fill-external-light: #ececed; /* derived: gray-800 10% over white */
+
+      --hadrian-font-sans: "Sohne", "Inter", system-ui, -apple-system, Arial, sans-serif;
+      --hadrian-font-mono: "Sohne Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    }
+
+    /* Dark: navy ground, raised navy panels, white ink. */
+    [data-preset="hadrian"][data-theme="dark"] {
+      --bg: var(--color-navy);
+      --grid: var(--color-hairline-navy);
+      --canvas-dot: var(--color-hairline-strong-navy);
+      --text: var(--color-white);
+      --text-muted: var(--color-ink-dim-navy);
+      --text-dim: var(--color-gray-400);
+      --text-faint: var(--color-ink-dim-navy);
+
+      --panel: var(--color-raised);
+      --panel-border: var(--color-hairline-navy);
+      --lane-fill: var(--color-raised);
+      --lane-stroke: var(--color-hairline-strong-navy);
+
+      --arrow: var(--color-gray-400);
+      --arrow-emphasis: var(--color-white);
+      --mask: var(--color-raised);
+
+      /* Semantic categories. Each owns one hub family; see FORK.md. */
+      --frontend-stroke: var(--color-blue-200);
+      --backend-stroke: var(--color-status-green);
+      --database-stroke: var(--color-defense-green-tint);
+      --messagebus-stroke: var(--color-gold-400);
+      --security-stroke: var(--color-status-red);
+      --cloud-stroke: var(--color-gray-400);
+      --external-stroke: var(--color-gray-300);
+      --frontend-fill: var(--color-fill-frontend-navy);
+      --backend-fill: var(--color-fill-backend-navy);
+      --database-fill: var(--color-fill-database-navy);
+      --messagebus-fill: var(--color-fill-messagebus-navy);
+      --security-fill: var(--color-fill-security-navy);
+      --cloud-fill: var(--color-fill-cloud-navy);
+      --external-fill: var(--color-fill-external-navy);
+
+      --toolbar-bg: var(--color-raised);
+      --toolbar-border: var(--color-hairline-strong-navy);
+      --toolbar-text: var(--color-white);
+      --toolbar-hover: var(--color-raised-hi);
+      --toolbar-menu-bg: var(--color-raised);
+
+      --hadrian-focus: var(--color-strato);
+    }
+
+    /* Light: gray-100 ground, white panels, navy ink. */
+    [data-preset="hadrian"][data-theme="light"] {
+      --bg: var(--color-gray-100);
+      --grid: var(--color-gray-200);
+      --canvas-dot: var(--color-gray-300);
+      --text: var(--color-navy);
+      --text-muted: var(--color-gray-800);
+      --text-dim: var(--color-gray-700);
+      --text-faint: var(--color-gray-700);
+
+      --panel: var(--color-white);
+      --panel-border: var(--color-gray-200);
+      --lane-fill: var(--color-white);
+      --lane-stroke: var(--color-gray-300);
+
+      --arrow: var(--color-gray-700);
+      --arrow-emphasis: var(--color-navy);
+      --mask: var(--color-white);
+
+      --frontend-stroke: var(--color-heritage);
+      --backend-stroke: var(--color-status-green-shade);
+      --database-stroke: var(--color-defense-green-shade);
+      --messagebus-stroke: var(--color-gold-700);
+      --security-stroke: var(--color-status-red-shade);
+      --cloud-stroke: var(--color-gray-700);
+      --external-stroke: var(--color-gray-800);
+      --frontend-fill: var(--color-fill-frontend-light);
+      --backend-fill: var(--color-fill-backend-light);
+      --database-fill: var(--color-fill-database-light);
+      --messagebus-fill: var(--color-fill-messagebus-light);
+      --security-fill: var(--color-fill-security-light);
+      --cloud-fill: var(--color-fill-cloud-light);
+      --external-fill: var(--color-fill-external-light);
+
+      --toolbar-bg: var(--color-white);
+      --toolbar-border: var(--color-gray-300);
+      --toolbar-text: var(--color-navy);
+      --toolbar-hover: var(--color-gray-200);
+      --toolbar-menu-bg: var(--color-white);
+
+      --hadrian-focus: var(--color-blue-600);
+    }
+
+    /* Lifecycle success and failure keep the hub's completed/declined colours in
+       both themes; architecture categories above may map differently. */
+    svg[data-preset="hadrian"][data-lifecycle-layout] {
+      --backend-stroke: var(--color-status-green);
+      --security-stroke: var(--color-status-red);
+    }
+    [data-theme="light"] svg[data-preset="hadrian"][data-lifecycle-layout],
+    svg[data-preset="hadrian"][data-lifecycle-layout][data-theme="light"] {
+      --backend-stroke: var(--color-status-green-shade);
+      --security-stroke: var(--color-status-red-shade);
+    }
+    @media (prefers-color-scheme: light) {
+      /* A standalone auto-theme SVG export has no data-theme; its root is the svg. */
+      svg:root[data-preset="hadrian"][data-lifecycle-layout]:not([data-theme="dark"]) {
+        --backend-stroke: var(--color-status-green-shade);
+        --security-stroke: var(--color-status-red-shade);
+      }
+    }
+
+    /* Shape: square corners, 1px hairlines, no shadows, no glows. The upstream
+       Viewer rounds and lifts many surfaces; these rules remove that for the
+       Hadrian preset without touching geometry. */
+    html[data-preset="hadrian"] *,
+    html[data-preset="hadrian"] *::before,
+    html[data-preset="hadrian"] *::after {
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+    html[data-preset="hadrian"] body { background-image: none; }
+    /* Canvas: the same quiet dot field as classic, no drafting grid lines. */
+    html[data-preset="hadrian"] .diagram-container {
+      background:
+        radial-gradient(circle at 1px 1px, var(--canvas-dot) 1px, transparent 1.4px) 0 0 / 20px 20px,
+        var(--panel);
+    }
+    html[data-preset="hadrian"] .diagram-container > svg .c-grid { stroke: transparent; }
+    svg[data-preset="hadrian"] rect { rx: 0; ry: 0; }
+    svg[data-preset="hadrian"] * { filter: none !important; }
+    html[data-preset="hadrian"] .diagram-container,
+    html[data-preset="hadrian"] .card,
+    html[data-preset="hadrian"] .toolbar,
+    html[data-preset="hadrian"] .toolbar button,
+    html[data-preset="hadrian"] .preset-menu,
+    html[data-preset="hadrian"] .export-menu,
+    html[data-preset="hadrian"] .overview-map,
+    html[data-preset="hadrian"] .semantic-lens,
+    html[data-preset="hadrian"] .route-probe,
+    html[data-preset="hadrian"] .focus-chip,
+    html[data-preset="hadrian"] .diagram-guide,
+    html[data-preset="hadrian"] .node-finder {
+      border-width: 1px;
+    }
+    html[data-preset="hadrian"] .toolbar,
+    html[data-preset="hadrian"] .preset-menu,
+    html[data-preset="hadrian"] .export-menu,
+    html[data-preset="hadrian"] .overview-map,
+    html[data-preset="hadrian"] .semantic-lens,
+    html[data-preset="hadrian"] .route-probe,
+    html[data-preset="hadrian"] .focus-chip,
+    html[data-preset="hadrian"] .diagram-guide,
+    html[data-preset="hadrian"] .node-finder {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    /* Interactive state: keyboard focus rings use Stratosphere Blue on navy and
+       the hub's blue-600 on the light ground. */
+    html[data-preset="hadrian"] :focus-visible { outline-color: var(--hadrian-focus); }
+    svg[data-preset="hadrian"] [data-node-id]:focus-visible > :is(rect, circle, polygon):not(.c-mask) { stroke: var(--hadrian-focus); }
+
+    /* Typography: Hadrian's faces for the page chrome. The SVG keeps the embedded
+       JetBrains Mono because the validators measure labels with its metrics and
+       every export embeds the same bytes. */
+    html[data-preset="hadrian"] body { font-family: var(--hadrian-font-sans); }
+    html[data-preset="hadrian"] h1 { font-weight: 700; letter-spacing: -0.02em; }
+    html[data-preset="hadrian"] .card h3 { font-weight: 600; letter-spacing: 0; }
+    html[data-preset="hadrian"] kbd,
+    html[data-preset="hadrian"] code,
+    html[data-preset="hadrian"] .toolbar button,
+    html[data-preset="hadrian"] .diagram-nav button,
+    html[data-preset="hadrian"] .preset-menu-shortcut,
+    html[data-preset="hadrian"] .preset-menu-heading {
+      font-family: var(--hadrian-font-mono);
+    }
+
+    /* Style picker swatch: navy ground with a hairline card. */
+    .preset-option-swatch.hadrian {
+      background: var(--color-navy);
+      border-radius: 0;
+    }
+    .preset-option-swatch.hadrian::before {
+      top: 0.42rem;
+      right: 0.35rem;
+      bottom: 0.42rem;
+      left: 0.35rem;
+      border: 1px solid var(--color-blue-200);
+      background: var(--color-raised);
+    }
+    [data-theme="light"] .preset-option-swatch.hadrian { background: var(--color-gray-100); }
+    [data-theme="light"] .preset-option-swatch.hadrian::before {
+      border-color: var(--color-heritage);
+      background: var(--color-white);
+    }
+
+    /* Motion overlays keep their geometry but drop the glow halos. */
+    svg[data-preset="hadrian"] { --flow-halo-peak: 0; --flow-glow-peak: 0; --flow-tail-peak: 0.2; --flow-head-peak: 0.7; --flow-wake-peak: 0.1; --flow-ripple-peak: 0; }
+    svg[data-preset="hadrian"] .ambient-flow-playhead-glow { --flow-peak: 0; }
+  </style>
 </head>
 <body>
   <!-- Toolbar: theme, live visual style, trace motion, presentation stage, and export.
@@ -5111,17 +5390,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       </button>
       <div class="preset-menu" id="preset-menu" role="menu" aria-label="Visual style">
         <div class="preset-menu-heading" role="presentation"><span>Visual identity</span><span class="preset-menu-shortcut"><kbd>S</kbd>to cycle</span></div>
-        <button class="preset-option" data-preset-value="classic" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+        <button class="preset-option" data-preset-value="hadrian" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+          <span class="preset-option-swatch hadrian" aria-hidden="true"></span>
+          <span class="preset-option-copy"><strong>Hadrian</strong><small>Hadrian brand, light and dark</small></span>
+          <span class="preset-option-check" aria-hidden="true"></span>
+        </button>
+        <button class="preset-option" data-preset-value="classic" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" hidden>
           <span class="preset-option-swatch classic" aria-hidden="true"></span>
           <span class="preset-option-copy"><strong>Classic</strong><small>Stable technical default</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
-        <button class="preset-option" data-preset-value="signal-flow" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+        <button class="preset-option" data-preset-value="signal-flow" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" hidden>
           <span class="preset-option-swatch signal-flow" aria-hidden="true"></span>
           <span class="preset-option-copy"><strong>Signal Flow</strong><small>Motion-forward presentation</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
-        <button class="preset-option" data-preset-value="blueprint" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+        <button class="preset-option" data-preset-value="blueprint" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" hidden>
           <span class="preset-option-swatch blueprint" aria-hidden="true"></span>
           <span class="preset-option-copy"><strong>Blueprint</strong><small>Engineering review</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
@@ -5198,11 +5482,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     </div>
 
 
-    <script id="archify-i18n-data" type="application/json">{"locale":"en","messages":{"viewer.kind.frontend":"Frontend","viewer.kind.backend":"Backend","viewer.kind.database":"Database","viewer.kind.cloud":"Cloud","viewer.kind.security":"Security","viewer.kind.messagebus":"Message bus","viewer.kind.external":"External","viewer.kind.neutral":"Neutral","viewer.kind.node":"Node","viewer.kind.start":"Start","viewer.kind.active":"Active","viewer.kind.waiting":"Waiting","viewer.kind.decision":"Decision","viewer.kind.success":"Success","viewer.kind.failure":"Failure","viewer.toolbar.actions":"Diagram actions","viewer.theme.toggle.title":"Toggle theme (T)","viewer.theme.toggle":"Toggle color theme","viewer.theme.dark":"Dark","viewer.theme.light":"Light","viewer.preset.choose.title":"Choose visual style (S cycles)","viewer.preset.choose":"Choose visual style","viewer.preset.style":"Style","viewer.preset.menu":"Visual style","viewer.preset.identity":"Visual identity","viewer.preset.cycles":"to cycle","viewer.preset.classic":"Classic","viewer.preset.classic.short":"Classic","viewer.preset.classic.hint":"Stable technical default","viewer.preset.flow":"Signal Flow","viewer.preset.flow.short":"Flow","viewer.preset.flow.hint":"Motion-forward presentation","viewer.preset.blueprint":"Blueprint","viewer.preset.blueprint.hint":"Engineering review","viewer.preset.editorial":"Editorial","viewer.preset.editorial.hint":"Publication and launch notes","viewer.preset.badge.signalFlow":"SIGNAL FLOW","viewer.preset.badge.blueprint":"BLUEPRINT / REV 01","viewer.preset.badge.editorial":"EDITORIAL / FIELD NOTE","viewer.preset.badge.editorialPlate":"ARCHIFY / PLATE 04","viewer.preset.current":"Visual style: {style}. Choose visual style","viewer.motion.live":"Live","viewer.motion.still":"Still","viewer.motion.pause":"Pause motion","viewer.motion.resume":"Resume motion","viewer.motion.reduced":"Motion paused by reduced-motion preference","viewer.motion.hidden":"Motion paused while this page is hidden","viewer.motion.yielding":"Pause motion; currently yielding to {owner}","viewer.motion.yielding.title":"Live preview enabled · yielding to {owner}","viewer.owner.route":"Route Probe","viewer.owner.lens":"Semantic Lens","viewer.owner.relationship":"Relationship Preview","viewer.owner.intent":"Intent Trace","viewer.owner.focus":"semantic focus","viewer.owner.legend":"legend preview","viewer.owner.reader":"reader interaction","viewer.present.enter":"Enter presentation stage","viewer.present.enter.title":"Presentation stage (F)","viewer.present.exit":"Exit presentation stage","viewer.present.exit.title":"Exit presentation stage (F or Escape)","viewer.present.present":"Present","viewer.present.exit.label":"Exit","viewer.export.button":"Export","viewer.export.button.title":"Export diagram (E)","viewer.export.diagram":"Export diagram","viewer.export.menu":"Export","viewer.export.subtitle":"Portable, clean outputs","viewer.export.share":"Share","viewer.export.shareCard":"Share Card","viewer.export.routeShareCard":"Route Share Card","viewer.export.reachShareCard":"Reach Share Card","viewer.export.copyDiagram":"Copy diagram","viewer.export.clipboardPng":"PNG to clipboard","viewer.export.raster":"Raster images","viewer.export.image":"Image","viewer.export.lossless":"Lossless image","viewer.export.compact":"Compact image","viewer.export.modern":"Modern image","viewer.export.vectorMotion":"Vector and motion","viewer.export.vectorMotion.heading":"Vector \u0026 motion","viewer.export.editable":"Editable vector","viewer.export.svg.auto":"SVG · Auto","viewer.export.svg.auto.hint":"Matches host theme","viewer.export.svg.light":"SVG · Light","viewer.export.svg.light.hint":"Always light","viewer.export.svg.dark":"SVG · Dark","viewer.export.svg.dark.hint":"Always dark","viewer.export.motion6s":"6s motion","viewer.export.unsupported":"Not supported by this browser","viewer.export.clipboardUnsupported":"Clipboard image write not supported by this browser","viewer.export.clipboardUnsupported.short":"Clipboard image write not supported in this browser.","viewer.export.motionUnavailable":"Motion capture unavailable in this browser","viewer.export.webmUnavailable":"WebM unavailable in this browser","viewer.export.failed":"Export failed: {message}","viewer.export.unknownVariant":"Unknown Share Card variant: {variant}","viewer.export.routeRequired":"Trace a route before exporting a Route Share Card","viewer.export.reachRequired":"Trace authored reach before exporting a Reach Share Card","viewer.export.unknown":"unknown","viewer.export.routeFailed":"Route Share Card export failed: {message}","viewer.export.reachFailed":"Reach Share Card export failed: {message}","viewer.export.copyFailed":"Copy failed: {message}","viewer.export.copiedPng":"Copied PNG to clipboard","viewer.export.downloadedRoute":"Downloaded Route Share Card","viewer.export.downloadedReach":"Downloaded Reach Share Card","viewer.export.downloadedWebm":"Downloaded WebM","viewer.export.recording":"Recording 6 seconds of motion…","viewer.export.card.routeSummary.one":"Path: {source} → {target} · {count} step","viewer.export.card.routeSummary.other":"Path: {source} → {target} · {count} steps","viewer.export.card.reachSummary":"Authored {direction} from {origin} · {nodes} · {links} · max {hops}","viewer.export.card.node.one":"{count} node","viewer.export.card.node.other":"{count} nodes","viewer.export.card.link.one":"{count} link","viewer.export.card.link.other":"{count} links","viewer.export.card.hop.one":"{count} hop","viewer.export.card.hop.other":"{count} hops","viewer.export.card.routeBadge":"ARCHIFY · ROUTE · {hops}","viewer.export.card.reachBadge":"ARCHIFY · {direction} REACH","viewer.export.direction.upstream":"Upstream","viewer.export.direction.downstream":"Downstream","viewer.export.error.canvasUnavailable":"Canvas unavailable for {label}","viewer.export.error.contextUnavailable":"2D canvas context unavailable for {label}","viewer.export.error.toBlobUnavailable":"canvas.toBlob unavailable for {label}","viewer.export.error.toBlobNull":"canvas.toBlob returned no data for {label}","viewer.export.error.variantsCombined":"Share Card variants cannot be combined","viewer.export.error.viewerState":"Share Card export could not remove temporary viewer state","viewer.export.error.routeState":"Route Card export could not preserve the resolved route safely","viewer.export.error.reachState":"Reach Card export could not preserve authored reach safely","viewer.export.error.webmRequirements":"WebM motion export requires a trace animation and browser MediaRecorder support","viewer.export.error.mediaRecorder":"MediaRecorder failed","viewer.export.error.emptyWebm":"MediaRecorder produced an empty WebM","viewer.export.error.webmBackground":"SVG background could not be loaded for WebM export","viewer.guide.title":"Explore this system","viewer.focus.selectedNodes":"{count} selected nodes","viewer.guide.eyebrow":"Diagram guide","viewer.guide.close":"Close diagram guide","viewer.guide.inspecting":"Inspecting compiled semantics","viewer.guide.actions":"Diagram exploration actions","viewer.guide.find":"Find any node","viewer.guide.find.hint":"Search labels, responsibilities, kinds, and stable IDs.","viewer.guide.route":"Trace a route","viewer.guide.route.aria":"Trace a directed route","viewer.guide.route.hint":"Ask how two semantic nodes connect in authored direction.","viewer.guide.map":"See the whole system","viewer.guide.map.hint":"Open Semantic Radar with a live viewport and stable nodes.","viewer.guide.lens":"Compare semantic kinds","viewer.guide.lens.hint":"Count roles, reveal their traffic, and compare direct authored links.","viewer.guide.present":"Enter Presentation Stage","viewer.guide.present.hint":"Give the live diagram the viewport without changing export.","viewer.guide.shortcuts":"Additional keyboard shortcuts","viewer.guide.shortcut.export":"Export","viewer.guide.shortcut.theme":"Theme","viewer.guide.shortcut.style":"Style","viewer.guide.shortcut.reset":"Reset","viewer.guide.shortcut.zoomIn":"Zoom in","viewer.guide.shortcut.zoomOut":"Zoom out","viewer.guide.shortcut.close":"Close","viewer.guide.credit":"Find Archify useful? A star on GitHub helps","viewer.guide.star":"Star","viewer.guide.facts":"{nodes} · {relationships}","viewer.guide.fact.node.one":"{count} semantic node","viewer.guide.fact.node.other":"{count} semantic nodes","viewer.guide.fact.relationship.one":"{count} relationship","viewer.guide.fact.relationship.other":"{count} relationships","viewer.guide.open":"Open diagram guide","viewer.finder.title":"Find a node","viewer.finder.close":"Close node finder","viewer.finder.placeholder":"Search labels or IDs","viewer.finder.search":"Search diagram nodes","viewer.finder.results":"Diagram nodes","viewer.finder.empty":"No matching nodes","viewer.finder.result.focus":"Focus {label}","viewer.finder.result.routeStart":"Choose {label} as route start","viewer.finder.result.routeTarget":"Choose {label} as route destination, {links}","viewer.finder.status.empty":"No matching nodes","viewer.finder.status.count.one":"{count} matching node","viewer.finder.status.count.other":"{count} matching nodes","viewer.finder.noun.nodes":"nodes","viewer.finder.link.one":"{count} link","viewer.finder.link.other":"{count} links","viewer.finder.result.focus.one":"Focus {label}, {count} related connection","viewer.finder.result.focus.other":"Focus {label}, {count} related connections","viewer.finder.status.filtered":"{visible} of {available} {noun}","viewer.finder.status.all":"{available} {noun}","viewer.passport.eyebrow":"Semantic passport","viewer.passport.metadata":"Node metadata","viewer.passport.evidence":"Verified source evidence","viewer.passport.verified":"Verified source","viewer.passport.verificationScope":"Verified against local Git at the pinned revision. Remote access has not been checked.","viewer.passport.reach":"Authored reach","viewer.passport.reach.trace":"Trace authored reachability","viewer.passport.upstream":"Upstream","viewer.passport.downstream":"Downstream","viewer.passport.upstream.trace":"Trace upstream authored reachability","viewer.passport.downstream.trace":"Trace downstream authored reachability","viewer.passport.close":"Close semantic passport","viewer.passport.move":"Move semantic passport. Drag, use arrow keys, or press Home to reset.","viewer.passport.copy":"Copy link","viewer.passport.copy.focus":"Copy link to focused node","viewer.passport.relations":"Relations","viewer.passport.relations.show":"Show connected relationships","viewer.passport.relations.hide":"Hide connected relationships","viewer.passport.relations.list":"Connected relationships","viewer.passport.copyRelation":"Copy relation","viewer.passport.copyNode":"Copy node","viewer.passport.copyPinned":"Copy link to pinned relationship","viewer.passport.copySource":"Copy link to source node","viewer.passport.copy.focused.success":"Focused node link copied","viewer.passport.copy.pinned.success":"Pinned relationship link copied","viewer.passport.copy.focused.failed":"Could not copy focused node link","viewer.passport.copy.pinned.failed":"Could not copy pinned relationship link","viewer.passport.relationship.none":"No connected relationships","viewer.passport.relationship.count.one":"{count} relation","viewer.passport.relationship.count.other":"{count} relations","viewer.passport.relationship.show.one":"Show {count} connected relationship","viewer.passport.relationship.show.other":"Show {count} connected relationships","viewer.passport.relationship.summary":"{out} outgoing · {in} incoming{loops}","viewer.passport.relationship.loops":" · {count} loop","viewer.passport.relationship.explorer":"Direct relationship explorer","viewer.passport.relationship.help":"Use arrow keys to explore relationships. Press Enter or Space to pin details; Escape clears.","viewer.passport.relationship.loopsBack":"loops back","viewer.passport.relationship.connectsTo":"connects to","viewer.passport.relationship.connectsFrom":"connects from","viewer.passport.relationship.pinned":"Pinned relationship · {from} → {to} · {label}","viewer.passport.relationship.inspect":"Inspect relationship {index} of {total}: {from} to {to}, {label}. Press Enter for details.","viewer.passport.relationship.group.out":"Outgoing","viewer.passport.relationship.group.in":"Incoming","viewer.passport.relationship.group.loop":"Self loops","viewer.passport.relationship.row":"{group}: {relationship}, {neighbor}","viewer.passport.relationship.direction.out":"OUT →","viewer.passport.relationship.direction.in":"← IN","viewer.passport.relationship.direction.loop":"LOOP","viewer.passport.sourceCount.one":"{count} verified source reference","viewer.passport.sourceCount.other":"{count} verified source references","viewer.passport.repository.open":"Open verified repository revision {revision}","viewer.passport.source.open":"Open verified source {path} at revision {revision}","viewer.passport.source.openLink":"Open ↗","viewer.passport.reach.upstream.one":"Trace {count} upstream authored node","viewer.passport.reach.upstream.other":"Trace {count} upstream authored nodes","viewer.passport.reach.downstream.one":"Trace {count} downstream authored node","viewer.passport.reach.downstream.other":"Trace {count} downstream authored nodes","viewer.passport.reach.noUpstream":"No upstream authored nodes","viewer.passport.reach.noDownstream":"No downstream authored nodes","viewer.passport.reach.status":"{direction} · {nodes} nodes · {links} links · max {hops} hops","viewer.route.eyebrow":"Path","viewer.route.start":"Click where the path starts","viewer.route.start.find":"Find start","viewer.route.start.find.aria":"Find a route start","viewer.route.copy":"Copy link","viewer.route.copy.aria":"Copy link to traced route","viewer.route.clear":"Clear","viewer.route.clear.aria":"Clear route probe","viewer.route.traced":"Path","viewer.route.pickTwo":"Click two nodes on the diagram","viewer.route.pickOne":"Click a node on the diagram","viewer.route.controls":"Route journey controls","viewer.route.previous":"Previous route position","viewer.route.play":"Play route journey","viewer.route.pause":"Pause route journey","viewer.route.replay":"Replay route journey","viewer.route.next":"Next route position","viewer.route.journey":"Journey","viewer.route.pause.label":"Pause","viewer.route.replay.label":"Replay","viewer.route.overview":"Overview","viewer.route.overview.aria":"Show complete route overview","viewer.route.instructions":"Click a start, then an end. Paths follow the arrows.","viewer.route.destination":"Where does the path from {label} end?","viewer.route.destination.find":"Find target","viewer.route.destination.find.aria":"Find a reachable route destination","viewer.route.differentDestination":"Choose a different destination","viewer.route.distinct":"Pick two different nodes.","viewer.route.unreachable":"Cannot reach {label} from here","viewer.route.unreachable.detail":"{target} cannot be reached from {source} along the arrows. Pick a highlighted node.","viewer.route.start.instructions":"Next, pick the end. Only nodes you can reach will light up.","viewer.route.copy.success":"Traced route link copied","viewer.route.copy.failed":"Could not copy traced route link","viewer.route.position":"Route position {index} of {total}: {label}","viewer.route.step":"Step {index} of {total} · {phase} · {label}","viewer.route.motionRequired":"Automatic journey requires Live motion","viewer.route.trigger.clear":"Clear traced route","viewer.route.overview.status":"{nodes} · {hops} · shortest path","viewer.route.overview.node.one":"{count} node","viewer.route.overview.node.other":"{count} nodes","viewer.route.overview.hop.one":"{count} step","viewer.route.overview.hop.other":"{count} steps","viewer.route.phase.playing":"Playing","viewer.route.phase.complete":"Complete","viewer.route.phase.inspecting":"Inspecting","viewer.route.destination.count.one":"{count} reachable node is highlighted. Click it.","viewer.route.destination.count.other":"{count} reachable nodes are highlighted. Click one.","viewer.route.noOutgoing":"No arrows lead out of this node. Clear it and pick another start.","viewer.route.result.title":"{source} to {target}","viewer.route.finder.source.title":"Choose route start","viewer.route.finder.source.placeholder":"Search route sources","viewer.route.finder.source.empty":"No matching route sources","viewer.route.finder.source.results":"Nodes that can start a route","viewer.route.finder.source.noun":"route sources","viewer.route.finder.source.badge":"start","viewer.route.finder.target.title":"Destination from {label}","viewer.route.finder.target.placeholder":"Search reachable destinations","viewer.route.finder.target.empty":"No matching reachable destinations","viewer.route.finder.target.results":"Reachable route destinations","viewer.route.finder.target.noun":"reachable destinations","viewer.route.hop.one":"{count} hop","viewer.route.hop.other":"{count} hops","viewer.lens.eyebrow":"Semantic lens","viewer.lens.title":"Compare system roles","viewer.lens.close":"Close semantic lens","viewer.lens.instruction":"Choose up to two semantic kinds. One reveals its real traffic; two compare only direct authored relationships.","viewer.lens.kinds":"Semantic kinds","viewer.lens.choose":"Choose a kind to inspect its nodes and touching relationships.","viewer.lens.copy":"Copy link to semantic lens","viewer.lens.clear":"Clear semantic lens","viewer.lens.open":"Open semantic lens","viewer.lens.openActive":"Open active semantic lens","viewer.lens.legend":"Semantic legend","viewer.lens.legend.inspect.one":"Inspect {label}, {count} node","viewer.lens.legend.inspect.other":"Inspect {label}, {count} nodes","viewer.lens.kind.count.one":"{label}, {count} node","viewer.lens.kind.count.other":"{label}, {count} nodes","viewer.lens.compare.one":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationship","viewer.lens.compare.other":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationships","viewer.lens.single":"{nodes} · {relationships} · connected peers remain visible","viewer.lens.node.one":"{count} {label} node","viewer.lens.node.other":"{count} {label} nodes","viewer.lens.relationship.one":"{count} touching relationship","viewer.lens.relationship.other":"{count} touching relationships","viewer.radar.title":"Semantic radar","viewer.radar.building":"Building overview","viewer.radar.openFull":"Open full semantic radar","viewer.radar.open":"Open radar","viewer.radar.close":"Close semantic radar","viewer.radar.surface":"Diagram overview. Click a node to focus it, or use arrow keys to pan.","viewer.radar.click":"Click node","viewer.radar.drag":"Drag to pan","viewer.radar.space":"Semantic radar needs more MAP space.","viewer.radar.nodes":"Semantic diagram radar nodes","viewer.radar.focus":"Focus {label} from Semantic Radar","viewer.radar.status":"{count} nodes · {viewport}","viewer.radar.fullMap":"{count} nodes · full map","viewer.radar.compacted":"Radar compacted to avoid covering the Semantic Passport or MAP controls.","viewer.radar.cancelWaiting":"Cancel semantic radar waiting for more MAP space","viewer.radar.needsSpace":"Semantic radar needs more visible MAP space","viewer.radar.viewport.full":"full map","viewer.radar.viewport.width":"{percent}% width","viewer.radar.viewport.scale":"{percent}% viewport","viewer.nav.controls":"Diagram view controls","viewer.nav.route":"Trace a directed route","viewer.nav.route.title":"Trace route (R)","viewer.nav.route.short":"ROUTE","viewer.nav.radar":"Open semantic radar","viewer.nav.radar.title":"Semantic radar (M)","viewer.nav.radar.short":"MAP","viewer.nav.lens":"Open semantic lens","viewer.nav.lens.title":"Semantic lens (L)","viewer.nav.lens.short":"LENS","viewer.nav.find":"Find a node","viewer.nav.find.title":"Find a node (/)","viewer.outline.title":"Node index","viewer.rail.show":"Notes \u0026 index","viewer.rail.controls":"Side panel","viewer.rail.collapse":"Collapse side panel","viewer.rail.bottom":"Move panel below the diagram","viewer.rail.right":"Move panel beside the diagram","viewer.nav.guide":"Open diagram guide","viewer.nav.guide.title":"Diagram guide (?)","viewer.nav.zoomOut":"Zoom out","viewer.nav.zoomOut.title":"Zoom out (-)","viewer.nav.reset":"Reset diagram view","viewer.nav.reset.title":"Reset view (0)","viewer.nav.read":"READ","viewer.nav.zoomIn":"Zoom in","viewer.nav.zoomIn.title":"Zoom in (+)","viewer.nav.camera":"{hint}. Reset diagram view","viewer.nav.camera.title":"{semantic}{hint} · reset view (0)","viewer.nav.camera.semantic":"Semantic camera active · ","viewer.nav.level.map":"MAP","viewer.nav.level.read":"READ","viewer.nav.level.full":"FULL","viewer.nav.level.auto":"AUTO","viewer.nav.detail.map":"Zoom in to reveal relationship labels and node context","viewer.nav.detail.read":"Zoom in again to reveal tags and annotations","viewer.nav.detail.full":"Full diagram detail","viewer.intent.summary":"{label}. {out} outgoing, {in} incoming{loops}. {total} connections. Press Enter for details.","viewer.intent.loops":", {count} self loop","viewer.common.copied":"Copied","viewer.common.copyFailed":"Copy failed","viewer.common.copyLink":"Copy link","viewer.common.clear":"Clear","viewer.common.close":"Close"}}</script>
+    <script id="archify-i18n-data" type="application/json">{"locale":"en","messages":{"viewer.kind.frontend":"Frontend","viewer.kind.backend":"Backend","viewer.kind.database":"Database","viewer.kind.cloud":"Cloud","viewer.kind.security":"Security","viewer.kind.messagebus":"Message bus","viewer.kind.external":"External","viewer.kind.neutral":"Neutral","viewer.kind.node":"Node","viewer.kind.start":"Start","viewer.kind.active":"Active","viewer.kind.waiting":"Waiting","viewer.kind.decision":"Decision","viewer.kind.success":"Success","viewer.kind.failure":"Failure","viewer.toolbar.actions":"Diagram actions","viewer.theme.toggle.title":"Toggle theme (T)","viewer.theme.toggle":"Toggle color theme","viewer.theme.dark":"Dark","viewer.theme.light":"Light","viewer.preset.choose.title":"Choose visual style (S cycles)","viewer.preset.choose":"Choose visual style","viewer.preset.style":"Style","viewer.preset.menu":"Visual style","viewer.preset.identity":"Visual identity","viewer.preset.cycles":"to cycle","viewer.preset.hadrian":"Hadrian","viewer.preset.hadrian.hint":"Hadrian brand, light and dark","viewer.preset.classic":"Classic","viewer.preset.classic.short":"Classic","viewer.preset.classic.hint":"Stable technical default","viewer.preset.flow":"Signal Flow","viewer.preset.flow.short":"Flow","viewer.preset.flow.hint":"Motion-forward presentation","viewer.preset.blueprint":"Blueprint","viewer.preset.blueprint.hint":"Engineering review","viewer.preset.editorial":"Editorial","viewer.preset.editorial.hint":"Publication and launch notes","viewer.preset.badge.signalFlow":"SIGNAL FLOW","viewer.preset.badge.blueprint":"BLUEPRINT / REV 01","viewer.preset.badge.editorial":"EDITORIAL / FIELD NOTE","viewer.preset.badge.editorialPlate":"ARCHIFY / PLATE 04","viewer.preset.current":"Visual style: {style}. Choose visual style","viewer.motion.live":"Live","viewer.motion.still":"Still","viewer.motion.pause":"Pause motion","viewer.motion.resume":"Resume motion","viewer.motion.reduced":"Motion paused by reduced-motion preference","viewer.motion.hidden":"Motion paused while this page is hidden","viewer.motion.yielding":"Pause motion; currently yielding to {owner}","viewer.motion.yielding.title":"Live preview enabled · yielding to {owner}","viewer.owner.route":"Route Probe","viewer.owner.lens":"Semantic Lens","viewer.owner.relationship":"Relationship Preview","viewer.owner.intent":"Intent Trace","viewer.owner.focus":"semantic focus","viewer.owner.legend":"legend preview","viewer.owner.reader":"reader interaction","viewer.present.enter":"Enter presentation stage","viewer.present.enter.title":"Presentation stage (F)","viewer.present.exit":"Exit presentation stage","viewer.present.exit.title":"Exit presentation stage (F or Escape)","viewer.present.present":"Present","viewer.present.exit.label":"Exit","viewer.export.button":"Export","viewer.export.button.title":"Export diagram (E)","viewer.export.diagram":"Export diagram","viewer.export.menu":"Export","viewer.export.subtitle":"Portable, clean outputs","viewer.export.share":"Share","viewer.export.shareCard":"Share Card","viewer.export.routeShareCard":"Route Share Card","viewer.export.reachShareCard":"Reach Share Card","viewer.export.copyDiagram":"Copy diagram","viewer.export.clipboardPng":"PNG to clipboard","viewer.export.raster":"Raster images","viewer.export.image":"Image","viewer.export.lossless":"Lossless image","viewer.export.compact":"Compact image","viewer.export.modern":"Modern image","viewer.export.vectorMotion":"Vector and motion","viewer.export.vectorMotion.heading":"Vector \u0026 motion","viewer.export.editable":"Editable vector","viewer.export.svg.auto":"SVG · Auto","viewer.export.svg.auto.hint":"Matches host theme","viewer.export.svg.light":"SVG · Light","viewer.export.svg.light.hint":"Always light","viewer.export.svg.dark":"SVG · Dark","viewer.export.svg.dark.hint":"Always dark","viewer.export.motion6s":"6s motion","viewer.export.unsupported":"Not supported by this browser","viewer.export.clipboardUnsupported":"Clipboard image write not supported by this browser","viewer.export.clipboardUnsupported.short":"Clipboard image write not supported in this browser.","viewer.export.motionUnavailable":"Motion capture unavailable in this browser","viewer.export.webmUnavailable":"WebM unavailable in this browser","viewer.export.failed":"Export failed: {message}","viewer.export.unknownVariant":"Unknown Share Card variant: {variant}","viewer.export.routeRequired":"Trace a route before exporting a Route Share Card","viewer.export.reachRequired":"Trace authored reach before exporting a Reach Share Card","viewer.export.unknown":"unknown","viewer.export.routeFailed":"Route Share Card export failed: {message}","viewer.export.reachFailed":"Reach Share Card export failed: {message}","viewer.export.copyFailed":"Copy failed: {message}","viewer.export.copiedPng":"Copied PNG to clipboard","viewer.export.downloadedRoute":"Downloaded Route Share Card","viewer.export.downloadedReach":"Downloaded Reach Share Card","viewer.export.downloadedWebm":"Downloaded WebM","viewer.export.recording":"Recording 6 seconds of motion…","viewer.export.card.routeSummary.one":"Path: {source} → {target} · {count} step","viewer.export.card.routeSummary.other":"Path: {source} → {target} · {count} steps","viewer.export.card.reachSummary":"Authored {direction} from {origin} · {nodes} · {links} · max {hops}","viewer.export.card.node.one":"{count} node","viewer.export.card.node.other":"{count} nodes","viewer.export.card.link.one":"{count} link","viewer.export.card.link.other":"{count} links","viewer.export.card.hop.one":"{count} hop","viewer.export.card.hop.other":"{count} hops","viewer.export.card.routeBadge":"ARCHIFY · ROUTE · {hops}","viewer.export.card.reachBadge":"ARCHIFY · {direction} REACH","viewer.export.direction.upstream":"Upstream","viewer.export.direction.downstream":"Downstream","viewer.export.error.canvasUnavailable":"Canvas unavailable for {label}","viewer.export.error.contextUnavailable":"2D canvas context unavailable for {label}","viewer.export.error.toBlobUnavailable":"canvas.toBlob unavailable for {label}","viewer.export.error.toBlobNull":"canvas.toBlob returned no data for {label}","viewer.export.error.variantsCombined":"Share Card variants cannot be combined","viewer.export.error.viewerState":"Share Card export could not remove temporary viewer state","viewer.export.error.routeState":"Route Card export could not preserve the resolved route safely","viewer.export.error.reachState":"Reach Card export could not preserve authored reach safely","viewer.export.error.webmRequirements":"WebM motion export requires a trace animation and browser MediaRecorder support","viewer.export.error.mediaRecorder":"MediaRecorder failed","viewer.export.error.emptyWebm":"MediaRecorder produced an empty WebM","viewer.export.error.webmBackground":"SVG background could not be loaded for WebM export","viewer.guide.title":"Explore this system","viewer.focus.selectedNodes":"{count} selected nodes","viewer.guide.eyebrow":"Diagram guide","viewer.guide.close":"Close diagram guide","viewer.guide.inspecting":"Inspecting compiled semantics","viewer.guide.actions":"Diagram exploration actions","viewer.guide.find":"Find any node","viewer.guide.find.hint":"Search labels, responsibilities, kinds, and stable IDs.","viewer.guide.route":"Trace a route","viewer.guide.route.aria":"Trace a directed route","viewer.guide.route.hint":"Ask how two semantic nodes connect in authored direction.","viewer.guide.map":"See the whole system","viewer.guide.map.hint":"Open Semantic Radar with a live viewport and stable nodes.","viewer.guide.lens":"Compare semantic kinds","viewer.guide.lens.hint":"Count roles, reveal their traffic, and compare direct authored links.","viewer.guide.present":"Enter Presentation Stage","viewer.guide.present.hint":"Give the live diagram the viewport without changing export.","viewer.guide.shortcuts":"Additional keyboard shortcuts","viewer.guide.shortcut.export":"Export","viewer.guide.shortcut.theme":"Theme","viewer.guide.shortcut.style":"Style","viewer.guide.shortcut.reset":"Reset","viewer.guide.shortcut.zoomIn":"Zoom in","viewer.guide.shortcut.zoomOut":"Zoom out","viewer.guide.shortcut.close":"Close","viewer.guide.credit":"Find Archify useful? A star on GitHub helps","viewer.guide.star":"Star","viewer.guide.facts":"{nodes} · {relationships}","viewer.guide.fact.node.one":"{count} semantic node","viewer.guide.fact.node.other":"{count} semantic nodes","viewer.guide.fact.relationship.one":"{count} relationship","viewer.guide.fact.relationship.other":"{count} relationships","viewer.guide.open":"Open diagram guide","viewer.finder.title":"Find a node","viewer.finder.close":"Close node finder","viewer.finder.placeholder":"Search labels or IDs","viewer.finder.search":"Search diagram nodes","viewer.finder.results":"Diagram nodes","viewer.finder.empty":"No matching nodes","viewer.finder.result.focus":"Focus {label}","viewer.finder.result.routeStart":"Choose {label} as route start","viewer.finder.result.routeTarget":"Choose {label} as route destination, {links}","viewer.finder.status.empty":"No matching nodes","viewer.finder.status.count.one":"{count} matching node","viewer.finder.status.count.other":"{count} matching nodes","viewer.finder.noun.nodes":"nodes","viewer.finder.link.one":"{count} link","viewer.finder.link.other":"{count} links","viewer.finder.result.focus.one":"Focus {label}, {count} related connection","viewer.finder.result.focus.other":"Focus {label}, {count} related connections","viewer.finder.status.filtered":"{visible} of {available} {noun}","viewer.finder.status.all":"{available} {noun}","viewer.passport.eyebrow":"Semantic passport","viewer.passport.metadata":"Node metadata","viewer.passport.evidence":"Verified source evidence","viewer.passport.verified":"Verified source","viewer.passport.verificationScope":"Verified against local Git at the pinned revision. Remote access has not been checked.","viewer.passport.reach":"Authored reach","viewer.passport.reach.trace":"Trace authored reachability","viewer.passport.upstream":"Upstream","viewer.passport.downstream":"Downstream","viewer.passport.upstream.trace":"Trace upstream authored reachability","viewer.passport.downstream.trace":"Trace downstream authored reachability","viewer.passport.close":"Close semantic passport","viewer.passport.move":"Move semantic passport. Drag, use arrow keys, or press Home to reset.","viewer.passport.copy":"Copy link","viewer.passport.copy.focus":"Copy link to focused node","viewer.passport.relations":"Relations","viewer.passport.relations.show":"Show connected relationships","viewer.passport.relations.hide":"Hide connected relationships","viewer.passport.relations.list":"Connected relationships","viewer.passport.copyRelation":"Copy relation","viewer.passport.copyNode":"Copy node","viewer.passport.copyPinned":"Copy link to pinned relationship","viewer.passport.copySource":"Copy link to source node","viewer.passport.copy.focused.success":"Focused node link copied","viewer.passport.copy.pinned.success":"Pinned relationship link copied","viewer.passport.copy.focused.failed":"Could not copy focused node link","viewer.passport.copy.pinned.failed":"Could not copy pinned relationship link","viewer.passport.relationship.none":"No connected relationships","viewer.passport.relationship.count.one":"{count} relation","viewer.passport.relationship.count.other":"{count} relations","viewer.passport.relationship.show.one":"Show {count} connected relationship","viewer.passport.relationship.show.other":"Show {count} connected relationships","viewer.passport.relationship.summary":"{out} outgoing · {in} incoming{loops}","viewer.passport.relationship.loops":" · {count} loop","viewer.passport.relationship.explorer":"Direct relationship explorer","viewer.passport.relationship.help":"Use arrow keys to explore relationships. Press Enter or Space to pin details; Escape clears.","viewer.passport.relationship.loopsBack":"loops back","viewer.passport.relationship.connectsTo":"connects to","viewer.passport.relationship.connectsFrom":"connects from","viewer.passport.relationship.pinned":"Pinned relationship · {from} → {to} · {label}","viewer.passport.relationship.inspect":"Inspect relationship {index} of {total}: {from} to {to}, {label}. Press Enter for details.","viewer.passport.relationship.group.out":"Outgoing","viewer.passport.relationship.group.in":"Incoming","viewer.passport.relationship.group.loop":"Self loops","viewer.passport.relationship.row":"{group}: {relationship}, {neighbor}","viewer.passport.relationship.direction.out":"OUT →","viewer.passport.relationship.direction.in":"← IN","viewer.passport.relationship.direction.loop":"LOOP","viewer.passport.sourceCount.one":"{count} verified source reference","viewer.passport.sourceCount.other":"{count} verified source references","viewer.passport.repository.open":"Open verified repository revision {revision}","viewer.passport.source.open":"Open verified source {path} at revision {revision}","viewer.passport.source.openLink":"Open ↗","viewer.passport.reach.upstream.one":"Trace {count} upstream authored node","viewer.passport.reach.upstream.other":"Trace {count} upstream authored nodes","viewer.passport.reach.downstream.one":"Trace {count} downstream authored node","viewer.passport.reach.downstream.other":"Trace {count} downstream authored nodes","viewer.passport.reach.noUpstream":"No upstream authored nodes","viewer.passport.reach.noDownstream":"No downstream authored nodes","viewer.passport.reach.status":"{direction} · {nodes} nodes · {links} links · max {hops} hops","viewer.route.eyebrow":"Path","viewer.route.start":"Click where the path starts","viewer.route.start.find":"Find start","viewer.route.start.find.aria":"Find a route start","viewer.route.copy":"Copy link","viewer.route.copy.aria":"Copy link to traced route","viewer.route.clear":"Clear","viewer.route.clear.aria":"Clear route probe","viewer.route.traced":"Path","viewer.route.pickTwo":"Click two nodes on the diagram","viewer.route.pickOne":"Click a node on the diagram","viewer.route.controls":"Route journey controls","viewer.route.previous":"Previous route position","viewer.route.play":"Play route journey","viewer.route.pause":"Pause route journey","viewer.route.replay":"Replay route journey","viewer.route.next":"Next route position","viewer.route.journey":"Journey","viewer.route.pause.label":"Pause","viewer.route.replay.label":"Replay","viewer.route.overview":"Overview","viewer.route.overview.aria":"Show complete route overview","viewer.route.instructions":"Click a start, then an end. Paths follow the arrows.","viewer.route.destination":"Where does the path from {label} end?","viewer.route.destination.find":"Find target","viewer.route.destination.find.aria":"Find a reachable route destination","viewer.route.differentDestination":"Choose a different destination","viewer.route.distinct":"Pick two different nodes.","viewer.route.unreachable":"Cannot reach {label} from here","viewer.route.unreachable.detail":"{target} cannot be reached from {source} along the arrows. Pick a highlighted node.","viewer.route.start.instructions":"Next, pick the end. Only nodes you can reach will light up.","viewer.route.copy.success":"Traced route link copied","viewer.route.copy.failed":"Could not copy traced route link","viewer.route.position":"Route position {index} of {total}: {label}","viewer.route.step":"Step {index} of {total} · {phase} · {label}","viewer.route.motionRequired":"Automatic journey requires Live motion","viewer.route.trigger.clear":"Clear traced route","viewer.route.overview.status":"{nodes} · {hops} · shortest path","viewer.route.overview.node.one":"{count} node","viewer.route.overview.node.other":"{count} nodes","viewer.route.overview.hop.one":"{count} step","viewer.route.overview.hop.other":"{count} steps","viewer.route.phase.playing":"Playing","viewer.route.phase.complete":"Complete","viewer.route.phase.inspecting":"Inspecting","viewer.route.destination.count.one":"{count} reachable node is highlighted. Click it.","viewer.route.destination.count.other":"{count} reachable nodes are highlighted. Click one.","viewer.route.noOutgoing":"No arrows lead out of this node. Clear it and pick another start.","viewer.route.result.title":"{source} to {target}","viewer.route.finder.source.title":"Choose route start","viewer.route.finder.source.placeholder":"Search route sources","viewer.route.finder.source.empty":"No matching route sources","viewer.route.finder.source.results":"Nodes that can start a route","viewer.route.finder.source.noun":"route sources","viewer.route.finder.source.badge":"start","viewer.route.finder.target.title":"Destination from {label}","viewer.route.finder.target.placeholder":"Search reachable destinations","viewer.route.finder.target.empty":"No matching reachable destinations","viewer.route.finder.target.results":"Reachable route destinations","viewer.route.finder.target.noun":"reachable destinations","viewer.route.hop.one":"{count} hop","viewer.route.hop.other":"{count} hops","viewer.lens.eyebrow":"Semantic lens","viewer.lens.title":"Compare system roles","viewer.lens.close":"Close semantic lens","viewer.lens.instruction":"Choose up to two semantic kinds. One reveals its real traffic; two compare only direct authored relationships.","viewer.lens.kinds":"Semantic kinds","viewer.lens.choose":"Choose a kind to inspect its nodes and touching relationships.","viewer.lens.copy":"Copy link to semantic lens","viewer.lens.clear":"Clear semantic lens","viewer.lens.open":"Open semantic lens","viewer.lens.openActive":"Open active semantic lens","viewer.lens.legend":"Semantic legend","viewer.lens.legend.inspect.one":"Inspect {label}, {count} node","viewer.lens.legend.inspect.other":"Inspect {label}, {count} nodes","viewer.lens.kind.count.one":"{label}, {count} node","viewer.lens.kind.count.other":"{label}, {count} nodes","viewer.lens.compare.one":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationship","viewer.lens.compare.other":"{first} → {second}: {forward} · {second} → {first}: {reverse} · {count} direct relationships","viewer.lens.single":"{nodes} · {relationships} · connected peers remain visible","viewer.lens.node.one":"{count} {label} node","viewer.lens.node.other":"{count} {label} nodes","viewer.lens.relationship.one":"{count} touching relationship","viewer.lens.relationship.other":"{count} touching relationships","viewer.radar.title":"Semantic radar","viewer.radar.building":"Building overview","viewer.radar.openFull":"Open full semantic radar","viewer.radar.open":"Open radar","viewer.radar.close":"Close semantic radar","viewer.radar.surface":"Diagram overview. Click a node to focus it, or use arrow keys to pan.","viewer.radar.click":"Click node","viewer.radar.drag":"Drag to pan","viewer.radar.space":"Semantic radar needs more MAP space.","viewer.radar.nodes":"Semantic diagram radar nodes","viewer.radar.focus":"Focus {label} from Semantic Radar","viewer.radar.status":"{count} nodes · {viewport}","viewer.radar.fullMap":"{count} nodes · full map","viewer.radar.compacted":"Radar compacted to avoid covering the Semantic Passport or MAP controls.","viewer.radar.cancelWaiting":"Cancel semantic radar waiting for more MAP space","viewer.radar.needsSpace":"Semantic radar needs more visible MAP space","viewer.radar.viewport.full":"full map","viewer.radar.viewport.width":"{percent}% width","viewer.radar.viewport.scale":"{percent}% viewport","viewer.nav.controls":"Diagram view controls","viewer.nav.route":"Trace a directed route","viewer.nav.route.title":"Trace route (R)","viewer.nav.route.short":"ROUTE","viewer.nav.radar":"Open semantic radar","viewer.nav.radar.title":"Semantic radar (M)","viewer.nav.radar.short":"MAP","viewer.nav.lens":"Open semantic lens","viewer.nav.lens.title":"Semantic lens (L)","viewer.nav.lens.short":"LENS","viewer.nav.find":"Find a node","viewer.nav.find.title":"Find a node (/)","viewer.outline.title":"Node index","viewer.rail.show":"Notes \u0026 index","viewer.rail.controls":"Side panel","viewer.rail.collapse":"Collapse side panel","viewer.rail.bottom":"Move panel below the diagram","viewer.rail.right":"Move panel beside the diagram","viewer.nav.guide":"Open diagram guide","viewer.nav.guide.title":"Diagram guide (?)","viewer.nav.zoomOut":"Zoom out","viewer.nav.zoomOut.title":"Zoom out (-)","viewer.nav.reset":"Reset diagram view","viewer.nav.reset.title":"Reset view (0)","viewer.nav.read":"READ","viewer.nav.zoomIn":"Zoom in","viewer.nav.zoomIn.title":"Zoom in (+)","viewer.nav.camera":"{hint}. Reset diagram view","viewer.nav.camera.title":"{semantic}{hint} · reset view (0)","viewer.nav.camera.semantic":"Semantic camera active · ","viewer.nav.level.map":"MAP","viewer.nav.level.read":"READ","viewer.nav.level.full":"FULL","viewer.nav.level.auto":"AUTO","viewer.nav.detail.map":"Zoom in to reveal relationship labels and node context","viewer.nav.detail.read":"Zoom in again to reveal tags and annotations","viewer.nav.detail.full":"Full diagram detail","viewer.intent.summary":"{label}. {out} outgoing, {in} incoming{loops}. {total} connections. Press Enter for details.","viewer.intent.loops":", {count} self loop","viewer.common.copied":"Copied","viewer.common.copyFailed":"Copy failed","viewer.common.copyLink":"Copy link","viewer.common.clear":"Clear","viewer.common.close":"Close"}}</script>
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PLATE 04">
-      <svg viewBox="0 0 999 488" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-erd-ui="cards" data-reader-fit="intrinsic-height" data-reader-min-text="7.5">
+      <svg viewBox="0 0 999 488" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="hadrian" data-quality-profile="showcase" data-erd-ui="cards" data-reader-fit="intrinsic-height" data-reader-min-text="7.5">
         <title id="archify-diagram-title">Order management schema</title>
         <desc id="archify-diagram-description">An entity-relationship diagram generated by Archify.</desc>
         <!-- Definitions -->
@@ -6012,14 +6296,20 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     }
 
     /* ============================================================
-       Visual style try-on — one topology, four bundled presets.
+       Visual style try-on — one topology, five bundled presets.
        The reader's choice is intentionally session-only: it updates the
        live page and canonical SVG together, but never rewrites the source,
        URL, or a later diagram's authored default.
+       The Hadrian fork offers Hadrian and Editorial in the picker; the
+       upstream classic, signal-flow and blueprint presets stay authorable
+       through meta.visual_preset and appear in the picker only when a
+       document was authored with one of them.
        ============================================================ */
     Archify.preset = (function () {
-      var PRESETS = ['classic', 'signal-flow', 'blueprint', 'editorial'];
+      var KNOWN = ['hadrian', 'classic', 'signal-flow', 'blueprint', 'editorial'];
+      var PRESETS = ['hadrian', 'editorial'];
       var LABELS = {
+        hadrian: viewerText('viewer.preset.hadrian'),
         classic: viewerText('viewer.preset.classic.short'),
         'signal-flow': viewerText('viewer.preset.flow.short'),
         blueprint: viewerText('viewer.preset.blueprint'),
@@ -6031,11 +6321,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       var label = document.getElementById('preset-label');
       var menu = document.getElementById('preset-menu');
       var options = function () {
-        return Array.prototype.slice.call(menu.querySelectorAll('[data-preset-value]'));
+        return Array.prototype.slice.call(menu.querySelectorAll('[data-preset-value]')).filter(function (option) {
+          return !option.hidden;
+        });
       };
-      var authored = PRESETS.indexOf(html.getAttribute('data-preset')) >= 0
+      var authored = KNOWN.indexOf(html.getAttribute('data-preset')) >= 0
         ? html.getAttribute('data-preset')
-        : 'classic';
+        : 'hadrian';
+      if (PRESETS.indexOf(authored) < 0) {
+        PRESETS.push(authored);
+        var authoredOption = menu.querySelector('[data-preset-value="' + authored + '"]');
+        if (authoredOption) authoredOption.hidden = false;
+      }
 
       function current() {
         var value = html.getAttribute('data-preset');
@@ -6046,7 +6343,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function apply(preset) {
         if (html.getAttribute('data-embed') === 'true') return false;
-        if (PRESETS.indexOf(preset) < 0) return false;
+        if (KNOWN.indexOf(preset) < 0) return false;
         html.setAttribute('data-preset', preset);
         svg.setAttribute('data-preset', preset);
         btn.setAttribute('data-preset-option', preset);
@@ -6683,7 +6980,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         function resolveVars(themeAttr) {
           var probe = document.createElement('div');
           probe.setAttribute('data-theme', themeAttr);
-          probe.setAttribute('data-preset', document.documentElement.getAttribute('data-preset') || 'classic');
+          probe.setAttribute('data-preset', document.documentElement.getAttribute('data-preset') || 'hadrian');
           probe.style.cssText = 'position:absolute;width:0;height:0;visibility:hidden;';
           document.body.appendChild(probe);
           try {

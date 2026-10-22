@@ -306,8 +306,8 @@
     } catch {}
     return false;
   }
-  // The Viewer follows the page's theme, and its editorial preset matches the editorial style.
-  function sendViewer() { if(!viewer?.ready) return; viewer.frame.contentWindow.postMessage({kind:'archify-explainer-host',token:viewer.token,theme:root.dataset.theme,preset:root.dataset.style === 'editorial' ? 'editorial' : 'classic',hash:viewer.hash,nodes:viewer.nodes,edges:viewer.edges},'*'); }
+  // The Viewer follows the page's theme; the editorial style maps to the editorial preset and every other style to Hadrian.
+  function sendViewer() { if(!viewer?.ready) return; viewer.frame.contentWindow.postMessage({kind:'archify-explainer-host',token:viewer.token,theme:root.dataset.theme,preset:root.dataset.style === 'editorial' ? 'editorial' : 'hadrian',hash:viewer.hash,nodes:viewer.nodes,edges:viewer.edges},'*'); }
   function openViewer(id,hash,opener) {
     const diagram = diagrams[id];
     if(!diagram || !validHash(diagram,hash)) { notify(say('Diagram target unavailable.')); return; }
@@ -348,7 +348,7 @@
         const data=event.data;
         if(event.source!==parent||data?.kind!=='archify-explainer-host'||data.token!==token)return;
         if(['light','dark'].includes(data.theme))document.documentElement.dataset.theme=data.theme;
-        if(['classic','editorial'].includes(data.preset))window.Archify?.preset?.apply?.(data.preset);
+        if(['hadrian','editorial'].includes(data.preset))window.Archify?.preset?.apply?.(data.preset);
         if(typeof data.hash!=='string'||!/^(?:|focus=[^&]+|route=[^&]+~[^&]+)$/.test(data.hash))return;
         pending=data;
         if(location.hash.slice(1)===data.hash)dispatchEvent(new HashChangeEvent('hashchange'));

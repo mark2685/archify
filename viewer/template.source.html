@@ -169,6 +169,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   <style>
 /* ARCHIFY:VIEWER_CSS */
   </style>
+  <style>
+/* ARCHIFY:HADRIAN_CSS */
+  </style>
 </head>
 <body>
   <!-- Toolbar: theme, live visual style, trace motion, presentation stage, and export.
@@ -197,17 +200,22 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       </button>
       <div class="preset-menu" id="preset-menu" role="menu" aria-label="{{i18n:viewer.preset.menu}}">
         <div class="preset-menu-heading" role="presentation"><span>{{i18n:viewer.preset.identity}}</span><span class="preset-menu-shortcut"><kbd>S</kbd>{{i18n:viewer.preset.cycles}}</span></div>
-        <button class="preset-option" data-preset-value="classic" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+        <button class="preset-option" data-preset-value="hadrian" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+          <span class="preset-option-swatch hadrian" aria-hidden="true"></span>
+          <span class="preset-option-copy"><strong>{{i18n:viewer.preset.hadrian}}</strong><small>{{i18n:viewer.preset.hadrian.hint}}</small></span>
+          <span class="preset-option-check" aria-hidden="true"></span>
+        </button>
+        <button class="preset-option" data-preset-value="classic" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" hidden>
           <span class="preset-option-swatch classic" aria-hidden="true"></span>
           <span class="preset-option-copy"><strong>{{i18n:viewer.preset.classic}}</strong><small>{{i18n:viewer.preset.classic.hint}}</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
-        <button class="preset-option" data-preset-value="signal-flow" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+        <button class="preset-option" data-preset-value="signal-flow" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" hidden>
           <span class="preset-option-swatch signal-flow" aria-hidden="true"></span>
           <span class="preset-option-copy"><strong>{{i18n:viewer.preset.flow}}</strong><small>{{i18n:viewer.preset.flow.hint}}</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
         </button>
-        <button class="preset-option" data-preset-value="blueprint" type="button" role="menuitemradio" aria-checked="false" tabindex="-1">
+        <button class="preset-option" data-preset-value="blueprint" type="button" role="menuitemradio" aria-checked="false" tabindex="-1" hidden>
           <span class="preset-option-swatch blueprint" aria-hidden="true"></span>
           <span class="preset-option-copy"><strong>{{i18n:viewer.preset.blueprint}}</strong><small>{{i18n:viewer.preset.blueprint.hint}}</small></span>
           <span class="preset-option-check" aria-hidden="true"></span>
@@ -755,14 +763,20 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     }
 
     /* ============================================================
-       Visual style try-on — one topology, four bundled presets.
+       Visual style try-on — one topology, five bundled presets.
        The reader's choice is intentionally session-only: it updates the
        live page and canonical SVG together, but never rewrites the source,
        URL, or a later diagram's authored default.
+       The Hadrian fork offers Hadrian and Editorial in the picker; the
+       upstream classic, signal-flow and blueprint presets stay authorable
+       through meta.visual_preset and appear in the picker only when a
+       document was authored with one of them.
        ============================================================ */
     Archify.preset = (function () {
-      var PRESETS = ['classic', 'signal-flow', 'blueprint', 'editorial'];
+      var KNOWN = ['hadrian', 'classic', 'signal-flow', 'blueprint', 'editorial'];
+      var PRESETS = ['hadrian', 'editorial'];
       var LABELS = {
+        hadrian: viewerText('viewer.preset.hadrian'),
         classic: viewerText('viewer.preset.classic.short'),
         'signal-flow': viewerText('viewer.preset.flow.short'),
         blueprint: viewerText('viewer.preset.blueprint'),
@@ -774,11 +788,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       var label = document.getElementById('preset-label');
       var menu = document.getElementById('preset-menu');
       var options = function () {
-        return Array.prototype.slice.call(menu.querySelectorAll('[data-preset-value]'));
+        return Array.prototype.slice.call(menu.querySelectorAll('[data-preset-value]')).filter(function (option) {
+          return !option.hidden;
+        });
       };
-      var authored = PRESETS.indexOf(html.getAttribute('data-preset')) >= 0
+      var authored = KNOWN.indexOf(html.getAttribute('data-preset')) >= 0
         ? html.getAttribute('data-preset')
-        : 'classic';
+        : 'hadrian';
+      if (PRESETS.indexOf(authored) < 0) {
+        PRESETS.push(authored);
+        var authoredOption = menu.querySelector('[data-preset-value="' + authored + '"]');
+        if (authoredOption) authoredOption.hidden = false;
+      }
 
       function current() {
         var value = html.getAttribute('data-preset');
@@ -789,7 +810,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       }
       function apply(preset) {
         if (html.getAttribute('data-embed') === 'true') return false;
-        if (PRESETS.indexOf(preset) < 0) return false;
+        if (KNOWN.indexOf(preset) < 0) return false;
         html.setAttribute('data-preset', preset);
         svg.setAttribute('data-preset', preset);
         btn.setAttribute('data-preset-option', preset);

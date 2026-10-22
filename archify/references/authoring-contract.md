@@ -124,10 +124,12 @@ domain wording, and keep that authored override in the primary language.
 ## Visual preset default
 
 Omit `meta.visual_preset` by default. The renderer then opens the diagram in
-`classic` for both light and dark color modes. Color mode and visual preset are
-independent viewer state: switching Light / Dark must preserve the current
-preset. Author `signal-flow`, `blueprint`, or `editorial` only when the user
-explicitly requests that visual style.
+`hadrian`, the Hadrian brand style, for both light and dark color modes. Color
+mode and visual preset are independent viewer state: switching Light / Dark
+must preserve the current preset. Author `editorial`, `classic`, `signal-flow`,
+or `blueprint` only when the user explicitly requests that visual style; the
+Viewer's style picker offers Hadrian and Editorial, and shows one of the other
+three only when the document was authored with it.
 
 ## Engineering profile default
 

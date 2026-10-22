@@ -54,6 +54,7 @@
         },
         "visual_preset": {
           "enum": [
+            "hadrian",
             "classic",
             "signal-flow",
             "blueprint",
