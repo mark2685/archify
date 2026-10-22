@@ -478,7 +478,10 @@ for (const [name, mutate, expectedSha256] of [
     assert.equal(result.status, name === 'explicit-viewbox' ? 1 : 0, result.stdout + result.stderr);
     const render = spawnSync(process.execPath, [cli, 'render', 'dataflow', input, output], { encoding: 'utf8', env });
     assert.equal(render.status, 0, render.stderr);
+    // The frozen bytes predate the Hadrian fork's default preset; geometry is
+    // unchanged, so the default preset attribute is normalized to upstream's.
     const svg = fs.readFileSync(output, 'utf8').match(/<svg\b[^]*?<\/svg>/)[0]
+      .replace(/ data-preset="hadrian"/g, ' data-preset="classic"')
       .replace(/ data-animation="trace"/g, '')
       .replace(/ data-motion-choreography="stream"/g, '')
       .replace(/ data-animate="(?:node|edge)" style="--step:[^"]*"/g, '');

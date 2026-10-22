@@ -11,6 +11,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { sameEntry } from '../archify/renderers/shared/path-semantics.mjs';
 
 const scriptRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -75,7 +76,7 @@ export function scan(repoRoot) {
   return { violations, stale, allowed: [...allowed.keys()] };
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && sameEntry(process.argv[1], fileURLToPath(import.meta.url)).status === 'match') {
   const { violations, stale } = scan(root);
   if (list) {
     for (const { file, hits } of violations) console.log(`${file}: ${hits.length} line(s)`);
