@@ -68,7 +68,7 @@ test('update awareness is notification-only and never replaces the requested wor
 test('language behavior stays within the bounded locale contract', () => {
   assert.match(defaults, /one primary authored language/);
   assert.match(defaults, /user's choice or the request\/conversation/);
-  assert.match(defaults, /`en`, `zh-CN`, `zh-TW`, `es`, `ko`, and `ar` select a bundled Viewer catalog/);
+  assert.match(defaults, /`en` selects the bundled Viewer catalog/);
   assert.match(defaults, /meta\.translations/);
   assert.match(defaults, /exact product, code, protocol, command, API, and environment names/);
   assert.match(defaults, /Language consistency\]\(authoring-contract\.md#language-consistency\)/);
@@ -78,7 +78,7 @@ test('language behavior stays within the bounded locale contract', () => {
   assert.match(authoringContract, /For a language without a bundled catalog, supply the catalog here/);
   assert.match(authoringContract, /Reuse suitable translations/);
   assert.match(authoringContract, /artifact is\s+not fully localized/);
-  assert.match(authoringContract, /Do not silently substitute\s+`zh-CN` for another language or Chinese locale/);
+  assert.match(authoringContract, /Do not silently substitute\s+one locale for another/);
   assert.match(authoringContract, /It never translates authored content/);
   assert.match(authoringContract, /Renderer-owned default legend labels follow `meta\.locale`/);
   assert.match(authoringContract, /The fallback\s+applies only to renderer-owned surfaces/);

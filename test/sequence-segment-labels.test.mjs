@@ -261,7 +261,7 @@ test('the unedited payment draft reports its note overlap with a valid spacing r
 function neutralTitleDraft() {
   return {
     schema_version: 1, diagram_type: 'sequence',
-    meta: { title: 'Segment title clearance probe', output: 'diagram.html', quality_profile: 'showcase', locale: 'zh-CN' },
+    meta: { title: 'Segment title clearance probe', output: 'diagram.html', quality_profile: 'showcase', locale: 'en' },
     participants: [
       { id: 'a', type: 'external', label: '甲方' },
       { id: 'b', type: 'backend', label: '乙方' },

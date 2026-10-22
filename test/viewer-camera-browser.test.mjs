@@ -54,9 +54,11 @@ test('Camera accessible names retain the visible readout after native actions', 
     }
   }
   for (const [mode, example] of Object.entries(cases)) {
-    for (const locale of ['en', 'zh-CN']) {
+    for (const locale of ['en', 'xx']) {
       const candidate = JSON.parse(fs.readFileSync(path.join(skillRoot, 'examples', example), 'utf8'));
       candidate.meta.locale = locale;
+      // The fork bundles English only; the second pass supplies a catalog.
+      if (locale !== 'en') candidate.meta.translations = { 'viewer.nav.zoomIn': 'Enlarge', 'viewer.nav.zoomIn.title': 'Enlarge (+)' };
       const input = path.join(scratch, `${mode}-${locale}.json`);
       const artifact = path.join(scratch, `${mode}-${locale}.html`);
       fs.writeFileSync(input, JSON.stringify(candidate));

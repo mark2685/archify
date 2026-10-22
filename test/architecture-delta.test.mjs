@@ -232,7 +232,7 @@ test('compare reports icon-only changes in the receipt and exact review target',
 
 test('compare reports locale-only changes as presentation changes', () => {
   const head = read(baseFixture);
-  head.meta.locale = 'zh-CN';
+  head.meta.locale = 'en-GB';
   const headPath = path.join(tmp, 'locale-head.json');
   const output = path.join(tmp, 'locale-delta.html');
   fs.writeFileSync(headPath, JSON.stringify(head));

@@ -6,11 +6,12 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { ChromeVisualBrowser, findChrome, runVisualCheck } from '../archify/bin/visual-check.mjs';
 import {
-  skillRoot, cli, EXAMPLES, example, localeDocument, FR_PARTIAL_TRANSLATIONS, createLocaleFixture,
+  EXAMPLES, example, localeDocument, createLocaleFixture,
+  PSEUDO_LOCALE, PSEUDO_MARKER, PSEUDO_TRANSLATIONS, PSEUDO_PARTIAL_TRANSLATIONS, EN_TRANSLATIONS,
 } from './helpers/i18n-fixture.mjs';
 
 const chromePath = process.env.ARCHIFY_CHROME ? findChrome() : null;
-const { tmp, run, deliverKoreanFixture, deliverJapaneseFixture, cliJson } = createLocaleFixture();
+const { tmp, run, cliJson } = createLocaleFixture();
 
 async function evaluate(browser, sessionId, expression, awaitPromise = false) {
   const response = await browser.cdp.send('Runtime.evaluate', {
@@ -46,64 +47,12 @@ async function loadArtifact(browser, artifactPath) {
   return sessionId;
 }
 
-test('visual-check binds the delivered Korean fixture to viewport and theme receipts', {
-  skip: chromePath ? false : 'Set ARCHIFY_CHROME to collect artifact-bound visual-check evidence for the Korean fixture.',
-}, () => {
-  const { artifact, delivery } = deliverKoreanFixture();
-  const visual = spawnSync(process.execPath, [cli, 'visual-check', artifact, '--json'], {
-    cwd: skillRoot,
-    encoding: 'utf8',
-    env: { ...process.env, ARCHIFY_CHROME: chromePath },
-  });
-  assert.ok([0, 1].includes(visual.status), visual.stderr || visual.stdout);
-  const receipt = JSON.parse(visual.stdout);
-  assert.equal(receipt.command, 'visual-check');
-  assert.equal(receipt.visualReview, 'pending');
-  assert.equal(receipt.chrome.status, 'available');
-  assert.equal(receipt.readability.status, 'pass');
-  assert.equal(receipt.viewerChrome.status, 'pass');
-  assert.equal(receipt.captures.status, 'pass');
-  assert.equal(receipt.artifact.sha256, delivery.artifact.sha256);
-  assert.equal(receipt.artifact.bytes, delivery.artifact.bytes);
-  assert.equal(
-    receipt.containment.viewports.every((viewport) => viewport.overflowX === false),
-    true,
-    'Korean fixture introduced horizontal overflow',
-  );
-});
-
-test('visual-check binds the delivered Japanese fixture to viewport and theme receipts', {
-  skip: chromePath ? false : 'Set ARCHIFY_CHROME to collect artifact-bound visual-check evidence for the Japanese fixture.',
-}, () => {
-  const { artifact, delivery } = deliverJapaneseFixture();
-  const visual = spawnSync(process.execPath, [cli, 'visual-check', artifact, '--json'], {
-    cwd: skillRoot,
-    encoding: 'utf8',
-    env: { ...process.env, ARCHIFY_CHROME: chromePath },
-  });
-  assert.ok([0, 1].includes(visual.status), visual.stderr || visual.stdout);
-  const receipt = JSON.parse(visual.stdout);
-  assert.equal(receipt.command, 'visual-check');
-  assert.equal(receipt.visualReview, 'pending');
-  assert.equal(receipt.chrome.status, 'available');
-  assert.equal(receipt.readability.status, 'pass');
-  assert.equal(receipt.viewerChrome.status, 'pass');
-  assert.equal(receipt.captures.status, 'pass');
-  assert.equal(receipt.artifact.sha256, delivery.artifact.sha256);
-  assert.equal(receipt.artifact.bytes, delivery.artifact.bytes);
-  assert.equal(
-    receipt.containment.viewports.every((viewport) => viewport.overflowX === false),
-    true,
-    'Japanese fixture introduced horizontal overflow',
-  );
-});
-
 test('a passing finalize keeps locale warnings in its receipt', {
   skip: chromePath ? false : 'Set ARCHIFY_CHROME to run finalize with its browser gate.',
 }, () => {
-  const input = path.join(tmp, 'finalize-fr.json');
-  fs.writeFileSync(input, JSON.stringify(localeDocument('architecture', { locale: 'fr', translations: FR_PARTIAL_TRANSLATIONS })));
-  const summary = cliJson(['finalize', 'architecture', input, path.join(tmp, 'finalize-fr.html'), '--quality', 'showcase', '--json']);
+  const input = path.join(tmp, 'finalize-xx.json');
+  fs.writeFileSync(input, JSON.stringify(localeDocument('architecture', { locale: PSEUDO_LOCALE, translations: PSEUDO_PARTIAL_TRANSLATIONS })));
+  const summary = cliJson(['finalize', 'architecture', input, path.join(tmp, 'finalize-xx.html'), '--quality', 'showcase', '--json']);
   assert.equal(summary.ok, true);
   assert.equal(summary.status, 'pass');
   assert.deepEqual(summary.diagnostics.map((entry) => entry.code), ['i18n/translation-coverage']);
@@ -111,74 +60,32 @@ test('a passing finalize keeps locale warnings in its receipt', {
   assert.deepEqual(full.diagnostics.map((entry) => entry.code), ['i18n/translation-coverage']);
 });
 
+// Expected chrome for the pseudo-locale is derived from the canonical catalog,
+// so a renamed key fails here instead of silently passing with stale copy.
+const t = (key, values = {}) => PSEUDO_TRANSLATIONS[key].replace(/\{(\w+)\}/g, (_, name) => values[name]);
 const BROWSER_LOCALES = {
-  'zh-CN': {
-    title: (type) => `浏览器本地化-${type}`,
-    toolbarLabel: '图表视图控制',
-    finder: { hidden: false, title: '查找节点', searchLabel: '搜索图表节点' },
-    route: { hidden: false, title: '点击路径的起点', label: '清除已追踪路径' },
-    exportLabel: '导出图表',
-    exportMenuLabel: '导出',
-    exportMenuText: /复制图表/,
+  [PSEUDO_LOCALE]: {
+    title: (type) => `Browser localization ${type}`,
+    toolbarLabel: t('viewer.nav.controls'),
+    finder: { hidden: false, title: t('viewer.finder.title'), searchLabel: t('viewer.finder.search') },
+    route: { hidden: false, title: t('viewer.route.start'), label: t('viewer.route.trigger.clear') },
+    exportLabel: t('viewer.export.diagram'),
+    exportMenuLabel: t('viewer.export.menu'),
+    exportMenuText: new RegExp(PSEUDO_MARKER.replace('[', '\\[') + EN_TRANSLATIONS['viewer.export.copyDiagram']),
     presetBadges: {
-      'signal-flow': { header: '信号流', plate: 'none' },
-      blueprint: { header: '蓝图 / 修订 01', plate: '' },
-      editorial: { header: '编辑风格 / 现场笔记', plate: 'ARCHIFY / 图版 04' },
+      'signal-flow': { header: t('viewer.preset.badge.signalFlow'), plate: 'none' },
+      blueprint: { header: t('viewer.preset.badge.blueprint'), plate: '' },
+      editorial: { header: t('viewer.preset.badge.editorial'), plate: t('viewer.preset.badge.editorialPlate') },
     },
-    shareCardFailure: '无法为分享卡片创建二维画布上下文',
+    shareCardFailure: t('viewer.export.error.contextUnavailable', { label: t('viewer.export.shareCard') }),
   },
-  es: {
-    title: (type) => `Localización del navegador-${type}`,
-    toolbarLabel: 'Controles de vista del diagrama',
-    finder: { hidden: false, title: 'Buscar un nodo', searchLabel: 'Buscar nodos del diagrama' },
-    route: { hidden: false, title: 'Haz clic donde empieza la ruta', label: 'Borrar la ruta trazada' },
-    exportLabel: 'Exportar diagrama',
-    exportMenuLabel: 'Exportar',
-    exportMenuText: /Copiar diagrama/,
-    presetBadges: {
-      'signal-flow': { header: 'FLUJO DE SEÑAL', plate: 'none' },
-      blueprint: { header: 'PLANO / REV 01', plate: '' },
-      editorial: { header: 'EDITORIAL / NOTA DE CAMPO', plate: 'ARCHIFY / LÁMINA 04' },
-    },
-    shareCardFailure: 'Contexto de lienzo 2D no disponible para Tarjeta para compartir',
-  },
-  ko: {
-    title: (type) => `브라우저 로케일-${type}`,
-    toolbarLabel: '다이어그램 보기 제어',
-    finder: { hidden: false, title: '노드 찾기', searchLabel: '다이어그램 노드 검색' },
-    route: { hidden: false, title: '시작 노드 선택', label: '추적된 경로 지우기' },
-    exportLabel: '다이어그램 내보내기',
-    exportMenuLabel: '내보내기',
-    exportMenuText: /다이어그램 복사/,
-    presetBadges: {
-      'signal-flow': { header: '시그널 플로우', plate: 'none' },
-      blueprint: { header: '블루프린트 / 개정 01', plate: '' },
-      editorial: { header: '에디토리얼 / 현장 노트', plate: 'ARCHIFY / 도판 04' },
-    },
-    shareCardFailure: '공유 카드에 2D 캔버스 컨텍스트를 만들 수 없습니다',
-  },
-  ar: {
-    title: (type) => `API Gateway · مخطّط-${type}`,
-    toolbarLabel: 'أدواتُ عرض المخطّط',
-    finder: { hidden: false, title: 'ابحث عن عقدة', searchLabel: 'ابحث في عُقد المخطّط' },
-    route: { hidden: false, title: 'انقر حيث يبدأ المسار', label: 'امسح المسار المتتبَّع' },
-    exportLabel: 'تصدير المخطّط',
-    exportMenuLabel: 'تصدير',
-    exportMenuText: /انسخ المخطّط/,
-    presetBadges: {
-      'signal-flow': { header: 'تدفّق الإشارة', plate: 'none' },
-      blueprint: { header: 'مخطّط هندسي / إصدار ٠١', plate: '' },
-      editorial: { header: 'تحريري / ملاحظة ميدانية', plate: 'ARCHIFY / لوحة ٠٤' },
-    },
-    shareCardFailure: 'سياقُ لوحة الرسم ثنائيِّ الأبعاد غير متاح لـبطاقة مشاركة',
-  },
-
 };
 
 async function assertLocalizedViewer(browser, locale, expected) {
   for (const type of Object.keys(EXAMPLES)) {
     const document = example(type);
     document.meta.locale = locale;
+    document.meta.translations = PSEUDO_TRANSLATIONS;
     const authoredTitle = expected.title(type);
     document.meta.title = authoredTitle;
     const result = run(type, document);
@@ -285,45 +192,12 @@ async function assertLocalizedViewer(browser, locale, expected) {
   }
 }
 
-test('real Chrome keeps zh-CN Finder, Route, Export, and accessibility UI localized in all five modes', {
+test('real Chrome keeps supplied-catalog Finder, Route, Export, and accessibility UI localized in all five modes', {
   skip: chromePath ? false : 'Set ARCHIFY_CHROME to run the real browser localization regression.',
 }, async () => {
   const browser = new ChromeVisualBrowser(chromePath);
   try {
-    await assertLocalizedViewer(browser, 'zh-CN', BROWSER_LOCALES['zh-CN']);
-  } finally {
-    await browser.close();
-  }
-});
-
-test('real Chrome keeps es Finder, Route, Export, and accessibility UI localized in all five modes', {
-  skip: chromePath ? false : 'Set ARCHIFY_CHROME to run the real browser localization regression.',
-}, async () => {
-  const browser = new ChromeVisualBrowser(chromePath);
-  try {
-    await assertLocalizedViewer(browser, 'es', BROWSER_LOCALES.es);
-  } finally {
-    await browser.close();
-  }
-});
-
-test('real Chrome keeps ko Finder, Route, Export, and accessibility UI localized in all five modes', {
-  skip: chromePath ? false : 'Set ARCHIFY_CHROME to run the real browser localization regression.',
-}, async () => {
-  const browser = new ChromeVisualBrowser(chromePath);
-  try {
-    await assertLocalizedViewer(browser, 'ko', BROWSER_LOCALES.ko);
-  } finally {
-    await browser.close();
-  }
-});
-
-test('real Chrome keeps Arabic UI localized with mixed-script authored titles in all five modes', {
-  skip: chromePath ? false : 'Set ARCHIFY_CHROME to run the real browser localization regression.',
-}, async () => {
-  const browser = new ChromeVisualBrowser(chromePath);
-  try {
-    await assertLocalizedViewer(browser, 'ar', BROWSER_LOCALES.ar);
+    await assertLocalizedViewer(browser, PSEUDO_LOCALE, BROWSER_LOCALES[PSEUDO_LOCALE]);
   } finally {
     await browser.close();
   }

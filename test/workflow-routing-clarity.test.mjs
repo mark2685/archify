@@ -26,7 +26,7 @@ function edgeTag(svg, from, to) {
 test('readable-v2 separates unrelated automatic branches that meet at a bend', () => {
   const workflow = {
     schema_version: 2, diagram_type: 'workflow',
-    meta: { title: 'Independent failure branches', locale: 'zh-CN', output: 'branches.html' },
+    meta: { title: 'Independent failure branches', locale: 'en', output: 'branches.html' },
     lanes: [{ id: 'sender', label: '请求处理' }, { id: 'stop', label: '失败处理', variant: 'exception' }],
     nodes: [
       { id: 'request', lane: 'sender', col: 0, type: 'external', label: '提交请求', sublabel: '待处理业务任务' },
@@ -98,7 +98,7 @@ test('readable-v2 keeps a clear vertical main step straight when its source also
 test('readable-v2 uses a clear internal corridor for a long same-column branch', () => {
   const workflow = {
     schema_version: 2, diagram_type: 'workflow',
-    meta: { title: 'Payment and expiry', locale: 'zh-CN', output: 'expiry.html' },
+    meta: { title: 'Payment and expiry', locale: 'en', output: 'expiry.html' },
     lanes: [
       { id: 'checkout', label: '下单与支付' },
       { id: 'fulfillment', label: '支付成功后履约' },
@@ -140,7 +140,7 @@ test('readable-v2 keeps clear backward branches straight after provisional port 
   for (const role of ['error', 'return', undefined]) {
     const workflow = {
       schema_version: 2, diagram_type: 'workflow',
-      meta: { title: 'Timeout branch', locale: 'zh-CN', output: 'timeout.html' },
+      meta: { title: 'Timeout branch', locale: 'en', output: 'timeout.html' },
       lanes: ['checkout', 'fulfillment', 'expiry'].map(id => ({ id, label: id })),
       nodes: [
         { id: 'pending', lane: 'checkout', col: 3, type: 'backend', label: '创建待支付订单' },

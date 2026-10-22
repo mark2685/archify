@@ -71,7 +71,9 @@ test('browser announces verified source counts without visual marks and restores
 }, async (t) => {
   const data = fixture();
   t.after(() => fs.rmSync(data.root, { recursive: true, force: true }));
-  data.diagram.meta.locale = 'zh-CN';
+  // A supplied catalog proves the localized accessible name without a bundled non-English locale.
+  data.diagram.meta.locale = 'xx';
+  data.diagram.meta.translations = { 'viewer.passport.sourceCount.one': '{count} checked source reference', 'viewer.passport.sourceCount.other': '{count} checked source references' };
   fs.writeFileSync(data.input, JSON.stringify(data.diagram));
   const artifactPath = path.join(data.root, 'source-aria.html');
   const delivered = run(['deliver', 'architecture', data.input, artifactPath, '--repo-root', data.root, '--json']);
@@ -94,7 +96,7 @@ test('browser announces verified source counts without visual marks and restores
       assert.equal(typeof name, 'string', JSON.stringify(tree));
       return name;
     }
-    assert.match(await accessibleNodeName(), /2 个已验证来源引用/);
+    assert.match(await accessibleNodeName(), /2 checked source references/);
     const response = await browser.cdp.send('Runtime.evaluate', {
       expression: `(async () => {
         const reinitialize = () => { ${initialization} };
@@ -175,14 +177,14 @@ test('browser announces verified source counts without visual marks and restores
     }, sessionId);
     assert.equal(response.exceptionDetails, undefined);
     const observed = response.result.value;
-    assert.match(observed.initial, /2 个已验证来源引用/);
+    assert.match(observed.initial, /2 checked source references/);
     assert.equal(observed.repeated, observed.initial);
     for (const key of ['noVisualMarks', 'geometryPreserved', 'exportClean', 'exportPreservesLive', 'zeroRestored']) assert.equal(observed[key], true, key);
     assert.equal(observed.exportedLabel, observed.authoredLabel);
     assert.equal(observed.passportLinks, 3);
     assert.equal(observed.passportLinksAfter, 3);
     for (const [index, result] of observed.results.entries()) {
-      assert.match(result.once, /1 个已验证来源引用/);
+      assert.match(result.once, /1 checked source reference/);
       assert.equal(result.twice, result.once);
       assert.equal(result.restored, [null, '', 'Authored focus label'][index]);
       assert.equal(result.zeroRestored, [null, '', 'Authored focus label'][index]);
@@ -201,6 +203,6 @@ test('browser announces verified source counts without visual marks and restores
     }, sessionId);
     assert.equal(restored.exceptionDetails, undefined);
     assert.equal(restored.result.value, null, 'node has no competing aria-labelledby');
-    assert.equal(await accessibleNodeName(), 'Authored focus label, 1 个已验证来源引用');
+    assert.equal(await accessibleNodeName(), 'Authored focus label, 1 checked source reference');
   } finally { await browser.close(); }
 });

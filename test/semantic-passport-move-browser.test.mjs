@@ -22,6 +22,9 @@ function renderArtifact(locale = 'en', animation = null) {
   if (locale !== 'en' || animation) {
     const document = JSON.parse(fs.readFileSync(input, 'utf8'));
     document.meta.locale = locale;
+    // This fork bundles English only; another locale proves the catalog path
+    // through meta.translations.
+    if (locale !== 'en') document.meta.translations = { 'viewer.passport.move': 'Reposition the passport. Drag, use arrow keys, or press Home to reset.' };
     if (animation) document.meta.animation = animation;
     input = path.join(tmp, `passport-move-${artifactSequence}.${locale}.json`);
     fs.writeFileSync(input, JSON.stringify(document));
@@ -562,15 +565,15 @@ test('move affordance exposes localized accessible names and a visible keyboard 
     assert.equal(english.outlineStyle, 'solid', JSON.stringify(english, null, 2));
     assert.equal(english.outlineWidth, '2px', JSON.stringify(english, null, 2));
 
-    await loadArtifact(browser, renderArtifact('zh-CN'));
+    await loadArtifact(browser, renderArtifact('xx'));
     await focusNode(browser, sessionId, 'lb');
-    const chinese = await accessibilityState();
-    assert.equal(chinese.ariaLabel, '移动语义护照。可拖动、使用方向键移动，或按 Home 恢复自动位置。');
-    assert.equal(chinese.title, chinese.ariaLabel);
-    assert.equal(chinese.active, true, JSON.stringify(chinese, null, 2));
-    assert.equal(chinese.focusVisible, true, JSON.stringify(chinese, null, 2));
-    assert.equal(chinese.outlineStyle, 'solid', JSON.stringify(chinese, null, 2));
-    assert.equal(chinese.outlineWidth, '2px', JSON.stringify(chinese, null, 2));
+    const localized = await accessibilityState();
+    assert.equal(localized.ariaLabel, 'Reposition the passport. Drag, use arrow keys, or press Home to reset.');
+    assert.equal(localized.title, localized.ariaLabel);
+    assert.equal(localized.active, true, JSON.stringify(localized, null, 2));
+    assert.equal(localized.focusVisible, true, JSON.stringify(localized, null, 2));
+    assert.equal(localized.outlineStyle, 'solid', JSON.stringify(localized, null, 2));
+    assert.equal(localized.outlineWidth, '2px', JSON.stringify(localized, null, 2));
   } finally {
     await browser.close();
   }

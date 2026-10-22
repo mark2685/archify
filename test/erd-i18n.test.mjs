@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 const skillRoot = fileURLToPath(new URL('../archify/', import.meta.url));
 const cli = path.join(skillRoot, 'bin/archify.mjs');
 
-function fixture(translations, locale = 'zh-CN') {
+function fixture(translations, locale = 'en') {
   return {
     schema_version: 1,
     diagram_type: 'erd',
@@ -53,8 +53,8 @@ function messages(artifact) {
 
 test('ERD accepts partial translations through validate, render and deliver', t => {
   const directory = workspace(t);
-  const document = fixture({ 'viewer.common.close': '关闭面板' });
-  const chinese = JSON.parse(fs.readFileSync(path.join(skillRoot, 'locales/zh-CN.json'), 'utf8'));
+  const document = fixture({ 'viewer.common.close': 'Dismiss panel' });
+  const english = JSON.parse(fs.readFileSync(path.join(skillRoot, 'locales/en.json'), 'utf8'));
   for (const command of ['validate', 'render', 'deliver']) {
     const result = run(directory, document, command);
     assert.equal(result.status, 0, `${command}: ${result.stderr || result.stdout}`);
@@ -62,19 +62,19 @@ test('ERD accepts partial translations through validate, render and deliver', t 
     if (command === 'validate') continue;
     const artifact = html(directory);
     const embedded = messages(artifact);
-    assert.equal(embedded.locale, 'zh-CN');
-    assert.equal(embedded.messages['viewer.common.close'], '关闭面板');
-    assert.equal(embedded.messages['viewer.common.copyLink'], chinese['viewer.common.copyLink']);
-    assert.match(artifact, /<html lang="zh-CN"/);
+    assert.equal(embedded.locale, 'en');
+    assert.equal(embedded.messages['viewer.common.close'], 'Dismiss panel');
+    assert.equal(embedded.messages['viewer.common.copyLink'], english['viewer.common.copyLink']);
+    assert.match(artifact, /<html lang="en"/);
     assert.match(artifact, />Authored users<\/text>/);
     assert.match(artifact, />user_id<\/text>/);
     assert.match(artifact, />int<\/text>/);
   }
 });
 
-test('ERD renders the bundled Arabic cardinality legend and preserves authored names', t => {
+test('ERD renders a supplied cardinality legend and preserves authored names', t => {
   const directory = workspace(t);
-  const document = fixture(undefined, 'ar');
+  const document = fixture({ 'legend.erd.one': 'Exactly one', 'legend.erd.many': 'Several' }, 'xx');
   document.entities.push({
     id: 'accounts', label: 'Authored accounts', pos: [440, 80],
     attributes: [{ name: 'account_id', type: 'int', key: 'pk' }],
@@ -86,16 +86,16 @@ test('ERD renders the bundled Arabic cardinality legend and preserves authored n
   const result = run(directory, document);
   assert.equal(result.status, 0, result.stderr);
   const artifact = html(directory);
-  assert.equal(messages(artifact).locale, 'ar');
-  assert.match(artifact, />واحد<\/text>/);
-  assert.match(artifact, />متعدّد<\/text>/);
+  assert.equal(messages(artifact).locale, 'xx');
+  assert.match(artifact, />Exactly one<\/text>/);
+  assert.match(artifact, />Several<\/text>/);
   assert.match(artifact, />Authored users<\/text>/);
   assert.match(artifact, />Authored accounts<\/text>/);
 });
 
 test('ERD empty translations preserve locale-only artifacts byte for byte', t => {
   const directory = workspace(t);
-  for (const locale of ['en', 'zh-CN', 'zh-TW', 'es', 'ko', 'ar']) {
+  for (const locale of ['en', 'fr']) {
     const baseline = run(directory, fixture(undefined, locale));
     assert.equal(baseline.status, 0, baseline.stderr);
     const before = html(directory);
@@ -120,9 +120,9 @@ test('ERD unbundled translations retain supplied messages and disclose English f
 test('ERD invalid override keys and placeholders keep bundled messages with diagnostics', t => {
   const directory = workspace(t);
   const document = fixture({
-    'viewer.common.close': '关闭 {panel}',
-    'viewer.common.closee': '未知',
-    'viewer.common.clear': '清除选择',
+    'viewer.common.close': 'Dismiss {panel}',
+    'viewer.common.closee': 'Unknown',
+    'viewer.common.clear': 'Clear selection',
   });
   const validation = run(directory, document, 'validate');
   assert.equal(validation.status, 0, validation.stderr || validation.stdout);
@@ -131,9 +131,9 @@ test('ERD invalid override keys and placeholders keep bundled messages with diag
   const result = run(directory, document);
   assert.equal(result.status, 0, result.stderr);
   const embedded = messages(html(directory));
-  const chinese = JSON.parse(fs.readFileSync(path.join(skillRoot, 'locales/zh-CN.json'), 'utf8'));
-  assert.equal(embedded.messages['viewer.common.close'], chinese['viewer.common.close']);
-  assert.equal(embedded.messages['viewer.common.clear'], '清除选择');
+  const english = JSON.parse(fs.readFileSync(path.join(skillRoot, 'locales/en.json'), 'utf8'));
+  assert.equal(embedded.messages['viewer.common.close'], english['viewer.common.close']);
+  assert.equal(embedded.messages['viewer.common.clear'], 'Clear selection');
   assert.equal(embedded.messages['viewer.common.closee'], undefined);
   assert.match(result.stderr, /1 unknown, 1 placeholder mismatch/);
 });

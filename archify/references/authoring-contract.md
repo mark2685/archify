@@ -65,8 +65,8 @@ Choose one primary authored language. An explicit user choice wins; otherwise
 use the language of the request, or the conversation's dominant language when
 the request itself is language-neutral. Separately choose the Viewer locale.
 Always write the matching `meta.locale` as a well-formed language tag: `"en"`
-for English, `"zh-CN"` for Simplified Chinese, `"es"` for Spanish, or any
-other tag for another language. The renderer consumes the authored locale without inferring language
+for English, `"es"` for Spanish, `"de"` for German, or any other tag for
+another language. The renderer consumes the authored locale without inferring language
 from diagram strings. Documents that omit it remain valid and default to
 English.
 
@@ -79,11 +79,11 @@ legend label overrides, and cards. A bilingual diagram still
 chooses one primary locale for the Viewer; follow an explicit primary-language
 request, then prompt order or conversation dominance.
 
-Bundled Viewer catalogs are enrolled in `locales/manifest.json`: currently
-`en`, `zh-CN`, `zh-TW`, `es`, `ko`, and `ar`. For these, `meta.locale` alone selects the full
-catalog. Tags match case-insensitively (`zh-cn` selects `zh-CN`), but region
-and script variants are distinct: `zh-Hant`, `es-MX`, or `ko-KR` select no
-bundled catalog.
+Bundled Viewer catalogs are enrolled in `locales/manifest.json`: this fork
+bundles `en` only, so `meta.locale` alone selects the full catalog for English
+and every other tag needs `meta.translations`. Tags match case-insensitively,
+but region and script variants are distinct tags: `en-GB` selects no bundled
+catalog.
 
 `meta.translations` is an optional per-key override: an object mapping the
 renderer's canonical message keys (`locales/en.json`, or `catalogKeys()` in
@@ -93,9 +93,8 @@ match the English source exactly. Each message resolves as: valid
 bundled locale, supply only the keys whose wording the diagram needs to change;
 the rest of the language is kept. Omitting the field or supplying `{}` means no
 override. For a language without a bundled catalog, supply the catalog here.
-Reuse suitable translations from `examples/locales/` or a previously reviewed
-catalog, translate missing keys, and use the English source to check keys and
-placeholders.
+Reuse suitable translations from a previously reviewed catalog, translate
+missing keys, and use the English source to check keys and placeholders.
 
 An unknown key or a value with mismatched placeholders is rejected and keeps
 the lower-priority message; it is reported as `i18n/invalid-translation` on
@@ -112,7 +111,7 @@ the renderer safely uses English, and explicitly tell the user that fixed
 Viewer UI and `<html lang>` remain English and the artifact is not fully localized.
 The fallback applies only to renderer-owned surfaces; it never
 permits authored copy to fall back to English. Do not silently substitute
-`zh-CN` for another language or Chinese locale, and do not machine-translate
+one locale for another, and do not machine-translate
 `meta.translations` values without disclosing that they are unreviewed.
 
 Keep exact product names, code identifiers, commands, protocols, API paths, and
@@ -344,7 +343,7 @@ schema has more than 8 tables or 50 fields, it is a dense full-schema map: start
 with `meta.quality_profile: "standard"` so complete field visibility is not
 traded away for repeated showcase route repairs. Include every physical column in
 `attributes`, keep the source SQL type, and preserve the
-field's Chinese comment in the type string as `SQL_TYPE｜中文备注` because the
+field's column comment in the type string as `SQL_TYPE | comment` because the
 schema has no separate comment property. The default viewer shows these rows at
 the `read` level; do not rely on hover/focus or cards to reveal physical fields.
 Cards may explain constraints, inferred relationships, or domain rules, but never
@@ -638,7 +637,7 @@ renderer-owned and export with the diagram; URLs and raw SVG are not accepted.
 Icon selection changes only the corner symbol. The node's type still determines
 color and semantic grouping; brand marks remain independent. For a holiday
 workflow, pair `type: "backend", icon: "calendar"` with
-`meta.legend.entries.backend.label: "假期"`, and use `icon: "briefcase"` plus
+`meta.legend.entries.backend.label: "Holiday"`, and use `icon: "briefcase"` plus
 an appropriate legend label for make-up work. Keep the node label meaningful:
 icons are decorative and are hidden from assistive technology.
 

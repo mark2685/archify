@@ -1,6 +1,4 @@
-import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -9,15 +7,25 @@ import { fileURLToPath } from 'node:url';
 
 export const skillRoot = fileURLToPath(new URL('../../archify/', import.meta.url));
 export const cli = path.join(skillRoot, 'bin/archify.mjs');
-export const ES_TRANSLATIONS = JSON.parse(fs.readFileSync(path.join(skillRoot, 'locales/es.json'), 'utf8'));
 
 // locales/ holds the package-owned catalogs that meta.locale selects through
-// locales/manifest.json. examples/locales/fr.partial.json is the genericity
-// proof — an unbundled language, deliberately partial to also exercise the
-// coverage/fallback contract.
-export const KO_TRANSLATIONS = JSON.parse(fs.readFileSync(path.join(skillRoot, 'locales/ko.json'), 'utf8'));
-export const FR_PARTIAL_TRANSLATIONS = JSON.parse(fs.readFileSync(path.join(skillRoot, 'examples/locales/fr.partial.json'), 'utf8'));
+// locales/manifest.json. This fork bundles English only, so the genericity of
+// meta.translations is proved with a synthetic pseudo-locale derived from the
+// canonical catalog: every message keeps its placeholders and gains a visible
+// marker, so a leaked English string and a lost override are both detectable.
+export const EN_TRANSLATIONS = JSON.parse(fs.readFileSync(path.join(skillRoot, 'locales/en.json'), 'utf8'));
 export const MANIFEST = JSON.parse(fs.readFileSync(path.join(skillRoot, 'locales/manifest.json'), 'utf8'));
+export const PSEUDO_LOCALE = 'xx';
+export const PSEUDO_MARKER = '[xx] ';
+export const PSEUDO_TRANSLATIONS = Object.fromEntries(
+  Object.entries(EN_TRANSLATIONS).map(([key, message]) => [key, `${PSEUDO_MARKER}${message}`]),
+);
+// Deliberately partial: the legend and export labels are covered, the node
+// index title is not, so coverage reporting and per-key fallback are exercised.
+export const PSEUDO_PARTIAL_TRANSLATIONS = Object.fromEntries(
+  Object.entries(PSEUDO_TRANSLATIONS).filter(([key], index) => key !== 'viewer.outline.title'
+    && (index % 2 === 0 || key === 'legend.title' || key === 'viewer.export.diagram')),
+);
 
 export const EXAMPLES = {
   architecture: 'web-app.architecture.json',
@@ -44,17 +52,16 @@ const AUTHORED_TEXT_KEYS = new Set([
   'step',
 ]);
 
+// Replaces every authored string with a numbered marker so a test can prove
+// that localization never rewrites authored content. With the pseudo-locale,
+// renderer-owned copy is supplied through meta.translations.
 export function authoredExample(type, locale) {
   const document = example(type);
   const authored = [];
   let authoredIndex = 0;
   const nextAuthoredText = () => {
     authoredIndex += 1;
-    const value = locale === 'zh-CN'
-      ? `文案${String(authoredIndex).padStart(2, '0')}`
-      : locale === 'ko'
-        ? `문구${String(authoredIndex).padStart(2, '0')}`
-        : `Copy${String(authoredIndex).padStart(2, '0')}`;
+    const value = `Copy${String(authoredIndex).padStart(2, '0')}`;
     authored.push(value);
     return value;
   };
@@ -77,7 +84,7 @@ export function authoredExample(type, locale) {
 
   rewrite(document);
   document.meta.locale = locale;
-  if (locale === 'ko') document.meta.translations = KO_TRANSLATIONS;
+  if (locale === PSEUDO_LOCALE) document.meta.translations = PSEUDO_TRANSLATIONS;
   if (!document.meta.subtitle) document.meta.subtitle = nextAuthoredText();
   return { document, authored };
 }
@@ -111,75 +118,11 @@ export function createLocaleFixture() {
     };
   }
 
-  function deliverKoreanFixture() {
-    const fixture = path.join(skillRoot, '..', 'test', 'fixtures/korean-locale.architecture.json');
-    const source = JSON.parse(fs.readFileSync(fixture, 'utf8'));
-    assert.equal(source.meta.locale, 'ko');
-    assert.match(source.meta.title, /[가-힣]/);
-
-    const validate = spawnSync(process.execPath, [cli, 'validate', 'architecture', fixture, '--json'], {
-      cwd: skillRoot,
-      encoding: 'utf8',
-    });
-    assert.equal(validate.status, 0, validate.stderr || validate.stdout);
-    const validation = JSON.parse(validate.stdout);
-    assert.equal(validation.ok, true);
-    assert.equal(validation.command, 'validate');
-
-    const artifact = path.join(tmp, 'korean-locale-fixture.html');
-    const deliver = spawnSync(
-      process.execPath,
-      [cli, 'deliver', 'architecture', fixture, artifact, '--quality', 'showcase', '--json'],
-      { cwd: skillRoot, encoding: 'utf8' },
-    );
-    assert.equal(deliver.status, 0, deliver.stderr || deliver.stdout);
-    const delivery = JSON.parse(deliver.stdout);
-    assert.equal(delivery.ok, true);
-    assert.equal(delivery.command, 'deliver');
-    assert.equal(delivery.type, 'architecture');
-    assert.match(delivery.artifact.sha256, /^[a-f0-9]{64}$/);
-    assert.equal(delivery.artifact.bytes, fs.statSync(artifact).size);
-    assert.equal(delivery.artifact.sha256, createHash('sha256').update(fs.readFileSync(artifact)).digest('hex'));
-    return { fixture, artifact, delivery };
-  }
-
-  function deliverJapaneseFixture() {
-    const fixture = path.join(skillRoot, '..', 'test', 'fixtures/japanese-locale.architecture.json');
-    const source = JSON.parse(fs.readFileSync(fixture, 'utf8'));
-    assert.equal(source.meta.locale, 'ja');
-    assert.match(source.meta.title, /[぀-ヿ一-鿿]/);
-
-    const validate = spawnSync(process.execPath, [cli, 'validate', 'architecture', fixture, '--json'], {
-      cwd: skillRoot,
-      encoding: 'utf8',
-    });
-    assert.equal(validate.status, 0, validate.stderr || validate.stdout);
-    const validation = JSON.parse(validate.stdout);
-    assert.equal(validation.ok, true);
-    assert.equal(validation.command, 'validate');
-
-    const artifact = path.join(tmp, 'japanese-locale-fixture.html');
-    const deliver = spawnSync(
-      process.execPath,
-      [cli, 'deliver', 'architecture', fixture, artifact, '--quality', 'showcase', '--json'],
-      { cwd: skillRoot, encoding: 'utf8' },
-    );
-    assert.equal(deliver.status, 0, deliver.stderr || deliver.stdout);
-    const delivery = JSON.parse(deliver.stdout);
-    assert.equal(delivery.ok, true);
-    assert.equal(delivery.command, 'deliver');
-    assert.equal(delivery.type, 'architecture');
-    assert.match(delivery.artifact.sha256, /^[a-f0-9]{64}$/);
-    assert.equal(delivery.artifact.bytes, fs.statSync(artifact).size);
-    assert.equal(delivery.artifact.sha256, createHash('sha256').update(fs.readFileSync(artifact)).digest('hex'));
-    return { fixture, artifact, delivery };
-  }
-
   function cliJson(args) {
     const result = spawnSync(process.execPath, [cli, ...args], { cwd: tmp, encoding: 'utf8' });
-    assert.equal(result.status, 0, result.stderr || result.stdout);
+    if (result.status !== 0) throw new Error(result.stderr || result.stdout);
     return JSON.parse(result.stdout);
   }
 
-  return { tmp, run, deliverKoreanFixture, deliverJapaneseFixture, cliJson };
+  return { tmp, run, cliJson };
 }

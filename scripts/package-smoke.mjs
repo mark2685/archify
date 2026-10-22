@@ -305,7 +305,8 @@ async function verifyPackage() {
     }
   }
   const localized = JSON.parse(fs.readFileSync(path.join(skillRoot, 'examples', fixtures[0][1]), 'utf8'));
-  localized.meta.locale = 'ko';
+  localized.meta.locale = 'xx';
+  localized.meta.translations = { 'legend.title': 'Key' };
   localized.meta.output = 'localized.html';
   const localizedInput = path.join(scratch, 'localized.architecture.json');
   const localizedOutput = path.join(scratch, 'localized.html');
@@ -313,10 +314,10 @@ async function verifyPackage() {
   run(['render', 'architecture', localizedInput, localizedOutput], { cwd: os.tmpdir() });
   const localizedHtml = fs.readFileSync(localizedOutput, 'utf8');
   const embeddedLocale = localizedHtml.match(/<script id="archify-i18n-data" type="application\/json">([\s\S]*?)<\/script>/);
-  if (!localizedHtml.startsWith('<!DOCTYPE html>\n<html lang="ko"')
-    || !localizedHtml.includes('>범례</text>')
-    || JSON.parse(embeddedLocale?.[1] || '{}').locale !== 'ko') {
-    throw new Error('packaged renderer did not select the bundled ko catalog from meta.locale');
+  if (!localizedHtml.startsWith('<!DOCTYPE html>\n<html lang="xx"')
+    || !localizedHtml.includes('>Key</text>')
+    || JSON.parse(embeddedLocale?.[1] || '{}').locale !== 'xx') {
+    throw new Error('packaged renderer did not apply meta.translations for meta.locale');
   }
 
   const compareReceipt = JSON.parse(run([

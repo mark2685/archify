@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
+import { registerLocale } from '../archify/renderers/shared/i18n.mjs';
 import { compileWorkflow } from '../archify/renderers/workflow/workflow-compiler.mjs';
 
 function workflow(version, locale = 'en') {
@@ -41,14 +42,18 @@ for (const version of [1, 2]) {
     const snapshot = structuredClone(first);
     deepFreeze(first);
 
-    const other = workflow(version === 1 ? 2 : 1, 'zh-CN');
+    // compileWorkflow is called directly, so the document's catalog is
+    // registered here the way the CLI loader does before compiling.
+    const other = workflow(version === 1 ? 2 : 1, 'xx');
+    other.meta.translations = { 'legend.title': 'Key' };
+    registerLocale('xx', other.meta.translations);
     other.meta.title = 'Another workflow';
     other.nodes[1].col = 4;
     const different = compileWorkflow({ workflow: deepFreeze(other), qualityProfile: 'standard' });
     assert.equal(different.ok, true, JSON.stringify(different.diagnostics));
     assert.notEqual(different.svg, first.svg);
     assert.notEqual(different.receipt.contract, first.receipt.contract);
-    assert.match(different.svg, /lang="zh-CN"/);
+    assert.match(different.svg, /lang="xx"/);
     assert.match(different.svg, /data-quality-profile="standard"/);
 
     const repeated = compileWorkflow({ workflow: input, qualityProfile: 'showcase' });

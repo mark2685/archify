@@ -94,11 +94,11 @@ test('explainer diagrams: inline native locale inherits its parent while explici
       blockOf('sequence', shorthand, { id: 'inherited' }),
       blockOf('sequence', english, { id: 'english' }),
       { id: 'standalone', type: 'diagram', diagramType: 'sequence', source: 'standalone.sequence.json' },
-    ]), meta: { locale: 'zh-CN' } };
+    ]), meta: { locale: 'xx', translations: { 'legend.title': 'Key' } } };
     const originalDocument = JSON.stringify(document);
     const { diagrams, dependencies } = await prepareExplainerDiagrams(document, { baseDir: directory });
-    assert.match(diagrams.inherited.html, /lang="zh-CN"/);
-    assert.match(diagrams.inherited.html, />图例<\/text>/);
+    assert.match(diagrams.inherited.html, /lang="xx"/);
+    assert.match(diagrams.inherited.html, />Key<\/text>/);
     for (const id of ['english', 'standalone']) {
       assert.match(diagrams[id].html, /lang="en"/);
       assert.match(diagrams[id].html, />Legend<\/text>/);
