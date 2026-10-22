@@ -7107,7 +7107,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
           function finish(error, blob) {
             if (settled) return;
-            // 先锁定终态：停止录制和释放流可能产生晚到的编码事件。
+            // Settle the final state first: stopping the recorder and releasing the stream can emit late encoder events.
             settled = true;
             cancelAnimationFrame(raf);
             clearTimeout(durationTimer);
@@ -7173,7 +7173,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
                 raf = requestAnimationFrame(draw);
                 durationTimer = setTimeout(function () {
                   if (settled || recorder.state === 'inactive') return;
-                  // 保留最佳努力的编码器 flush；失败后仍通过 stop 收集最后的片段。
+                  // Keep the best-effort encoder flush; after a failure, stop() still collects the final chunk.
                   try { recorder.requestData(); } catch (_) {}
                   if (settled) return;
                   flushTimer = setTimeout(function () {
