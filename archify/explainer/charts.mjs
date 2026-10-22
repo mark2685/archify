@@ -17,7 +17,7 @@ function pieLegend(text) {
   const slice = /^(\s*)"((?:[^"\\]|\\.)*)"\s*:\s*(-?\d+(?:\.\d+)?)\s*$/gmu;
   const total = [...text.matchAll(slice)].reduce((sum, match) => sum + Number(match[3]), 0);
   if (!(total > 0)) return text;
-  return text.replace(/^(\s*pie)\s+showData\b/u, '$1').replace(slice, (_, indent, label, value) => { const share = Math.round(Number(value) / total * 100); return `${indent}"${label} · ${value}${/\p{Script=Han}/u.test(label) ? `（${share}%）` : ` (${share}%)`}" : ${value}`; });
+  return text.replace(/^(\s*pie)\s+showData\b/u, '$1').replace(slice, (_, indent, label, value) => { const share = Math.round(Number(value) / total * 100); return `${indent}"${label} · ${value}${` (${share}%)`}" : ${value}`; });
 }
 
 /** Render a Mermaid chart to static SVG, or return a located diagnostic reason. */

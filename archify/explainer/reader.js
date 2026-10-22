@@ -5,8 +5,8 @@
   const prepared = read('archify-explainer-prepared');
   const diagrams = prepared.preparedDiagrams.diagrams || prepared.preparedDiagrams;
   const words = read('explainer-reader-words');
-  const english = !root.lang.startsWith('zh');
-  const say = (en,zh) => english ? en : zh;
+  // This fork ships English reader copy for every page language.
+  const say = (en) => en;
   const byId = id => document.getElementById(id);
   const all = (selector, within = document) => [...within.querySelectorAll(selector)];
   let toastTimer;
@@ -211,7 +211,7 @@
       const status = svg.closest('.block-diagram').querySelector('.diagram-fit-status');
       changed ||= status.hidden === insufficient;
       status.hidden = !insufficient;
-      status.textContent = insufficient ? say('This diagram cannot fit this page width with readable text. Open the interactive view to inspect it.','此图在当前页宽下放不下且文字会太小，请打开交互图查看。') : '';
+      status.textContent = insufficient ? say('This diagram cannot fit this page width with readable text. Open the interactive view to inspect it.') : '';
     });
     return changed;
   }
@@ -286,10 +286,10 @@
     exportToggle.disabled = true;
     try {
       const blob = await pageImage(format), link = document.createElement('a'), extension = {'image/jpeg':'jpg','image/webp':'webp'}[blob.type] || 'png';
-      if (blob.type !== `image/${format}`) notify(say(`This browser cannot save ${format.toUpperCase()}; saved as PNG.`,`当前浏览器不支持导出 ${format.toUpperCase()}，已改存为 PNG。`));
+      if (blob.type !== `image/${format}`) notify(say(`This browser cannot save ${format.toUpperCase()}; saved as PNG.`));
       link.href = URL.createObjectURL(blob); link.download = `${(document.querySelector('h1')?.textContent || 'explainer').trim().replace(/[\\/:*?"<>|]+/g,' ').slice(0,80)}.${extension}`;
       document.body.append(link); link.click(); link.remove(); setTimeout(()=>URL.revokeObjectURL(link.href),4000);
-    } catch { notify(say('This browser cannot export the page as an image. Use Print / PDF instead.','当前浏览器无法导出长图，请用"打印 / PDF"。')); }
+    } catch { notify(say('This browser cannot export the page as an image. Use Print / PDF instead.')); }
     finally { exportToggle.disabled = false; }
   }
   window.ArchifyExplainer = {pageImage};
@@ -310,7 +310,7 @@
   function sendViewer() { if(!viewer?.ready) return; viewer.frame.contentWindow.postMessage({kind:'archify-explainer-host',token:viewer.token,theme:root.dataset.theme,preset:root.dataset.style === 'editorial' ? 'editorial' : 'classic',hash:viewer.hash,nodes:viewer.nodes,edges:viewer.edges},'*'); }
   function openViewer(id,hash,opener) {
     const diagram = diagrams[id];
-    if(!diagram || !validHash(diagram,hash)) { notify(say('Diagram target unavailable.','图中目标不可用。')); return; }
+    if(!diagram || !validHash(diagram,hash)) { notify(say('Diagram target unavailable.')); return; }
     let requestedEdges = []; try { requestedEdges = JSON.parse(opener.dataset.diagramEdges || '[]'); } catch {}
     requestedEdges = requestedEdges.filter(id=>(diagram.semantic?.edges || []).some(edge=>edge.id === id));
     const selectedEdges = (diagram.semantic?.edges || []).filter(edge=>requestedEdges.includes(edge.id));
@@ -365,7 +365,7 @@
       if (viewer?.frame !== frame) return;
       const end = html.toLowerCase().lastIndexOf('</body>');
       frame.srcdoc = end < 0 ? html + script : html.slice(0,end) + script + html.slice(end);
-    },()=>notify(say('This diagram could not be opened.','无法打开此交互图。')));
+    },()=>notify(say('This diagram could not be opened.')));
   }
   // The page stores each native Viewer gzip-compressed; inflate it once, on first open.
   function nativeHtml(diagram) {
@@ -517,13 +517,13 @@
         spotlight(preview,[message.dataset.edgeFrom,message.dataset.edgeTo],[message.dataset.edgeId]);
         const box = message.getBoundingClientRect();
         if (box.top < 0 || box.bottom > innerHeight - 80) message.scrollIntoView({block:'center',behavior:'smooth'});
-        return `${label(message.dataset.edgeFrom)} → ${label(message.dataset.edgeTo)}${say(': ','：')}${message.dataset.edgeLabel || ''}`;
+        return `${label(message.dataset.edgeFrom)} → ${label(message.dataset.edgeTo)}${say(': ')}${message.dataset.edgeLabel || ''}`;
       }));
     });
   }
   all('[data-copy]').forEach(button=>button.addEventListener('click',()=>{
     const text = button.closest('figure').querySelector('pre code').textContent;
-    Promise.resolve(navigator.clipboard?.writeText(text)).then(()=>{button.textContent = words.copied;setTimeout(()=>{button.textContent = words.copy;},1600);},()=>notify(say('Copy failed.','复制失败。')));
+    Promise.resolve(navigator.clipboard?.writeText(text)).then(()=>{button.textContent = words.copied;setTimeout(()=>{button.textContent = words.copy;},1600);},()=>notify(say('Copy failed.')));
   }));
   // Follow-up questions: a reader asks about a panel, or about selected text in it, and copies a
   // message that names the page, the panel ID and the quote, so the agent can revise just that panel.
@@ -538,7 +538,7 @@
       const number = panel.id === 'answer' ? words.answer : panel.querySelector('.panel-id')?.textContent.trim();
       const title = panel.id === 'answer' ? words.answer : panel.dataset.title || panel.querySelector('h2')?.textContent.trim();
       context = {panel,quote,number,title};
-      dialog.querySelector('.ask-where').textContent = panel.id === 'answer' ? title : say(`Panel ${number} · ${title}`,`面板 ${number} · ${title}`);
+      dialog.querySelector('.ask-where').textContent = panel.id === 'answer' ? title : say(`Panel ${number} · ${title}`);
       all('[data-chip]',dialog).forEach(chip=>chip.setAttribute('aria-pressed','false'));
       quoteBox.hidden = !quote; quoteBox.textContent = quote;
       area.value = ''; dialog.showModal(); area.focus();
@@ -555,13 +555,13 @@
       event.preventDefault();
       const {panel,quote,number,title} = context, page = document.querySelector('h1')?.textContent.trim();
       const file = location.protocol === 'file:' ? decodeURIComponent(location.pathname) : location.href.split('#')[0];
-      const quoteMark = text => english ? `"${text}"` : `「${text}」`;
+      const quoteMark = text => `"${text}"`;
       const lines = [
-        `${words.askPage}${say(': ','：')}${quoteMark(page)}`,
-        `${words.askFile}${say(': ','：')}${file}`,
-        `${words.askWhere}${say(': ','：')}${panel.id === 'answer' ? title : say(`Panel ${number} ${quoteMark(title)}`,`面板 ${number}${quoteMark(title)}`)}${say(` (ID: ${panel.id})`,`（ID: ${panel.id}）`)}`,
-        ...(quote ? [`${words.askQuoteLabel}${say(': ','：')}${quoteMark(quote)}`] : []),
-        `${words.askQuestion}${say(': ','：')}${area.value.trim() || words.askChips[0]}`,
+        `${words.askPage}${say(': ')}${quoteMark(page)}`,
+        `${words.askFile}${say(': ')}${file}`,
+        `${words.askWhere}${say(': ')}${panel.id === 'answer' ? title : say(`Panel ${number} ${quoteMark(title)}`)}${say(` (ID: ${panel.id})`)}`,
+        ...(quote ? [`${words.askQuoteLabel}${say(': ')}${quoteMark(quote)}`] : []),
+        `${words.askQuestion}${say(': ')}${area.value.trim() || words.askChips[0]}`,
         ...(panel.id === 'answer' ? [] : [words.askPatch]),
       ];
       const text = lines.join('\n');
@@ -617,7 +617,7 @@
       const excerpt = lines.length ? `<pre><code>${lines.slice(0,14).map((line,index)=>`<span class="line"><i>${first + index}</i>${escapeText(line) || ' '}</span>`).join('')}${lines.length > 14 ? `<span class="line more"><i></i>…</span>` : ''}</code></pre>` : '';
       const note = !source.path && (source.text || source.method) ? `<p class="source-note">${escapeText(source.text || '')}${source.method ? `<span>${escapeText(source.method)}</span>` : ''}</p>` : '';
       const number = /^\d+$/.test(link.textContent.trim()) ? link.textContent.trim() : '';
-      card.innerHTML = `<header><span class="source-icon" data-kind="${kind}" aria-hidden="true">${sourceIcons[kind]}</span><span class="source-head"><b>${escapeText(source.title || source.path || id)}</b>${where ? `<span class="source-where">${escapeText(where)}</span>` : ''}</span>${number ? `<span class="source-number">${number}</span>` : ''}</header>${excerpt}${note}${source.revision || source.url ? `<footer>${source.revision ? `<span class="source-pin">${say('Pinned at','固定在')} <code>${escapeText(String(source.revision).slice(0,7))}</code></span>` : '<span></span>'}${source.url ? `<a href="${escapeText(source.url)}" target="_blank" rel="noopener noreferrer">${say('Open source','打开原文')} ↗</a>` : ''}</footer>` : ''}`;
+      card.innerHTML = `<header><span class="source-icon" data-kind="${kind}" aria-hidden="true">${sourceIcons[kind]}</span><span class="source-head"><b>${escapeText(source.title || source.path || id)}</b>${where ? `<span class="source-where">${escapeText(where)}</span>` : ''}</span>${number ? `<span class="source-number">${number}</span>` : ''}</header>${excerpt}${note}${source.revision || source.url ? `<footer>${source.revision ? `<span class="source-pin">${say('Pinned at')} <code>${escapeText(String(source.revision).slice(0,7))}</code></span>` : '<span></span>'}${source.url ? `<a href="${escapeText(source.url)}" target="_blank" rel="noopener noreferrer">${say('Open source')} ↗</a>` : ''}</footer>` : ''}`;
       card.hidden = false;
       const box = link.getBoundingClientRect(), width = Math.min(520,innerWidth - 24);
       card.style.width = `${width}px`;

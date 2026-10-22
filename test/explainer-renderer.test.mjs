@@ -150,8 +150,8 @@ test('renderer: over-limit metrics disclose the excess and limit-only metrics im
   assert.equal(text(all(find(tree,'capacity-only'),node=>attr(node,'class') === 'metric-value')[0]),'Limit 10requests');
 });
 
-test('renderer: only Chinese pages get Chinese controls; other languages fall back to English',()=>{
-  for (const [locale,expected] of [['es','Over limit by'],['ko','Over limit by'],['zh-TW','超限']]) {
+test('renderer: every page language gets the English controls',()=>{
+  for (const [locale,expected] of [['es','Over limit by'],['ko','Over limit by'],['zh-TW','Over limit by']]) {
     const input = fixture(); input.meta.locale = locale;
     input.panels[0].blocks = [{id:'overflow',type:'metric',label:'Requests',value:12,limit:10}];
     assert.match(text(find(parse(renderExplainer(input)),'overflow')),new RegExp(expected),locale);

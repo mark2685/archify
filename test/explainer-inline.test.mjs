@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {parseInline,renderInline} from '../archify/explainer/inline.mjs';
 
 test('inline content preserves escaped literals and safe text while exposing reference semantics',()=>{
-  const source='**先查** `GET <key>`，再看 [Redis](node:path.redis)、[请求路径](route:path.api~db) 和 [依据](source:trace)。\\*';
+  const source='**Check first** `GET <key>`, then see [Redis](node:path.redis), [request path](route:path.api~db) and [evidence](source:trace).\\*';
   const parsed=parseInline(source);
   assert.deepEqual(parsed.diagnostics,[]);
   assert.deepEqual(parsed.references.map(({kind,diagram,node,from,to,id})=>({kind,diagram,node,from,to,id})),[
@@ -12,11 +12,11 @@ test('inline content preserves escaped literals and safe text while exposing ref
     {kind:'source',diagram:undefined,node:undefined,from:undefined,to:undefined,id:'trace'}
   ]);
   const html=renderInline(source);
-  assert.match(html,/<strong>先查<\/strong>/);
+  assert.match(html,/<strong>Check first<\/strong>/);
   assert.match(html,/<code>GET &lt;key&gt;<\/code>/);
   assert.match(html,/data-diagram-hash="route=api~db"/);
   assert.match(html,/href="#source-trace"/);
-  assert.ok(html.endsWith('。*'));
+  assert.ok(html.endsWith('.*'));
 });
 
 test('unsupported or executable author input fails with located repair guidance',()=>{
@@ -38,12 +38,12 @@ test('HTTP references preserve parentheses and escape attributes without evaluat
 
 test('typical-value qualifications become numbered real footnotes shared across text fields',()=>{
   const footnotes=[];
-  const a=renderInline('[1 ms](typical:示意值，不是本页实测)',{footnotes});
-  const b=renderInline('[快速](typical:取决于数据量)',{footnotes});
+  const a=renderInline('[1 ms](typical:indicative, not measured on this page)',{footnotes});
+  const b=renderInline('[fast](typical:depends on the data volume)',{footnotes});
   assert.match(a,/href="#explainer-typical-1"/);
   assert.match(b,/href="#explainer-typical-2"/);
-  assert.deepEqual(footnotes.map(x=>x.text),['示意值，不是本页实测','取决于数据量']);
-  assert.match(renderInline('[快速](typical:需在本地测量)'),/需在本地测量/);
+  assert.deepEqual(footnotes.map(x=>x.text),['indicative, not measured on this page','depends on the data volume']);
+  assert.match(renderInline('[fast](typical:measure locally)'),/measure locally/);
 });
 
 test('escaped backslashes do not consume a following closing emphasis delimiter',()=>{

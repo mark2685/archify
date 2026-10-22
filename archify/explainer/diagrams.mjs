@@ -108,16 +108,16 @@ function rankedPlacement(nodes, edges) {
 export function compileExplainerDiagram(diagramType, rows, { title, id, line = 1, quality = 'showcase' } = {}) {
   const context = { line, pointer: '/', id, diagramType, rowMap: {}, subject: { diagram: id, diagramType } };
   if (!TYPES.has(diagramType)) fail(context, 'diagram-type', 'Unknown native diagram type.', 'sequence');
-  if (!Array.isArray(rows) || !rows.length) fail(context, 'diagram-rows', 'A shorthand diagram needs at least one row.', 'Client | API | 请求记录');
+  if (!Array.isArray(rows) || !rows.length) fail(context, 'diagram-rows', 'A shorthand diagram needs at least one row.', 'Client | API | request record');
   const entries = rows.map((row, index) => {
     const ctx = { ...context, line: Number.isInteger(row?.line) ? row.line : line + index };
     const cells = Array.isArray(row) ? row : row?.cells;
     if (cells !== undefined) {
-      if (!Array.isArray(cells) || !cells.length || cells.some(cell => typeof cell !== 'string')) fail(ctx, 'diagram-row', 'Each diagram row needs text cells.', 'Client | API | 请求记录');
+      if (!Array.isArray(cells) || !cells.length || cells.some(cell => typeof cell !== 'string')) fail(ctx, 'diagram-row', 'Each diagram row needs text cells.', 'Client | API | request record');
       return { parts: cells.map(cell => cell.trim()), context: ctx };
     }
     const text = typeof row === 'string' ? row : row?.text;
-    if (typeof text !== 'string' || !text.trim()) fail(ctx, 'diagram-row', 'Each diagram row needs text.', 'Client | API | 请求记录');
+    if (typeof text !== 'string' || !text.trim()) fail(ctx, 'diagram-row', 'Each diagram row needs text.', 'Client | API | request record');
     return { parts: rowParts(text), context: ctx };
   });
   const spec = { schema_version: diagramType === 'workflow' ? 2 : 1, diagram_type: diagramType,
@@ -156,7 +156,7 @@ export function compileExplainerDiagram(diagramType, rows, { title, id, line = 1
     const phases = [];
     for (const entry of entries.filter(entry => !entry.parts[0].startsWith('actor '))) {
       if (entry.parts[0] === 'phase') { expect(entry, 2, 2, 'phase | TCP handshake'); phases.push({ label: entry.parts[1], first: spec.messages.length, context: entry.context }); continue; }
-      expect(entry, 3, 4, 'Client | API | 请求记录 | return');
+      expect(entry, 3, 4, 'Client | API | request record | return');
       const [fromLabel, toLabel, label, variant] = entry.parts;
       const from = actorId(fromLabel, entry.context), to = actorId(toLabel, entry.context);
       context.rowMap[`/messages/${spec.messages.length}`] = entry.context.line;
@@ -168,7 +168,7 @@ export function compileExplainerDiagram(diagramType, rows, { title, id, line = 1
       (spec.segments ||= []).push({ from: spec.messages[phase.first].y - 22, to: spec.messages[last].y + 16, label: phase.label });
     });
     duplicateCheck(spec.participants, context, 'actor');
-    if (!spec.messages.length) fail(context, 'diagram-rows', 'Sequence shorthand needs a message.', 'client | api | 请求记录');
+    if (!spec.messages.length) fail(context, 'diagram-rows', 'Sequence shorthand needs a message.', 'client | api | request record');
   } else if (diagramType === 'architecture' || diagramType === 'workflow') {
     const nodes = [], edges = [], lanes = new Map(), nodeLanes = new Map();
     for (const entry of entries) {
@@ -179,7 +179,7 @@ export function compileExplainerDiagram(diagramType, rows, { title, id, line = 1
         if (lanes.has(laneId)) fail(entry.context, 'diagram-id-duplicate', 'Workflow lane ids must be unique.', 'lane locate | Locate the cause');
         lanes.set(laneId, { id: laneId, label: entry.parts[1] });
       } else if (route) {
-        if (entry.parts.length > 3) fail(entry.context, 'diagram-row', 'An edge supports a label and optional native variant.', 'api > redis | 查询 | dashed');
+        if (entry.parts.length > 3) fail(entry.context, 'diagram-row', 'An edge supports a label and optional native variant.', 'api > redis | lookup | dashed');
         context.rowMap[`/${diagramType === 'architecture' ? 'connections' : 'edges'}/${edges.length}`] = entry.context.line;
         edges.push({ id: edgeId(route[1], route[2]), from: route[1], to: route[2], ...(entry.parts[1] ? { label: entry.parts[1] } : {}), ...(entry.parts[2] ? { variant: entry.parts[2] } : {}) });
       } else {
@@ -192,7 +192,7 @@ export function compileExplainerDiagram(diagramType, rows, { title, id, line = 1
         const labelWidth = Math.ceil(Math.max(textUnits(node.label) * 6.8 + 12, minimumNodeTextWidth(node.label, 11) + 2 * (SEMANTIC_SIGIL_FOOTPRINT + 2)));
         if (diagramType === 'workflow' && labelWidth > 92) node.width = labelWidth;
         // A question is a decision point: the native decision mark tells it apart from a step.
-        if (diagramType === 'workflow' && /[?？]$/u.test(node.label)) node.icon = 'decision';
+        if (diagramType === 'workflow' && /[?\uFF1F]$/u.test(node.label)) node.icon = 'decision';
         if (entry.parts[3]) nodeLanes.set(node.id, { lane: safeId(entry.parts[3], entry.context), context: entry.context });
         nodes.push(node);
       }
@@ -267,13 +267,13 @@ export function compileExplainerDiagram(diagramType, rows, { title, id, line = 1
       }
       const rows = wrapped || placed;
       if (rows.some(node => node.col > 5)) fail(context, 'diagram-shorthand-limit', 'Native workflow columns are limited to 0–5.', 'Declare phase lanes with "lane <id> | label" rows and assign nodes to them.');
-      spec.lanes = Array.from({ length: Math.max(1, ...rows.map(node => node.row + 1)) }, (_, row) => ({ id: `lane-${row}`, label: wrapped ? `${spec.meta.title} · ${row + 1}` : row ? `分支 ${row}` : spec.meta.title }));
+      spec.lanes = Array.from({ length: Math.max(1, ...rows.map(node => node.row + 1)) }, (_, row) => ({ id: `lane-${row}`, label: wrapped ? `${spec.meta.title} · ${row + 1}` : row ? `Branch ${row}` : spec.meta.title }));
       spec.nodes = rows.map(({ row, ...node }) => ({ ...node, lane: `lane-${row}` }));
       spec.edges = edges;
     }
   } else if (diagramType === 'tree') {
     spec.nodes = entries.map((entry, index) => {
-      expect(entry, 2, 3, 'api | API 服务 | root');
+      expect(entry, 2, 3, 'api | API service | root');
       context.rowMap[`/nodes/${index}`] = entry.context.line;
       const [nodeId, label, parent] = entry.parts;
       return { id: safeId(nodeId, entry.context), label, ...(parent && parent !== '-' ? { parent: safeId(parent, entry.context) } : {}) };
@@ -284,14 +284,14 @@ export function compileExplainerDiagram(diagramType, rows, { title, id, line = 1
     const lanes = new Map(); spec.events = [];
     for (const entry of entries) {
       if (entry.parts[0].startsWith('lane ')) {
-        expect(entry, 2, 2, 'lane release | 发布');
+        expect(entry, 2, 2, 'lane release | Release');
         const laneId = safeId(entry.parts[0].slice(5).trim(), entry.context);
-        if (lanes.has(laneId)) fail(entry.context, 'diagram-id-duplicate', 'Timeline lane ids must be unique.', 'lane release | 发布');
+        if (lanes.has(laneId)) fail(entry.context, 'diagram-id-duplicate', 'Timeline lane ids must be unique.', 'lane release | Release');
         lanes.set(laneId, { id: laneId, label: entry.parts[1] });
       }
     }
     for (const entry of entries.filter(entry => !entry.parts[0].startsWith('lane '))) {
-      expect(entry, 3, 5, 'deploy | 2026-10-01T10:00:00+08:00 | 发布 v2 | release | change');
+      expect(entry, 3, 5, 'deploy | 2026-10-01T10:00:00+08:00 | Release v2 | release | change');
       const [eventId, at, eventTitle, authoredLane, kind] = entry.parts;
       const lane = authoredLane || 'events'; safeId(lane, entry.context);
       if (!lanes.has(lane)) lanes.set(lane, { id: lane, label: lane });
@@ -302,22 +302,22 @@ export function compileExplainerDiagram(diagramType, rows, { title, id, line = 1
   } else if (diagramType === 'erd') {
     const entities = new Map(); spec.relationships = [];
     for (const entry of entries.filter(entry => entry.parts[0].startsWith('entity '))) {
-      expect(entry, 2, 2, 'entity user | 用户');
+      expect(entry, 2, 2, 'entity user | User');
       const entityId = safeId(entry.parts[0].slice(7).trim(), entry.context);
-      if (entities.has(entityId)) fail(entry.context, 'diagram-id-duplicate', 'Entity ids must be unique.', 'entity user | 用户');
+      if (entities.has(entityId)) fail(entry.context, 'diagram-id-duplicate', 'Entity ids must be unique.', 'entity user | User');
       entities.set(entityId, { id: entityId, label: entry.parts[1], row: 0, col: entities.size, attributes: [] });
     }
     for (const entry of entries.filter(entry => !entry.parts[0].startsWith('entity '))) {
       const route = entry.parts[0].match(/^([a-zA-Z][a-zA-Z0-9_-]*)\s*>\s*([a-zA-Z][a-zA-Z0-9_-]*)$/);
       if (route) {
-        expect(entry, 2, 3, 'order > user | many:one | 下单者');
+        expect(entry, 2, 3, 'order > user | many:one | buyer');
         const cardinality = entry.parts[1].match(/^(one|many):(one|many)$/);
-        if (!cardinality) fail(entry.context, 'diagram-cardinality', 'Relationship cardinality must be explicit.', 'order > user | many:one | 下单者');
+        if (!cardinality) fail(entry.context, 'diagram-cardinality', 'Relationship cardinality must be explicit.', 'order > user | many:one | buyer');
         spec.relationships.push({ id: edgeId(route[1], route[2]), from: route[1], to: route[2], fromCardinality: cardinality[1], toCardinality: cardinality[2], ...(entry.parts[2] ? { label: entry.parts[2] } : {}) });
       } else {
         expect(entry, 2, 4, 'order.user_id | bigint | fk | user.id');
         const field = entry.parts[0].match(/^([a-zA-Z][a-zA-Z0-9_-]*)\.([a-zA-Z][a-zA-Z0-9_]*)$/);
-        if (!field || !entities.has(field[1])) fail(entry.context, 'diagram-field', 'A field must name an explicitly declared entity.', 'entity user | 用户\nuser.id | bigint | pk');
+        if (!field || !entities.has(field[1])) fail(entry.context, 'diagram-field', 'A field must name an explicitly declared entity.', 'entity user | User\nuser.id | bigint | pk');
         const roles = entry.parts[2]?.split(',').map(value => value.trim()).filter(Boolean);
         entities.get(field[1]).attributes.push({ name: field[2], type: entry.parts[1], ...(roles?.length ? { key: roles.length === 1 ? roles[0] : roles } : {}), ...(entry.parts[3] ? { references: entry.parts[3] } : {}) });
       }
@@ -474,8 +474,10 @@ export async function prepareExplainerDiagrams(document, { repoRoot, baseDir, qu
       // Inline diagrams belong to the explainer's reading context. Keep the
       // original author bytes frozen; apply inheritance only to native render
       // input. Referenced standalone specs retain their own locale defaults.
+      // A page-level catalog travels with the inherited locale, so an
+      // unbundled page language localizes its inline diagrams the same way.
       const inheritedLocale = block.spec !== undefined && original.meta?.locale === undefined && document.meta?.locale !== undefined
-        ? { locale: document.meta.locale } : {};
+        ? { locale: document.meta.locale, ...(document.meta.translations !== undefined ? { translations: document.meta.translations } : {}) } : {};
       const spec = { ...original, meta: { ...original.meta, ...inheritedLocale, output: 'diagram.html', quality_profile: quality } };
       try { validateSchema(block.diagramType, spec); } catch (error) { rethrowNative(error, context, 'diagram-schema'); }
       fs.writeFileSync(input, JSON.stringify(spec), { flag: 'wx' });

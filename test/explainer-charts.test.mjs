@@ -35,10 +35,12 @@ test('explainer chart fences send native diagram types to shorthand and locate s
 });
 
 test('explainer chart CJK axis titles stand upright and task lists become checklists', t => {
-  const { status, html } = finalize(t, 'xychart-beta\n  x-axis ["前", "后"]\n  y-axis "延迟（毫秒）" 0 --> 700\n  bar [80, 600]\n```\n\n- [ ] 核对押金条款\n- [x] 拍下水电读数\n\n```text\nx');
+  // The y-axis title is a CJK sample, escaped to keep the repository
+  // English-only: upright vertical writing is the behaviour under test.
+  const { status, html } = finalize(t, 'xychart-beta\n  x-axis ["before", "after"]\n  y-axis "\u5ef6\u8fdf" 0 --> 700\n  bar [80, 600]\n```\n\n- [ ] Check the deposit terms\n- [x] Photograph the meter readings\n\n```text\nx');
   assert.equal(status, 0);
-  assert.match(html, /<text[^>]*writing-mode="vertical-rl"[^>]*>延迟（毫秒）<\/text>/);
-  assert.match(html, /<ul class="checklist"><li><label><input type="checkbox"><span>核对押金条款<\/span><\/label><\/li><li><label><input type="checkbox"><span>拍下水电读数<\/span>/);
+  assert.match(html, /<text[^>]*writing-mode="vertical-rl"[^>]*>\u5ef6\u8fdf<\/text>/);
+  assert.match(html, /<ul class="checklist"><li><label><input type="checkbox"><span>Check the deposit terms<\/span><\/label><\/li><li><label><input type="checkbox"><span>Photograph the meter readings<\/span>/);
   const mixed = finalize(t, 'pie\n  "A" : 1\n```\n\n- [ ] Task\n- Plain\n\n```text\nx');
   assert.ok(mixed.receipt.diagnostics.some(d => d.code === 'explainer/parse-list' && /checklist/.test(d.message)));
 });
@@ -46,9 +48,9 @@ test('explainer chart CJK axis titles stand upright and task lists become checkl
 test('explainer charts label bar values and give pie slices their value and share', t => {
   const bars = finalize(t, 'xychart-beta\n  x-axis ["Before", "After"]\n  bar [80, 600]');
   assert.match(bars.html, /<text[^>]*>600<\/text>/, 'bars carry their value');
-  const pie = finalize(t, 'pie showData\n  "Viewer" : 0.8\n  "字体" : 0.2');
+  const pie = finalize(t, 'pie showData\n  "Viewer" : 0.8\n  "Fonts" : 0.2');
   assert.match(pie.html, /Viewer · 0\.8 \(80%\)/);
-  assert.match(pie.html, /字体 · 0\.2（20%）/);
+  assert.match(pie.html, /Fonts · 0\.2 \(20%\)/);
   assert.doesNotMatch(pie.html, /\[0\.8\]/);
 });
 

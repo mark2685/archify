@@ -17,9 +17,9 @@ const rows = {
     'client | api | Request', 'api | redis | Read', 'redis | api | Miss | return'],
   architecture: ['client | Client | external', 'api | API | backend', 'redis | Redis | database', 'client > api | Request', 'api > redis | Read'],
   workflow: ['client | Client | external', 'api | API | backend', 'done | Done | backend', 'client > api | Request', 'api > done | Done'],
-  tree: ['root | 平台', 'api | API | root', 'redis | Redis | root'],
-  timeline: ['lane release | 发布', 'deploy | 2026-10-01T10:00:00+08:00 | 发布 | release | change', 'alert | 2026-10-01T10:05:00+08:00 | 告警 | release | alert'],
-  erd: ['entity user | 用户', 'entity order | 订单', 'user.id | bigint | pk', 'order.id | bigint | pk', 'order.user_id | bigint | fk | user.id', 'order > user | many:one | 下单者'],
+  tree: ['root | Platform', 'api | API | root', 'redis | Redis | root'],
+  timeline: ['lane release | Release', 'deploy | 2026-10-01T10:00:00+08:00 | Release | release | change', 'alert | 2026-10-01T10:05:00+08:00 | Alert | release | alert'],
+  erd: ['entity user | User', 'entity order | Order', 'user.id | bigint | pk', 'order.id | bigint | pk', 'order.user_id | bigint | fk | user.id', 'order > user | many:one | buyer'],
 };
 
 test('explainer diagrams: compact shapes produce real native showcase HTML and semantic routes', async () => {

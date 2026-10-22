@@ -59,10 +59,10 @@ test('automatic heading IDs survive insertion and duplicate headings offer an ex
 });
 
 test('panel offsets enable exact replacement without rewriting untouched source or CRLF',()=>{
-  const original='# 标题\r\n\r\n结论。\r\n\r\n## 第一个？ {#first}\r\n\r\n保留此段。\r\n\r\n## 第二个？ {#second}\r\n\r\n更改此段。\r\n';
+  const original='# Title\r\n\r\nConclusion.\r\n\r\n## First? {#first}\r\n\r\nKeep this paragraph.\r\n\r\n## Second? {#second}\r\n\r\nChange this paragraph.\r\n';
   const result=parse(original);const range=result.sourceMap['/panels/1'];
-  assert.equal(range.line,9);assert.equal(original.slice(range.start,range.end),'## 第二个？ {#second}\r\n\r\n更改此段。\r\n');
-  const next=original.slice(0,range.start)+'## 第二个？ {#second}\r\n\r\n新内容。\r\n'+original.slice(range.end);
+  assert.equal(range.line,9);assert.equal(original.slice(range.start,range.end),'## Second? {#second}\r\n\r\nChange this paragraph.\r\n');
+  const next=original.slice(0,range.start)+'## Second? {#second}\r\n\r\nNew content.\r\n'+original.slice(range.end);
   const updated=parse(next);assert.deepEqual(updated.document.panels[0],result.document.panels[0]);assert.equal(updated.document.panels[1].id,'second');
 });
 
@@ -102,9 +102,9 @@ test('restricted syntax errors contain a line, component, reason and repair exam
 
 test('frozen real format-calibration drafts parse and validate without rewriting their syntax',()=>{
   const drafts=[
-    '# 临时数据方案\n结论：选 A。这是虚构场景：团队要存放临时预览数据。\n\n## 标准是否满足？\n| 标准 | A | B |\n|---|---|---|\n| 数据无需跨重启保留 | ok | ok |\n| 无需磁盘 | ok | no |\n| 无需后台任务 | ok | no |\n',
-    '# 缓存读取\n这里只说明流程，没有测量性能。\n\n## 命中和未命中怎样处理？\n1. API 先查 Redis。\n2. 命中时，API 直接返回缓存值。\n3. 未命中时，API 读取数据库。\n4. API 回填 Redis，再返回结果。\n',
-    '# 记录请求\n请求经 API 查询 Store，再返回 Client。\n\n## 请求怎样往返？\n@sequence\nClient | API | 请求记录\nAPI | Store | 查询记录\nStore | API | 返回记录 | return\nAPI | Client | 返回记录 | return\n',
+    '# Temporary data options\nConclusion: choose A. The team needs somewhere to keep temporary preview data.\n\n## Are the criteria met?\n| Criterion | A | B |\n|---|---|---|\n| Data need not survive a restart | ok | ok |\n| No disk required | ok | ok |\n| No background job required | ok | no |\n',
+    '# Cache reads\nThis page explains the flow and did not measure performance.\n\n## How are hits and misses handled?\n1. The API checks Redis first.\n2. On a hit, the API returns the cached value.\n3. On a miss, the API reads the database.\n4. The API refills Redis, then returns the result.\n',
+    '# Recording requests\nA request goes through the API to the Store and back to the Client.\n\n## How does a request travel?\n@sequence\nClient | API | request record\nAPI | Store | look up record\nStore | API | return record | return\nAPI | Client | return record | return\n',
   ];
   for(const draft of drafts){const result=parseExplainer(draft,{output:'/tmp/explainer-calibration/result.html'});assert.ok(result.document,JSON.stringify(result.diagnostics));assert.equal(result.document.meta.output,'result.html');const validated=validateExplainer(result.document,{sourceMap:result.sourceMap});assert.equal(validated.ok,true,JSON.stringify(validated.diagnostics));}
 });
