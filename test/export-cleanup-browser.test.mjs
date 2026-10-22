@@ -113,9 +113,10 @@ test('Export cleanup preserves canonical artifacts and live interaction state', 
   });
 
   await t.test('explicit light and dark SVG exports stay fixed under the opposite OS theme', async () => {
+    // The fork's default preset is hadrian: gray-100 light ground, navy dark ground.
     const cases = [
-      { authorTheme: 'dark', hostTheme: 'dark', format: 'svg-light', theme: 'light', background: 'rgb(244, 245, 247)' },
-      { authorTheme: 'light', hostTheme: 'light', format: 'svg-dark', theme: 'dark', background: 'rgb(2, 6, 23)' },
+      { authorTheme: 'dark', hostTheme: 'dark', format: 'svg-light', theme: 'light', background: 'rgb(244, 246, 249)' },
+      { authorTheme: 'light', hostTheme: 'light', format: 'svg-dark', theme: 'dark', background: 'rgb(0, 37, 72)' },
     ];
     for (const item of cases) {
       await load(files.architecture, item.authorTheme);
