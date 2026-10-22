@@ -43,4 +43,8 @@ export const browserTestFiles = [
   'sequence-segment-contrast-browser.test.mjs',
   'bottom-node-index-browser.test.mjs',
   'explainer-browser.test.mjs',
+  // Hadrian fork brand guards (FORK.md).
+  'hadrian-shape-browser.test.mjs',
+  'hadrian-contrast.test.mjs',
+  'hadrian-default-browser.test.mjs',
 ];
