@@ -203,7 +203,8 @@ function wrapNoteText(text, width) {
   for (const token of String(text).match(/\s+|\p{Script=Han}[\p{Script=Han}\p{Mark}]*|[^\s\p{Script=Han}]+/gu) || []) {
     if (/\p{Script=Han}/u.test(token)) {
       for (const { segment } of noteWordSegmenter.segment(token)) words.push(segment);
-    } else if (/^[、。，；：！？）】》」』]+$/u.test(token) && words.length) {
+    // CJK closing punctuation (U+3001, U+3002, U+FF0C, U+FF1B, U+FF1A, U+FF01, U+FF1F, U+FF09, U+3011, U+300B, U+300D, U+300F) attaches to the preceding word.
+    } else if (/^[\u3001\u3002\uFF0C\uFF1B\uFF1A\uFF01\uFF1F\uFF09\u3011\u300B\u300D\u300F]+$/u.test(token) && words.length) {
       words[words.length - 1] += token;
     } else {
       words.push(token);

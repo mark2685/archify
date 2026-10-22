@@ -874,11 +874,11 @@ test('textUnits: ASCII=1, CJK=2, mixed sums, fullwidth supplementary=2', () => {
 
 test('textUnits follows wide and halfwidth East Asian presentation boundaries', () => {
   assert.equal(textUnits('\u3042\u30ab'), 4); // Hiragana + Katakana are wide
-  assert.equal(textUnits('\u3105ㆠ'), 4); // Bopomofo + extended Bopomofo are wide
+  assert.equal(textUnits('\u3105\u31a0'), 4); // Bopomofo + extended Bopomofo are wide
   assert.equal(textUnits('\u3131'), 2); // Hangul compatibility letter is wide
   assert.equal(textUnits('︐︙'), 4); // vertical punctuation forms are wide
   assert.equal(textUnits('\uff76\uff80\uff76\uff85'), 4); // halfwidth Katakana stays one unit per glyph
-  assert.equal(textUnits('ꥠ'), 2); // Hangul Jamo Extended-A is wide
+  assert.equal(textUnits('\ua960'), 2); // Hangul Jamo Extended-A is wide
 });
 
 test('textUnits counts emoji-presentation symbols in the BMP as wide', () => {
@@ -907,8 +907,8 @@ test('textUnits counts emoji-presentation symbols in the BMP as wide', () => {
   assert.equal(textUnits('⚏'), 2); // digram for greater yin
   // Hangul Jamo Extended-A stops at its last assigned jamo; the unassigned
   // tail of the block defaults to Neutral.
-  assert.equal(textUnits('ꥼ'), 2);
-  assert.equal(textUnits('꥽'), 1);
+  assert.equal(textUnits('\ua97c'), 2);
+  assert.equal(textUnits('\ua97d'), 1);
 });
 
 test('textUnits estimates variation-selector sequences without counting selectors separately', () => {

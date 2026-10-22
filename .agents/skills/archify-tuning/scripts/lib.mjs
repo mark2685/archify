@@ -7,9 +7,9 @@ import crypto from 'node:crypto';
 export const DIAGRAM_TYPES = ['architecture', 'workflow', 'sequence', 'dataflow', 'lifecycle', 'erd', 'class', 'tree', 'timeline', 'waterfall'];
 
 // Prompt names per type, as a user would ask for the diagram.
-export const TYPE_NAMES_ZH = {
-  architecture: '架构图', workflow: '工作流图', sequence: '时序图', dataflow: '数据流图', lifecycle: '生命周期图',
-  erd: 'ER 图', class: '类图', tree: '树图', timeline: '时间线图', waterfall: '瀑布图',
+export const TYPE_NAMES = {
+  architecture: 'architecture diagram', workflow: 'workflow diagram', sequence: 'sequence diagram', dataflow: 'data-flow diagram', lifecycle: 'lifecycle diagram',
+  erd: 'ER diagram', class: 'class diagram', tree: 'tree diagram', timeline: 'timeline', waterfall: 'waterfall chart',
 };
 
 export function tuningHome(env = process.env) {

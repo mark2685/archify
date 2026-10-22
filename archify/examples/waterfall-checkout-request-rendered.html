@@ -5306,6 +5306,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     html[data-preset="hadrian"] .node-finder {
       border-width: 1px;
     }
+    /* Upstream thickens a few edges for emphasis (kbd caps, card and editorial
+       rules); every edge stays a hairline here. */
+    html[data-preset="hadrian"] kbd,
+    html[data-preset="hadrian"] .card,
+    html[data-preset="hadrian"] .card::before,
+    html[data-preset="hadrian"] .header-row::after,
+    html[data-preset="hadrian"] .relationship-lens-head {
+      border-width: 1px;
+    }
     html[data-preset="hadrian"] .toolbar,
     html[data-preset="hadrian"] .preset-menu,
     html[data-preset="hadrian"] .export-menu,

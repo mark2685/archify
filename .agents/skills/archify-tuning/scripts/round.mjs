@@ -8,7 +8,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DIAGRAM_TYPES, TYPE_NAMES_ZH, tuningHome } from './lib.mjs';
+import { DIAGRAM_TYPES, TYPE_NAMES, tuningHome } from './lib.mjs';
 
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
@@ -52,8 +52,8 @@ const prompts = types.map((type) => {
   fs.mkdirSync(workdir, { recursive: true });
   return {
     type,
-    title: `${name} ${TYPE_NAMES_ZH[type]}`,
-    task: `画 ${project} 这个项目的${TYPE_NAMES_ZH[type]}。
+    title: `${name} ${TYPE_NAMES[type]}`,
+    task: `Draw the ${TYPE_NAMES[type]} of the ${project} project.
 
 Use the Archify skill located at ${archify} (read ${archify}/SKILL.md first and follow it exactly, including the references it tells you to read). Do NOT install, update, or copy Archify anywhere; use the CLI directly as \`node ${archify}/bin/archify.mjs ...\`.
 

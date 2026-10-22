@@ -1,0 +1,9 @@
+{
+  "$comment": "Files allowed to contain non-English text, each with a reason. Keep this list short; scripts/check-english-only.mjs fails on stale entries.",
+  "entries": [
+    {
+      "path": ".agents/skills/simplify-codebase/SKILL.md",
+      "reason": "Vendored third-party review Skill pinned to an upstream commit (see .agents/README.md); its frontmatter description lists the Chinese trigger phrases its author chose, and the fork does not edit pinned vendored files."
+    }
+  ]
+}
