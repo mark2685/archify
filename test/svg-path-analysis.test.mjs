@@ -70,7 +70,7 @@ for (const source of [
     assert.ok(Number.isInteger(result.error.tokenOffset));
     assert.ok(result.error.tokenOffset >= 0 && result.error.tokenOffset <= source.length);
     assert.equal(typeof result.error.reason, 'string');
-    assert.equal(result.subpaths, undefined, '不把部分解析当作可信几何返回');
+    assert.equal(result.subpaths, undefined, '\u4e0d\u628a\u90e8\u5206\u89e3\u6790\u5f53\u4f5c\u53ef\u4fe1\u51e0\u4f55\u8fd4\u56de');
   });
 }
 

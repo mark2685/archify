@@ -3,7 +3,7 @@
  "diagram_type": "lifecycle",
  "meta": {
   "title": "Crowded wide lifecycle",
-  "locale": "zh-CN",
+  "locale": "en",
   "output": "lifecycle.html",
   "quality_profile": "showcase"
  },
@@ -19,77 +19,77 @@
   {
    "id": "connecting",
    "type": "start",
-   "label": "正在连接",
-   "sublabel": "建立 ACP 会话",
+   "label": "\u6b63\u5728\u8fde\u63a5",
+   "sublabel": "\u5efa\u7acb ACP \u4f1a\u8bdd",
    "tag": "connecting",
    "step": "01"
   },
   {
    "id": "planning",
    "type": "active",
-   "label": "规划中",
-   "sublabel": "生成 Plan",
+   "label": "\u89c4\u5212\u4e2d",
+   "sublabel": "\u751f\u6210 Plan",
    "tag": "running·plan",
    "step": "02"
   },
   {
    "id": "plan_ready",
    "type": "decision",
-   "label": "待确认计划",
-   "sublabel": "等待确认",
+   "label": "\u5f85\u786e\u8ba4\u8ba1\u5212",
+   "sublabel": "\u7b49\u5f85\u786e\u8ba4",
    "tag": "ready·plan",
    "step": "03"
   },
   {
    "id": "executing",
    "type": "active",
-   "label": "执行中",
-   "sublabel": "按 Plan 执行",
+   "label": "\u6267\u884c\u4e2d",
+   "sublabel": "\u6309 Plan \u6267\u884c",
    "tag": "running·process",
    "step": "04"
   },
   {
    "id": "awaiting_acceptance",
    "type": "waiting",
-   "label": "待验收",
-   "sublabel": "结果卡片",
+   "label": "\u5f85\u9a8c\u6536",
+   "sublabel": "\u7ed3\u679c\u5361\u7247",
    "tag": "ready·result",
    "step": "05"
   },
   {
    "id": "completed",
    "type": "success",
-   "label": "已完成",
-   "sublabel": "结果已验收",
+   "label": "\u5df2\u5b8c\u6210",
+   "sublabel": "\u7ed3\u679c\u5df2\u9a8c\u6536",
    "tag": "completed",
    "step": "06"
   },
   {
    "id": "undelivered",
    "type": "waiting",
-   "label": "回合结束未交付",
-   "sublabel": "缺少有效 mobi-result",
+   "label": "\u56de\u5408\u7ed3\u675f\u672a\u4ea4\u4ed8",
+   "sublabel": "\u7f3a\u5c11\u6709\u6548 mobi-result",
    "tag": "ready·process"
   },
   {
    "id": "revision",
    "type": "waiting",
-   "label": "待返工反馈",
+   "label": "\u5f85\u8fd4\u5de5\u53cd\u9988",
    "sublabel": "revisionRequested",
    "tag": "ready·result"
   },
   {
    "id": "paused",
    "type": "neutral",
-   "label": "已停止",
-   "sublabel": "用户停止或宿主重启",
+   "label": "\u5df2\u505c\u6b62",
+   "sublabel": "\u7528\u6237\u505c\u6b62\u6216\u5bbf\u4e3b\u91cd\u542f",
    "tag": "paused"
   },
   {
    "id": "error",
    "type": "failure",
-   "label": "出错了",
-   "sublabel": "ACP 或协议异常",
+   "label": "\u51fa\u9519\u4e86",
+   "sublabel": "ACP \u6216\u534f\u8bae\u5f02\u5e38",
    "tag": "error"
   }
  ],
@@ -98,19 +98,19 @@
    "id": "t-connect",
    "from": "connecting",
    "to": "planning",
-   "label": "会话就绪"
+   "label": "\u4f1a\u8bdd\u5c31\u7eea"
   },
   {
    "id": "t-plan-done",
    "from": "planning",
    "to": "plan_ready",
-   "label": "回合结束"
+   "label": "\u56de\u5408\u7ed3\u675f"
   },
   {
    "id": "t-confirm",
    "from": "plan_ready",
    "to": "executing",
-   "label": "确认计划",
+   "label": "\u786e\u8ba4\u8ba1\u5212",
    "variant": "emphasis"
   },
   {
@@ -123,115 +123,115 @@
    "id": "t-accept",
    "from": "awaiting_acceptance",
    "to": "completed",
-   "label": "验收通过",
+   "label": "\u9a8c\u6536\u901a\u8fc7",
    "variant": "emphasis"
   },
   {
    "id": "t-clarify",
    "from": "plan_ready",
    "to": "planning",
-   "label": "补充消息"
+   "label": "\u8865\u5145\u6d88\u606f"
   },
   {
    "id": "t-native-approve",
    "from": "planning",
    "to": "executing",
-   "label": "批准计划权限",
+   "label": "\u6279\u51c6\u8ba1\u5212\u6743\u9650",
    "variant": "dashed"
   },
   {
    "id": "t-no-envelope",
    "from": "executing",
    "to": "undelivered",
-   "label": "无结果信封"
+   "label": "\u65e0\u7ed3\u679c\u4fe1\u5c01"
   },
   {
    "id": "t-continue",
    "from": "undelivered",
    "to": "executing",
-   "label": "继续对话"
+   "label": "\u7ee7\u7eed\u5bf9\u8bdd"
   },
   {
    "id": "t-request-changes",
    "from": "awaiting_acceptance",
    "to": "revision",
-   "label": "提出修改"
+   "label": "\u63d0\u51fa\u4fee\u6539"
   },
   {
    "id": "t-feedback",
    "from": "revision",
    "to": "planning",
-   "label": "发送反馈"
+   "label": "\u53d1\u9001\u53cd\u9988"
   },
   {
    "id": "t-followup",
    "from": "completed",
    "to": "planning",
-   "label": "追加消息",
+   "label": "\u8ffd\u52a0\u6d88\u606f",
    "variant": "dashed"
   },
   {
    "id": "t-stop-connect",
    "from": "connecting",
    "to": "paused",
-   "label": "停止"
+   "label": "\u505c\u6b62"
   },
   {
    "id": "t-stop-plan",
    "from": "planning",
    "to": "paused",
-   "label": "停止"
+   "label": "\u505c\u6b62"
   },
   {
    "id": "t-stop-exec",
    "from": "executing",
    "to": "paused",
-   "label": "停止"
+   "label": "\u505c\u6b62"
   },
   {
    "id": "t-resume-plan",
    "from": "paused",
    "to": "planning",
-   "label": "继续·计划"
+   "label": "\u7ee7\u7eed·\u8ba1\u5212"
   },
   {
    "id": "t-resume-exec",
    "from": "paused",
    "to": "executing",
-   "label": "继续·执行"
+   "label": "\u7ee7\u7eed·\u6267\u884c"
   },
   {
    "id": "t-fail-connect",
    "from": "connecting",
    "to": "error",
-   "label": "出错",
+   "label": "\u51fa\u9519",
    "variant": "security"
   },
   {
    "id": "t-fail-plan",
    "from": "planning",
    "to": "error",
-   "label": "出错",
+   "label": "\u51fa\u9519",
    "variant": "security"
   },
   {
    "id": "t-fail-exec",
    "from": "executing",
    "to": "error",
-   "label": "出错",
+   "label": "\u51fa\u9519",
    "variant": "security"
   },
   {
    "id": "t-retry-plan",
    "from": "error",
    "to": "planning",
-   "label": "重发·计划"
+   "label": "\u91cd\u53d1·\u8ba1\u5212"
   },
   {
    "id": "t-retry-exec",
    "from": "error",
    "to": "executing",
-   "label": "重发·执行"
+   "label": "\u91cd\u53d1·\u6267\u884c"
   }
  ]
 }

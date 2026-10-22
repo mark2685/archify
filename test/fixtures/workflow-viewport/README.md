@@ -1,6 +1,6 @@
 # Order workflow viewport regression
 
-Original task (Chinese): 用户提交订单，校验并预占库存，创建待支付订单并等待支付；支付成功扣减库存并发货；库存不足提示失败；支付超时取消订单并释放预占库存；发货失败进入人工处理。
+Original task (translated from Chinese; the fixture labels keep the original wide glyphs as escapes): a user submits an order; stock is validated and reserved; a pending order is created and waits for payment; successful payment deducts stock and ships; insufficient stock reports failure; payment timeout cancels the order and releases the reservation; a failed shipment goes to manual handling.
 
 `order-overflow.workflow.json` is the final failed candidate from a Luna trial on
 PR #325 (`d634028`), after three layout repairs. Static showcase validation

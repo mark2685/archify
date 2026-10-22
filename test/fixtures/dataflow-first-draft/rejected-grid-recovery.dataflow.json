@@ -4,49 +4,49 @@
   "meta": {
     "title": "Automatic label corridor",
     "output": "diagram.html",
-    "locale": "zh-CN",
+    "locale": "en",
     "quality_profile": "showcase"
   },
   "stages": [
     {
-      "label": "输入结果"
+      "label": "\u8f93\u5165\u7ed3\u679c"
     },
     {
-      "label": "分支条件"
+      "label": "\u5206\u652f\u6761\u4ef6"
     },
     {
-      "label": "清理与交付"
+      "label": "\u6e05\u7406\u4e0e\u4ea4\u4ed8"
     }
   ],
   "nodes": [
     {
       "id": "n7",
       "type": "backend",
-      "label": "请求状态判定",
-      "sublabel": "Kind / active / 其他",
+      "label": "\u8bf7\u6c42\u72b6\u6001\u5224\u5b9a",
+      "sublabel": "Kind / active / \u5176\u4ed6",
       "stage": 1,
       "row": 0
     },
     {
       "id": "n8",
       "type": "backend",
-      "label": "结果处理",
-      "sublabel": "最终处理结果或连接异常",
+      "label": "\u7ed3\u679c\u5904\u7406",
+      "sublabel": "\u6700\u7ec8\u5904\u7406\u7ed3\u679c\u6216\u8fde\u63a5\u5f02\u5e38",
       "stage": 1,
       "row": 1
     },
     {
       "id": "n9",
       "type": "backend",
-      "label": "submit 提交",
-      "sublabel": "结果确认值 · 继续收尾",
+      "label": "submit \u63d0\u4ea4",
+      "sublabel": "\u7ed3\u679c\u786e\u8ba4\u503c · \u7ee7\u7eed\u6536\u5c3e",
       "stage": 1,
       "row": 2
     },
     {
       "id": "n10",
       "type": "backend",
-      "label": "输入 / 处理异常",
+      "label": "\u8f93\u5165 / \u5904\u7406\u5f02\u5e38",
       "sublabel": "expired / refused / missing",
       "stage": 0,
       "row": 4
@@ -54,16 +54,16 @@
     {
       "id": "n11",
       "type": "backend",
-      "label": "cleanup 收尾",
-      "sublabel": "worker.clear() · 完成交付",
+      "label": "cleanup \u6536\u5c3e",
+      "sublabel": "worker.clear() · \u5b8c\u6210\u4ea4\u4ed8",
       "stage": 2,
       "row": 2
     },
     {
       "id": "n12",
       "type": "backend",
-      "label": "调用方接收结果",
-      "sublabel": "选定结果字典或异常值",
+      "label": "\u8c03\u7528\u65b9\u63a5\u6536\u7ed3\u679c",
+      "sublabel": "\u9009\u5b9a\u7ed3\u679c\u5b57\u5178\u6216\u5f02\u5e38\u503c",
       "stage": 2,
       "row": 4
     }
@@ -73,73 +73,73 @@
       "id": "f9",
       "from": "n7",
       "to": "n11",
-      "label": "状态非 active 或 Idle",
+      "label": "\u72b6\u6001\u975e active \u6216 Idle",
       "variant": "dashed",
-      "classification": "控制条件"
+      "classification": "\u63a7\u5236\u6761\u4ef6"
     },
     {
       "id": "f10",
       "from": "n8",
       "to": "n11",
-      "label": "处理已结束或 EOF",
+      "label": "\u5904\u7406\u5df2\u7ed3\u675f\u6216 EOF",
       "variant": "dashed",
-      "classification": "控制条件"
+      "classification": "\u63a7\u5236\u6761\u4ef6"
     },
     {
       "id": "f11",
       "from": "n9",
       "to": "n11",
-      "label": "请求结束或 EOF",
+      "label": "\u8bf7\u6c42\u7ed3\u675f\u6216 EOF",
       "variant": "dashed",
-      "classification": "控制条件"
+      "classification": "\u63a7\u5236\u6761\u4ef6"
     },
     {
       "id": "f12",
       "from": "n10",
       "to": "n11",
-      "label": "捕获指定处理异常",
+      "label": "\u6355\u83b7\u6307\u5b9a\u5904\u7406\u5f02\u5e38",
       "variant": "dashed",
-      "classification": "控制条件"
+      "classification": "\u63a7\u5236\u6761\u4ef6"
     },
     {
       "id": "f13",
       "from": "n11",
       "to": "n12",
-      "label": "close 收尾后交付",
+      "label": "close \u6536\u5c3e\u540e\u4ea4\u4ed8",
       "variant": "dashed",
-      "classification": "控制条件"
+      "classification": "\u63a7\u5236\u6761\u4ef6"
     },
     {
       "id": "f14",
       "from": "n7",
       "to": "n12",
-      "label": "中间值或输入错误",
+      "label": "\u4e2d\u95f4\u503c\u6216\u8f93\u5165\u9519\u8bef",
       "variant": "default",
-      "classification": "结果数据"
+      "classification": "\u7ed3\u679c\u6570\u636e"
     },
     {
       "id": "f15",
       "from": "n8",
       "to": "n12",
-      "label": "result 或处理错误",
+      "label": "result \u6216\u5904\u7406\u9519\u8bef",
       "variant": "default",
-      "classification": "结果数据"
+      "classification": "\u7ed3\u679c\u6570\u636e"
     },
     {
       "id": "f16",
       "from": "n9",
       "to": "n12",
-      "label": "中间值或输入错误",
+      "label": "\u4e2d\u95f4\u503c\u6216\u8f93\u5165\u9519\u8bef",
       "variant": "default",
-      "classification": "结果数据"
+      "classification": "\u7ed3\u679c\u6570\u636e"
     },
     {
       "id": "f17",
       "from": "n10",
       "to": "n12",
-      "label": "result:error 字典",
+      "label": "result:error \u5b57\u5178",
       "variant": "default",
-      "classification": "结果数据"
+      "classification": "\u7ed3\u679c\u6570\u636e"
     }
   ]
 }

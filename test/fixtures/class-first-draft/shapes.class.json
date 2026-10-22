@@ -2,8 +2,8 @@
   "schema_version": 1,
   "diagram_type": "class",
   "meta": {
-    "title": "图形编辑器核心类",
-    "locale": "zh-CN",
+    "title": "\u56fe\u5f62\u7f16\u8f91\u5668\u6838\u5fc3\u7c7b",
+    "locale": "en",
     "quality_profile": "showcase"
   },
   "layout": {
@@ -159,21 +159,21 @@
       "from": "group",
       "to": "shape",
       "kind": "composition",
-      "label": "包含"
+      "label": "\u5305\u542b"
     },
     {
       "id": "doc_shape_aggregation",
       "from": "doc",
       "to": "shape",
       "kind": "aggregation",
-      "label": "持有"
+      "label": "\u6301\u6709"
     },
     {
       "id": "doc_history_composition",
       "from": "doc",
       "to": "history",
       "kind": "composition",
-      "label": "撤销栈"
+      "label": "\u64a4\u9500\u6808"
     }
   ]
 }

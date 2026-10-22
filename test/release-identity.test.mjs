@@ -50,15 +50,15 @@ function writeValidDevelopmentFixture(root, overrides = {}) {
     '',
   ].join('\n');
   const chinese = [
-    '![开发版本](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
+    '![\u5f00\u53d1\u7248\u672c](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
     '',
-    `当前开发版本：\`v${version}\``,
+    `\u5f53\u524d\u5f00\u53d1\u7248\u672c\uff1a\`v${version}\``,
     '',
   ].join('\n');
   const japanese = [
-    '![開発版](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
+    '![\u958b\u767a\u7248](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
     '',
-    `現在の開発版: \`v${version}\``,
+    `\u73fe\u5728\u306e\u958b\u767a\u7248: \`v${version}\``,
     '',
   ].join('\n');
   const files = {
@@ -92,11 +92,11 @@ function writeValidDevelopmentFixture(root, overrides = {}) {
     'README_EN.md': english,
     'README_ZH.md': chinese,
     'README_JA.md': japanese,
-    'scripts/start-template.html': 'development · 开发版 · [[ARCHIFY_VERSION]]',
-    'scripts/guide-template.html': 'development · 开发版 · [[ARCHIFY_VERSION]]',
-    'scripts/gallery-template.html': 'development · 开发版 · [[ARCHIFY_VERSION]]',
-    'docs/index.html': `<span>development · v${version} · 开发版 · 9/9 checks</span>`,
-    'docs/start.html': `<span>development · v${version} · 开发版</span>`,
+    'scripts/start-template.html': 'development · \u5f00\u53d1\u7248 · [[ARCHIFY_VERSION]]',
+    'scripts/guide-template.html': 'development · \u5f00\u53d1\u7248 · [[ARCHIFY_VERSION]]',
+    'scripts/gallery-template.html': 'development · \u5f00\u53d1\u7248 · [[ARCHIFY_VERSION]]',
+    'docs/index.html': `<span>development · v${version} · \u5f00\u53d1\u7248 · 9/9 checks</span>`,
+    'docs/start.html': `<span>development · v${version} · \u5f00\u53d1\u7248</span>`,
     'ROADMAP.md': `The current development line is \`v${version}\`; it contains the work under Changelog Unreleased and is not a stable release.`,
   };
   for (const [relativePath, content] of Object.entries({ ...files, ...overrides })) {
@@ -113,15 +113,15 @@ function writeValidStableFixture(root, overrides = {}) {
     '',
   ].join('\n');
   const chinese = [
-    '![稳定版本](https://img.shields.io/badge/version-2.13.0-blue)',
+    '![\u7a33\u5b9a\u7248\u672c](https://img.shields.io/badge/version-2.13.0-blue)',
     '',
-    `当前稳定版本：\`v${version}\``,
+    `\u5f53\u524d\u7a33\u5b9a\u7248\u672c\uff1a\`v${version}\``,
     '',
   ].join('\n');
   const japanese = [
-    '![安定版](https://img.shields.io/badge/version-2.13.0-blue)',
+    '![\u5b89\u5b9a\u7248](https://img.shields.io/badge/version-2.13.0-blue)',
     '',
-    `現在の安定版: \`v${version}\``,
+    `\u73fe\u5728\u306e\u5b89\u5b9a\u7248: \`v${version}\``,
     '',
   ].join('\n');
   const files = {
@@ -151,11 +151,11 @@ function writeValidStableFixture(root, overrides = {}) {
     'README_EN.md': english,
     'README_ZH.md': chinese,
     'README_JA.md': japanese,
-    'scripts/start-template.html': 'stable · 稳定版 · [[ARCHIFY_VERSION]]',
-    'scripts/guide-template.html': 'stable · 稳定版 · [[ARCHIFY_VERSION]]',
-    'scripts/gallery-template.html': 'stable · 稳定版 · [[ARCHIFY_VERSION]]',
-    'docs/index.html': `<span>stable · v${version} · 稳定版 · 9/9 checks</span>`,
-    'docs/start.html': `<span>stable · v${version} · 稳定版</span>`,
+    'scripts/start-template.html': 'stable · \u7a33\u5b9a\u7248 · [[ARCHIFY_VERSION]]',
+    'scripts/guide-template.html': 'stable · \u7a33\u5b9a\u7248 · [[ARCHIFY_VERSION]]',
+    'scripts/gallery-template.html': 'stable · \u7a33\u5b9a\u7248 · [[ARCHIFY_VERSION]]',
+    'docs/index.html': `<span>stable · v${version} · \u7a33\u5b9a\u7248 · 9/9 checks</span>`,
+    'docs/start.html': `<span>stable · v${version} · \u7a33\u5b9a\u7248</span>`,
     'ROADMAP.md': `The current stable version is \`v${version}\`.`,
   };
   for (const [relativePath, content] of Object.entries({ ...files, ...overrides })) {
@@ -357,8 +357,8 @@ test('package, lockfile, Skill metadata, escaped Shields badge, and public docs 
     ].join('\n');
     writeFile(fixture, 'README.md', staleEnglish);
     writeFile(fixture, 'README_EN.md', staleEnglish);
-    writeFile(fixture, 'README_ZH.md', '![Version](https://img.shields.io/badge/version-2.13.0-blue)\n\nArchify 2.12 包含未发布能力。\n');
-    writeFile(fixture, 'README_JA.md', '![Version](https://img.shields.io/badge/version-2.13.0-blue)\n\nArchify 2.12 は未リリース機能を含みます。\n');
+    writeFile(fixture, 'README_ZH.md', '![Version](https://img.shields.io/badge/version-2.13.0-blue)\n\nArchify 2.12 \u5305\u542b\u672a\u53d1\u5e03\u80fd\u529b\u3002\n');
+    writeFile(fixture, 'README_JA.md', '![Version](https://img.shields.io/badge/version-2.13.0-blue)\n\nArchify 2.12 \u306f\u672a\u30ea\u30ea\u30fc\u30b9\u6a5f\u80fd\u3092\u542b\u307f\u307e\u3059\u3002\n');
     writeFile(fixture, 'docs/index.html', '<span>Agent Skill · v2.12.0</span>');
     writeFile(fixture, 'docs/start.html', '<span>Archify v2.12.0</span>');
 
@@ -379,7 +379,7 @@ test('landing proof receipt matches the current nine-check artifact contract', (
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
   try {
     writeValidDevelopmentFixture(fixture, {
-      'docs/index.html': '<span>development · v2.13.0-dev.0 · 开发版 · 8/8 checks</span>',
+      'docs/index.html': '<span>development · v2.13.0-dev.0 · \u5f00\u53d1\u7248 · 8/8 checks</span>',
     });
 
     const result = runCheck(fixture);
@@ -395,7 +395,7 @@ test('landing rejects every stale N/N contract count even when 9/9 is also prese
   try {
     writeValidDevelopmentFixture(fixture, {
       'docs/index.html': [
-        '<span>development · v2.13.0-dev.0 · 开发版 · 9/9 checks</span>',
+        '<span>development · v2.13.0-dev.0 · \u5f00\u53d1\u7248 · 9/9 checks</span>',
         '<span>legacy receipt · 7/7 checks</span>',
       ].join('\n'),
     });
@@ -413,7 +413,7 @@ test('Raven is not a generated agent-switcher target', () => {
   try {
     writeValidDevelopmentFixture(fixture, {
       'docs/start.html': [
-        '<span>development · v2.13.0-dev.0 · 开发版</span>',
+        '<span>development · v2.13.0-dev.0 · \u5f00\u53d1\u7248</span>',
         '<button data-agent="raven">Raven</button>',
         '<pre>npx skills add tt-a1i/archify --agent raven</pre>',
       ].join('\n'),
@@ -432,7 +432,7 @@ test('the Japanese README must carry its own development marker, not the English
   try {
     writeValidDevelopmentFixture(fixture, {
       'README_JA.md': [
-        '![開発版](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
+        '![\u958b\u767a\u7248](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
         '',
         'Current development version: `v2.13.0-dev.0`',
         '',
@@ -486,7 +486,7 @@ test('generated public-page templates keep a development marker and version plac
 
     const result = runCheck(fixture);
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /scripts\/gallery-template\.html must use \[\[ARCHIFY_VERSION\]\] with development and 开发版 labels/);
+    assert.match(result.stderr, /scripts\/gallery-template\.html must use \[\[ARCHIFY_VERSION\]\] with development and \u5f00\u53d1\u7248 labels/);
   } finally {
     fs.rmSync(fixture, { recursive: true, force: true });
   }
@@ -499,13 +499,13 @@ test('stable public-page templates reject development labels on version-bearing 
       'scripts/guide-template.html': [
         '<span data-i18n="versionLabel">Scenario guide / development / v[[ARCHIFY_VERSION]]</span>',
         "versionLabel:'Scenario guide / stable / v[[ARCHIFY_VERSION]]'",
-        "versionLabel:'场景指南 / 稳定版 / v[[ARCHIFY_VERSION]]'",
+        "versionLabel:'\u573a\u666f\u6307\u5357 / \u7a33\u5b9a\u7248 / v[[ARCHIFY_VERSION]]'",
       ].join('\n'),
     });
 
     const result = runCheck(fixture);
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /scripts\/guide-template\.html must not label \[\[ARCHIFY_VERSION\]\] as development or 开发版/);
+    assert.match(result.stderr, /scripts\/guide-template\.html must not label \[\[ARCHIFY_VERSION\]\] as development or \u5f00\u53d1\u7248/);
   } finally {
     fs.rmSync(fixture, { recursive: true, force: true });
   }
@@ -514,7 +514,7 @@ test('stable public-page templates reject development labels on version-bearing 
 test('public-page identity ignores compact SVG coordinates without hiding real version literals', () => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
   const templatePath = 'scripts/start-template.html';
-  const identity = 'development · 开发版 · [[ARCHIFY_VERSION]]';
+  const identity = 'development · \u5f00\u53d1\u7248 · [[ARCHIFY_VERSION]]';
   const coordinates = 'M8 1.6l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.4z';
   try {
     for (const pathElement of [

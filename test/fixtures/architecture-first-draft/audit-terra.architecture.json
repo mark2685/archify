@@ -2,8 +2,8 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "跨租户审计日志导出与脱敏编排服务（含异步导出、留存策略和人工复核边界）",
-    "locale": "zh-CN",
+    "title": "\u8de8\u79df\u6237\u5ba1\u8ba1\u65e5\u5fd7\u5bfc\u51fa\u4e0e\u8131\u654f\u7f16\u6392\u670d\u52a1\uff08\u542b\u5f02\u6b65\u5bfc\u51fa\u3001\u7559\u5b58\u7b56\u7565\u548c\u4eba\u5de5\u590d\u6838\u8fb9\u754c\uff09",
+    "locale": "en",
     "quality_profile": "showcase",
     "output": "audit-terra.html"
   },
@@ -11,8 +11,8 @@
     {
       "id": "caller",
       "type": "external",
-      "label": "导出请求调用方",
-      "sublabel": "提供 tenantId 与 range",
+      "label": "\u5bfc\u51fa\u8bf7\u6c42\u8c03\u7528\u65b9",
+      "sublabel": "\u63d0\u4f9b tenantId \u4e0e range",
       "pos": [
         35,
         235
@@ -25,8 +25,8 @@
     {
       "id": "entry",
       "type": "backend",
-      "label": "请求入口 requestAuditExport",
-      "sublabel": "缺 tenantId 或 range 返回 400",
+      "label": "\u8bf7\u6c42\u5165\u53e3 requestAuditExport",
+      "sublabel": "\u7f3a tenantId \u6216 range \u8fd4\u56de 400",
       "pos": [
         250,
         235
@@ -39,8 +39,8 @@
     {
       "id": "plan",
       "type": "messagebus",
-      "label": "导出计划（内存对象）",
-      "sublabel": "queued、parts 与 run 闭包",
+      "label": "\u5bfc\u51fa\u8ba1\u5212\uff08\u5185\u5b58\u5bf9\u8c61\uff09",
+      "sublabel": "queued\u3001parts \u4e0e run \u95ed\u5305",
       "pos": [
         510,
         235
@@ -53,8 +53,8 @@
     {
       "id": "policy",
       "type": "security",
-      "label": "策略配置 policy",
-      "sublabel": "180 天、字段、分片、名称",
+      "label": "\u7b56\u7565\u914d\u7f6e policy",
+      "sublabel": "180 \u5929\u3001\u5b57\u6bb5\u3001\u5206\u7247\u3001\u540d\u79f0",
       "pos": [
         505,
         55
@@ -67,8 +67,8 @@
     {
       "id": "execution",
       "type": "backend",
-      "label": "exportParts 执行函数",
-      "sublabel": "仅由 run 闭包引用，调用者未展示",
+      "label": "exportParts \u6267\u884c\u51fd\u6570",
+      "sublabel": "\u4ec5\u7531 run \u95ed\u5305\u5f15\u7528\uff0c\u8c03\u7528\u8005\u672a\u5c55\u793a",
       "pos": [
         510,
         440
@@ -81,8 +81,8 @@
     {
       "id": "query-stub",
       "type": "database",
-      "label": "审计日志查询桩",
-      "sublabel": "按 tenantId 与 part 返回本地示例行",
+      "label": "\u5ba1\u8ba1\u65e5\u5fd7\u67e5\u8be2\u6869",
+      "sublabel": "\u6309 tenantId \u4e0e part \u8fd4\u56de\u672c\u5730\u793a\u4f8b\u884c",
       "pos": [
         790,
         385
@@ -95,8 +95,8 @@
     {
       "id": "redactor",
       "type": "security",
-      "label": "字段脱敏",
-      "sublabel": "过滤 policy.redactFields",
+      "label": "\u5b57\u6bb5\u8131\u654f",
+      "sublabel": "\u8fc7\u6ee4 policy.redactFields",
       "pos": [
         790,
         530
@@ -109,8 +109,8 @@
     {
       "id": "writer-stub",
       "type": "cloud",
-      "label": "结果对象写入桩",
-      "sublabel": "返回 bucket/tenantId/行数 路径字符串",
+      "label": "\u7ed3\u679c\u5bf9\u8c61\u5199\u5165\u6869",
+      "sublabel": "\u8fd4\u56de bucket/tenantId/\u884c\u6570 \u8def\u5f84\u5b57\u7b26\u4e32",
       "pos": [
         1040,
         530
@@ -123,8 +123,8 @@
     {
       "id": "notifier",
       "type": "external",
-      "label": "完成通知函数",
-      "sublabel": "组装 audit-export-ready 返回对象",
+      "label": "\u5b8c\u6210\u901a\u77e5\u51fd\u6570",
+      "sublabel": "\u7ec4\u88c5 audit-export-ready \u8fd4\u56de\u5bf9\u8c61",
       "pos": [
         1035,
         385
@@ -137,8 +137,8 @@
     {
       "id": "result",
       "type": "external",
-      "label": "执行结果（若 run 被调用）",
-      "sublabel": "files 与 expiresAfterDays",
+      "label": "\u6267\u884c\u7ed3\u679c\uff08\u82e5 run \u88ab\u8c03\u7528\uff09",
+      "sublabel": "files \u4e0e expiresAfterDays",
       "pos": [
         1040,
         690
@@ -151,8 +151,8 @@
     {
       "id": "review-declaration",
       "type": "external",
-      "label": "人工复核（仅声明）",
-      "sublabel": "privacy-review 与 requestReview 未接入",
+      "label": "\u4eba\u5de5\u590d\u6838\uff08\u4ec5\u58f0\u660e\uff09",
+      "sublabel": "privacy-review \u4e0e requestReview \u672a\u63a5\u5165",
       "pos": [
         255,
         55
@@ -166,7 +166,7 @@
   "boundaries": [
     {
       "kind": "region",
-      "label": "入口与计划模块边界",
+      "label": "\u5165\u53e3\u4e0e\u8ba1\u5212\u6a21\u5757\u8fb9\u754c",
       "wraps": [
         "entry",
         "plan",
@@ -176,7 +176,7 @@
     },
     {
       "kind": "region",
-      "label": "条件执行中的租户数据处理",
+      "label": "\u6761\u4ef6\u6267\u884c\u4e2d\u7684\u79df\u6237\u6570\u636e\u5904\u7406",
       "wraps": [
         "execution",
         "query-stub",
@@ -193,7 +193,7 @@
       "id": "request",
       "from": "caller",
       "to": "entry",
-      "label": "导出请求：tenantId + range",
+      "label": "\u5bfc\u51fa\u8bf7\u6c42\uff1atenantId + range",
       "variant": "emphasis"
     },
     {
@@ -207,19 +207,19 @@
       "id": "policy-to-plan",
       "from": "policy",
       "to": "plan",
-      "label": "maxRowsPerPart 用于分片"
+      "label": "maxRowsPerPart \u7528\u4e8e\u5206\u7247"
     },
     {
       "id": "policy-to-execution",
       "from": "policy",
       "to": "execution",
-      "label": "脱敏、留存、对象与通知名称"
+      "label": "\u8131\u654f\u3001\u7559\u5b58\u3001\u5bf9\u8c61\u4e0e\u901a\u77e5\u540d\u79f0"
     },
     {
       "id": "run-reference",
       "from": "plan",
       "to": "execution",
-      "label": "run 闭包引用（未见调用）",
+      "label": "run \u95ed\u5305\u5f15\u7528\uff08\u672a\u89c1\u8c03\u7528\uff09",
       "variant": "dashed"
     },
     {
@@ -232,14 +232,14 @@
       "id": "redact",
       "from": "query-stub",
       "to": "redactor",
-      "label": "示例行 → 移除 token、ipAddress",
+      "label": "\u793a\u4f8b\u884c → \u79fb\u9664 token\u3001ipAddress",
       "variant": "security"
     },
     {
       "id": "write",
       "from": "redactor",
       "to": "writer-stub",
-      "label": "writeObject（本地路径字符串）"
+      "label": "writeObject\uff08\u672c\u5730\u8def\u5f84\u5b57\u7b26\u4e32\uff09"
     },
     {
       "id": "notify",
@@ -252,40 +252,40 @@
       "id": "return",
       "from": "execution",
       "to": "result",
-      "label": "返回 files + expiresAfterDays"
+      "label": "\u8fd4\u56de files + expiresAfterDays"
     },
     {
       "id": "review-declared",
       "from": "policy",
       "to": "review-declaration",
-      "label": "reviewQueue 配置；无运行时调用",
+      "label": "reviewQueue \u914d\u7f6e\uff1b\u65e0\u8fd0\u884c\u65f6\u8c03\u7528",
       "variant": "dashed"
     }
   ],
   "cards": [
     {
       "dot": "emerald",
-      "title": "实际入口行为",
+      "title": "\u5b9e\u9645\u5165\u53e3\u884c\u4e3a",
       "items": [
-        "入口只校验 tenantId 与 range，然后返回 queued 导出计划。",
-        "计划保存 run 闭包；当前源码未展示任何执行器、队列消费者或调用点。"
+        "\u5165\u53e3\u53ea\u6821\u9a8c tenantId \u4e0e range\uff0c\u7136\u540e\u8fd4\u56de queued \u5bfc\u51fa\u8ba1\u5212\u3002",
+        "\u8ba1\u5212\u4fdd\u5b58 run \u95ed\u5305\uff1b\u5f53\u524d\u6e90\u7801\u672a\u5c55\u793a\u4efb\u4f55\u6267\u884c\u5668\u3001\u961f\u5217\u6d88\u8d39\u8005\u6216\u8c03\u7528\u70b9\u3002"
       ]
     },
     {
       "dot": "cyan",
-      "title": "条件执行时的数据边界",
+      "title": "\u6761\u4ef6\u6267\u884c\u65f6\u7684\u6570\u636e\u8fb9\u754c",
       "items": [
-        "执行函数把 tenantId 传给查询桩，并按配置移除 token 与 ipAddress。",
-        "对象写入桩只返回路径字符串；未观察到真实对象存储 I/O。",
-        "留存策略只作为 expiresAfterDays 返回，未观察到删除或生命周期执行。"
+        "\u6267\u884c\u51fd\u6570\u628a tenantId \u4f20\u7ed9\u67e5\u8be2\u6869\uff0c\u5e76\u6309\u914d\u7f6e\u79fb\u9664 token \u4e0e ipAddress\u3002",
+        "\u5bf9\u8c61\u5199\u5165\u6869\u53ea\u8fd4\u56de\u8def\u5f84\u5b57\u7b26\u4e32\uff1b\u672a\u89c2\u5bdf\u5230\u771f\u5b9e\u5bf9\u8c61\u5b58\u50a8 I/O\u3002",
+        "\u7559\u5b58\u7b56\u7565\u53ea\u4f5c\u4e3a expiresAfterDays \u8fd4\u56de\uff0c\u672a\u89c2\u5bdf\u5230\u5220\u9664\u6216\u751f\u547d\u5468\u671f\u6267\u884c\u3002"
       ]
     },
     {
       "dot": "amber",
-      "title": "通知与复核的未实现边界",
+      "title": "\u901a\u77e5\u4e0e\u590d\u6838\u7684\u672a\u5b9e\u73b0\u8fb9\u754c",
       "items": [
-        "notifyReady 只构造通知对象，未观察到主题发布。",
-        "privacy-review 与 requestReview 存在声明，但未从导出路径调用或入队。"
+        "notifyReady \u53ea\u6784\u9020\u901a\u77e5\u5bf9\u8c61\uff0c\u672a\u89c2\u5bdf\u5230\u4e3b\u9898\u53d1\u5e03\u3002",
+        "privacy-review \u4e0e requestReview \u5b58\u5728\u58f0\u660e\uff0c\u4f46\u672a\u4ece\u5bfc\u51fa\u8def\u5f84\u8c03\u7528\u6216\u5165\u961f\u3002"
       ]
     }
   ]

@@ -468,11 +468,11 @@ test('portable origin failures redact HTTP credentials and query tokens', () => 
 
 test('explicit providers retain GitHub links and encode Gitee source paths', () => {
   const data = fixture();
-  fs.writeFileSync(path.join(data.root, 'src', '中文 # router.js'), 'one\ntwo\n');
+  fs.writeFileSync(path.join(data.root, 'src', '\u4e2d\u6587 # router.js'), 'one\ntwo\n');
   git(data.root, 'add', 'src');
   git(data.root, 'commit', '-m', 'encoded source path');
   const revision = git(data.root, 'rev-parse', 'HEAD');
-  data.diagram.components[0].sources = [{ path: 'src/中文 # router.js', line: 1, end_line: 2 }];
+  data.diagram.components[0].sources = [{ path: 'src/\u4e2d\u6587 # router.js', line: 1, end_line: 2 }];
   for (const provider of ['github', 'gitee']) {
     data.diagram.meta.repository = { url: `https://${provider}.com/example/evidence-repo.git/`, revision, provider };
     git(data.root, 'remote', 'set-url', 'origin', `git@${provider}.com:example/evidence-repo.git`);
@@ -481,7 +481,7 @@ test('explicit providers retain GitHub links and encode Gitee source paths', () 
     const result = run(['render', 'architecture', data.input, output, '--repo-root', data.root]);
     assert.equal(result.status, 0, result.stderr);
     const evidence = evidencePayload(fs.readFileSync(output, 'utf8'));
-    assert.equal(evidence.nodes.users[0].href, `https://${provider}.com/example/evidence-repo/blob/${revision}/src/${encodeURIComponent('中文 # router.js')}#L1-${provider === 'github' ? 'L' : ''}2`);
+    assert.equal(evidence.nodes.users[0].href, `https://${provider}.com/example/evidence-repo/blob/${revision}/src/${encodeURIComponent('\u4e2d\u6587 # router.js')}#L1-${provider === 'github' ? 'L' : ''}2`);
   }
 });
 

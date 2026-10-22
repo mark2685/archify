@@ -65,8 +65,8 @@ test('architecture: adjacent request and callback stay straight when their compl
         { id: 'provider', type: 'external', label: 'Provider', pos: [320, 40], size: [190, 74] },
       ],
       connections: [
-        { from: 'service', to: 'provider', label: '同步支付请求' },
-        { from: 'provider', to: 'service', label: '支付回调', variant: 'dashed' },
+        { from: 'service', to: 'provider', label: '\u540c\u6b65\u652f\u4ed8\u8bf7\u6c42' },
+        { from: 'provider', to: 'service', label: '\u652f\u4ed8\u56de\u8c03', variant: 'dashed' },
       ],
       boundaries: [{ kind: 'region', label: 'Internal', wraps: ['service'], pad: 22 }],
     };

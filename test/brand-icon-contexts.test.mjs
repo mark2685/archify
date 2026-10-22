@@ -230,7 +230,7 @@ for (const [name, prefix] of [
   test(`link attributes and ${name} context survive one-byte response chunks`, { timeout: 20000 }, async (t) => {
     // Keep each response short enough for the real request deadline, including
     // hosts with coarse timer resolution. Do not relax the capture timeout.
-    const markup = prefix + '<LiNk title="图 > icon" REL=icon HREF="/active.png?a=1&amp;b=2">';
+    const markup = prefix + '<LiNk title="\u56fe > icon" REL=icon HREF="/active.png?a=1&amp;b=2">';
     await capture(await fixture(t, markup, { byteChunks: true }), ['/active.png?a=1&b=2']);
   });
 }

@@ -130,7 +130,7 @@ test('class: mixed hierarchy fallback keeps dependency notation in focus and SVG
   };
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
-  // 只截取下载边界，SVG 序列化和关系交互仍执行产品实现。
+  // Intercept only the download boundary; SVG serialization and relationship interaction still run the product implementation.
   await send('Page.addScriptToEvaluateOnNewDocument', { source: `
     window.classExports = [];
     const urls = new Map(), create = URL.createObjectURL.bind(URL);
@@ -169,11 +169,11 @@ test('class: mixed hierarchy fallback keeps dependency notation in focus and SVG
       return { live, exported: paths(exported), pulse, dependency: dependency.getAttribute('d') };
     })()`);
     assert.equal(result.live.length, 3);
-    assert.deepEqual(result.exported, result.live, `${theme}: 独立 SVG 保留关系路径与符号`);
+    assert.deepEqual(result.exported, result.live, `${theme}: \u72ec\u7acb SVG \u4fdd\u7559\u5173\u7cfb\u8def\u5f84\u4e0e\u7b26\u53f7`);
     const dependency = result.live.find(({ id }) => id === 'client_uses');
     assert.equal(dependency.marker, 'cl-open');
     assert.equal(dependency.dashed, true);
-    assert.equal(result.pulse, result.dependency, `${theme}: 聚焦脉冲沿依赖方向运行`);
+    assert.equal(result.pulse, result.dependency, `${theme}: \u805a\u7126\u8109\u51b2\u6cbf\u4f9d\u8d56\u65b9\u5411\u8fd0\u884c`);
     for (const inherited of result.live.filter(({ kind }) => kind === 'inheritance')) {
       assert.equal(inherited.marker, 'cl-triangle');
       assert.equal(inherited.dashed, false);

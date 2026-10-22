@@ -27,15 +27,15 @@
     {
       "id": "input",
       "type": "frontend",
-      "label": "批量处理参数",
-      "sublabel": "选项、输入、输出设置",
+      "label": "\u6279\u91cf\u5904\u7406\u53c2\u6570",
+      "sublabel": "\u9009\u9879\u3001\u8f93\u5165\u3001\u8f93\u51fa\u8bbe\u7f6e",
       "stage": 0,
       "row": 3
     },
     {
       "id": "template",
       "type": "database",
-      "label": "JSON 模板",
+      "label": "JSON \u6a21\u677f",
       "sublabel": "static_ / input_ / batch_",
       "stage": 0,
       "row": 2
@@ -43,39 +43,39 @@
     {
       "id": "configuration",
       "type": "backend",
-      "label": "配置值",
-      "sublabel": "自定义优先；否则取默认",
+      "label": "\u914d\u7f6e\u503c",
+      "sublabel": "\u81ea\u5b9a\u4e49\u4f18\u5148\uff1b\u5426\u5219\u53d6\u9ed8\u8ba4",
       "stage": 1,
       "row": 1
     },
     {
       "id": "context",
       "type": "backend",
-      "label": "配置与处理对象",
-      "sublabel": "内存：配置、输入、处理中",
+      "label": "\u914d\u7f6e\u4e0e\u5904\u7406\u5bf9\u8c61",
+      "sublabel": "\u5185\u5b58\uff1a\u914d\u7f6e\u3001\u8f93\u5165\u3001\u5904\u7406\u4e2d",
       "stage": 1,
       "row": 3
     },
     {
       "id": "transform",
       "type": "backend",
-      "label": "批次模板转换",
-      "sublabel": "配置＋输入＋记录＋模板参数",
+      "label": "\u6279\u6b21\u6a21\u677f\u8f6c\u6362",
+      "sublabel": "\u914d\u7f6e\uff0b\u8f93\u5165\uff0b\u8bb0\u5f55\uff0b\u6a21\u677f\u53c2\u6570",
       "stage": 2,
       "row": 2
     },
     {
       "id": "writer",
       "type": "backend",
-      "label": "按序处理结果",
-      "sublabel": "多记录合并 ABC；单记录复制",
+      "label": "\u6309\u5e8f\u5904\u7406\u7ed3\u679c",
+      "sublabel": "\u591a\u8bb0\u5f55\u5408\u5e76 ABC\uff1b\u5355\u8bb0\u5f55\u590d\u5236",
       "stage": 4,
       "row": 3
     },
     {
       "id": "artifact",
       "type": "database",
-      "label": "最终结果文件",
+      "label": "\u6700\u7ec8\u7ed3\u679c\u6587\u4ef6",
       "sublabel": "output/{task_id}/final.dat",
       "stage": 4,
       "row": 4
@@ -83,8 +83,8 @@
     {
       "id": "result",
       "type": "backend",
-      "label": "结果构造与任务保存",
-      "sublabel": "内存结果返回；JSON 写入磁盘",
+      "label": "\u7ed3\u679c\u6784\u9020\u4e0e\u4efb\u52a1\u4fdd\u5b58",
+      "sublabel": "\u5185\u5b58\u7ed3\u679c\u8fd4\u56de\uff1bJSON \u5199\u5165\u78c1\u76d8",
       "stage": 4,
       "row": 2
     }
@@ -93,37 +93,37 @@
     {
       "id": "flow1",
       "to": "context",
-      "label": "配置",
+      "label": "\u914d\u7f6e",
       "from": "configuration"
     },
     {
       "id": "flow2",
       "to": "transform",
-      "label": "模板内容",
+      "label": "\u6a21\u677f\u5185\u5bb9",
       "from": "template"
     },
     {
       "id": "flow3",
       "to": "artifact",
-      "label": "写入最终结果",
+      "label": "\u5199\u5165\u6700\u7ec8\u7ed3\u679c",
       "from": "writer"
     },
     {
       "id": "flow4",
       "to": "writer",
-      "label": "可选复制路径",
+      "label": "\u53ef\u9009\u590d\u5236\u8def\u5f84",
       "from": "input"
     },
     {
       "id": "flow5",
       "to": "result",
-      "label": "路径与文件大小",
+      "label": "\u8def\u5f84\u4e0e\u6587\u4ef6\u5927\u5c0f",
       "from": "artifact"
     },
     {
       "id": "flow6",
       "to": "result",
-      "label": "原始参数",
+      "label": "\u539f\u59cb\u53c2\u6570",
       "from": "input"
     }
   ]

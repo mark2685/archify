@@ -14,6 +14,6 @@
     { "id": "result", "lane": "main", "col": 4, "type": "backend", "label": "Result" }
   ],
   "edges": [
-    { "id": "request-result", "from": "request", "to": "result", "label": "同步 ✅ ready" }
+    { "id": "request-result", "from": "request", "to": "result", "label": "\u540c\u6b65 ✅ ready" }
   ]
 }

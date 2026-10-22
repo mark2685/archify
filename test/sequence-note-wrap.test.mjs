@@ -124,7 +124,7 @@ test('a short note keeps its original single-line markup', (t) => {
 });
 
 test('mixed Chinese notes use partial lines before requiring a later reply', (t) => {
-  const text = 'inner.run 成功或抛错都会 close；外层 init 失败发生在 try 之前。';
+  const text = 'inner.run \u6210\u529f\u6216\u629b\u9519\u90fd\u4f1a close\uff1b\u5916\u5c42 init \u5931\u8d25\u53d1\u751f\u5728 try \u4e4b\u524d\u3002';
   const spec = sequence({
     participants: ['client', 'api', 'db', 'cache', 'queue', 'worker', 'store'],
     messages: [
@@ -147,9 +147,9 @@ test('mixed Chinese notes use partial lines before requiring a later reply', (t)
 
 test('Chinese wrapping preserves signed scores and graphemes without growing notes', (t) => {
   const texts = [
-    '评分：会话 ID 匹配 +4、匹配 file-edit seq +4、非空事件 +1；取最高且大于 0 的结果。',
-    '快照按 commit hash 精确优先，再前缀匹配；未命中保留空摘录，不生成推测对话。',
-    '首先说明 aaaaaaaaaaae\u0301成功或抛错都会 close；外层 init 失败发生在 try 之前。',
+    '\u8bc4\u5206\uff1a\u4f1a\u8bdd ID \u5339\u914d +4\u3001\u5339\u914d file-edit seq +4\u3001\u975e\u7a7a\u4e8b\u4ef6 +1\uff1b\u53d6\u6700\u9ad8\u4e14\u5927\u4e8e 0 \u7684\u7ed3\u679c\u3002',
+    '\u5feb\u7167\u6309 commit hash \u7cbe\u786e\u4f18\u5148\uff0c\u518d\u524d\u7f00\u5339\u914d\uff1b\u672a\u547d\u4e2d\u4fdd\u7559\u7a7a\u6458\u5f55\uff0c\u4e0d\u751f\u6210\u63a8\u6d4b\u5bf9\u8bdd\u3002',
+    '\u9996\u5148\u8bf4\u660e aaaaaaaaaaae\u0301\u6210\u529f\u6216\u629b\u9519\u90fd\u4f1a close\uff1b\u5916\u5c42 init \u5931\u8d25\u53d1\u751f\u5728 try \u4e4b\u524d\u3002',
   ];
   const html = render(t, sequence({
     participants: ['client', 'api', 'db', 'cache', 'queue', 'worker', 'store'],

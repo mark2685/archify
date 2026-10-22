@@ -627,7 +627,7 @@ test('cli: deliver --open launches only the committed absolute artifact as one a
   skip: process.platform === 'win32',
 }, () => {
   const fake = makeFakeOpeners('successful-open');
-  const out = path.join(tmp, `-复杂 path 'quoted'`, 'verified diagram.html');
+  const out = path.join(tmp, `-\u590d\u6742 path 'quoted'`, 'verified diagram.html');
   const input = path.join(skillRoot, 'examples/agent-tool-call.workflow.json');
   const result = run(['deliver', 'workflow', input, out, '--open', '--json'], { env: fake.env });
 

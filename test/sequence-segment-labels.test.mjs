@@ -120,7 +120,7 @@ function headerDraft(from = 145, firstY = 175) {
     participants: ['build', 'snapshot', 'page', 'browser', 'reader']
       .map((id) => ({ id, type: 'backend', label: id })),
     messages: [{ from: 'build', to: 'snapshot', y: firstY, label: 'ping', note: 'keep this annotation' }],
-    segments: [{ from, to: 400, label: '构建期：读取固定文件；两种构建分支' }],
+    segments: [{ from, to: 400, label: '\u6784\u5efa\u671f\uff1a\u8bfb\u53d6\u56fa\u5b9a\u6587\u4ef6\uff1b\u4e24\u79cd\u6784\u5efa\u5206\u652f' }],
   };
 }
 
@@ -181,7 +181,7 @@ test('a header-adjacent title keeps clear of another title that moved above its 
   const diagram = headerDraft();
   diagram.messages[0].note = undefined;
   diagram.segments[0].to = 154;
-  diagram.segments.push({ from: 194, to: 350, label: '读取快照与生成页面' });
+  diagram.segments.push({ from: 194, to: 350, label: '\u8bfb\u53d6\u5feb\u7167\u4e0e\u751f\u6210\u9875\u9762' });
   const result = render(diagram);
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const [first, next] = labels(result.html);
@@ -252,7 +252,7 @@ test('the unedited payment draft reports its note overlap with a valid spacing r
   assert.deepEqual(diagnostic.supportedFixes, [], 'moving only the reply would crowd the following message');
   const repaired = render(spacedScanToPay(), true);
   assert.equal(repaired.status, 0, repaired.stdout + repaired.stderr);
-  assert.match(repaired.html, /需验签，并按订单号幂等处理/, 'repair preserves the authored annotation');
+  assert.match(repaired.html, /\u9700\u9a8c\u7b7e\uff0c\u5e76\u6309\u8ba2\u5355\u53f7\u5e42\u7b49\u5904\u7406/, 'repair preserves the authored annotation');
   diagram.meta.quality_profile = 'standard';
   const compatible = render(diagram, true);
   assert.equal(compatible.status, 0, compatible.stdout + compatible.stderr);
@@ -263,13 +263,13 @@ function neutralTitleDraft() {
     schema_version: 1, diagram_type: 'sequence',
     meta: { title: 'Segment title clearance probe', output: 'diagram.html', quality_profile: 'showcase', locale: 'en' },
     participants: [
-      { id: 'a', type: 'external', label: '甲方' },
-      { id: 'b', type: 'backend', label: '乙方' },
-      { id: 'c', type: 'cloud', label: '丙方' },
-      { id: 'd', type: 'backend', label: '丁方' },
+      { id: 'a', type: 'external', label: '\u7532\u65b9' },
+      { id: 'b', type: 'backend', label: '\u4e59\u65b9' },
+      { id: 'c', type: 'cloud', label: '\u4e19\u65b9' },
+      { id: 'd', type: 'backend', label: '\u4e01\u65b9' },
     ],
-    segments: [{ from: 145, to: 205, label: '准备阶段确认目标以后开始前' }],
-    messages: [{ from: 'a', to: 'b', y: 170, label: '请求开始以后等待返回值' }],
+    segments: [{ from: 145, to: 205, label: '\u51c6\u5907\u9636\u6bb5\u786e\u8ba4\u76ee\u6807\u4ee5\u540e\u5f00\u59cb\u524d' }],
+    messages: [{ from: 'a', to: 'b', y: 170, label: '\u8bf7\u6c42\u5f00\u59cb\u4ee5\u540e\u7b49\u5f85\u8fd4\u56de\u503c' }],
   };
 }
 
@@ -290,8 +290,8 @@ function assertClearTitle(result, diagram) {
   }
   assert.ok(title.y <= diagram.segments[0].from && title.y + title.height >= diagram.segments[0].from,
     'the title remains on its own top border');
-  assert.match(result.html, /font-size="9" font-weight="600">准备阶段确认目标以后开始前<\/text>/);
-  assert.match(result.html, /font-size="(?:9|11)" text-anchor="middle">请求开始以后等待返回值<\/text>/);
+  assert.match(result.html, /font-size="9" font-weight="600">\u51c6\u5907\u9636\u6bb5\u786e\u8ba4\u76ee\u6807\u4ee5\u540e\u5f00\u59cb\u524d<\/text>/);
+  assert.match(result.html, /font-size="(?:9|11)" text-anchor="middle">\u8bf7\u6c42\u5f00\u59cb\u4ee5\u540e\u7b49\u5f85\u8fd4\u56de\u503c<\/text>/);
   const frame = result.html.match(/data-composition-frame-id="0" x="48" y="([\d.]+)" width="[\d.]+" height="([\d.]+)"/);
   assert.deepEqual(frame.slice(1).map(Number), [145, 60]);
   const arrow = result.html.match(/data-composition-edge-from="a"[^>]*d="M [\d.]+ ([\d.]+) L [\d.]+ \1"/);
@@ -327,7 +327,7 @@ test('horizontal fallback clears activation bars without changing their geometry
 
 test('an exhausted horizontal strip preserves compatible legacy placement', () => {
   const diagram = neutralTitleDraft();
-  diagram.segments[0].label = '阶段'.repeat(35);
+  diagram.segments[0].label = '\u9636\u6bb5'.repeat(35);
   const result = render(diagram);
   assert.equal(result.status, 0, result.stdout + result.stderr);
   const [title] = labels(result.html);

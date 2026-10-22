@@ -366,7 +366,7 @@ function sevenParticipantCapacity() {
     meta: { title: 'Seven participant capacity', quality_profile: 'showcase' },
     participants: Array.from({ length: 7 }, (_, index) => ({
       id: `p${index}`, type: 'backend',
-      label: index === 0 ? 'ParticipantEndpoint' : index === 6 ? '中文参与者终端接口' : `P${index}`,
+      label: index === 0 ? 'ParticipantEndpoint' : index === 6 ? '\u4e2d\u6587\u53c2\u4e0e\u8005\u7ec8\u7aef\u63a5\u53e3' : `P${index}`,
       sublabel: index === 6 ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZab' : `context ${index}`,
       ...(index === 2 ? { brand: 'redis' } : {}),
     })),
@@ -433,7 +433,7 @@ test('automatic header fallback retains failure when actual sublabel or brand ra
 
 test('automatic header fallback wraps boundary notes before height while preserving timeline y and real collisions', () => {
   const doc = sevenParticipantCapacity();
-  const token = `${'x'.repeat(25)}文`;
+  const token = `${'x'.repeat(25)}\u6587`;
   doc.messages[0].y = 700;
   doc.messages[0].note = token;
   doc.segments = [{ from: 160, to: 720, label: 'Phase' }];
@@ -471,13 +471,13 @@ test('a widened automatic canvas reports sublabels at the size that stays readab
     meta: { title: 'Readable sublabel', quality_profile: 'showcase' },
     participants: [
       participant('a', 'Web UI'), participant('b', 'Orchestrator'), participant('c', 'team CLI'), participant('d', 'Runtime'),
-      participant('e', 'Team operations'), participant('f', 'SQLite'), participant('g', 'Stdin queue', 'tmp 或 reports/review'), participant('h', 'Worker'),
+      participant('e', 'Team operations'), participant('f', 'SQLite'), participant('g', 'Stdin queue', 'tmp \u6216 reports/review'), participant('h', 'Worker'),
     ],
     messages: [{ from: 'a', to: 'h', label: 'send', y: 180 }],
   };
   const outcome = renderOutcome(doc);
   assert.notEqual(outcome.code, 0);
-  assert.match(outcome.stderr, /Sublabel "tmp 或 reports\/review" needs ~\d+px at the [\d.]+px minimum that stays readable on this \d+px canvas/);
+  assert.match(outcome.stderr, /Sublabel "tmp \u6216 reports\/review" needs ~\d+px at the [\d.]+px minimum that stays readable on this \d+px canvas/);
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-sequence-diagnostic-'));
   try {
     const input = path.join(tmp, 'input.json');

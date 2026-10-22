@@ -2,45 +2,45 @@
   "schema_version": 2,
   "diagram_type": "workflow",
   "meta": {
-    "title": "一次生产发布审批工作流",
-    "locale": "zh-CN",
+    "title": "\u4e00\u6b21\u751f\u4ea7\u53d1\u5e03\u5ba1\u6279\u5de5\u4f5c\u6d41",
+    "locale": "en",
     "quality_profile": "showcase",
     "output": "release-luna.html"
   },
   "lanes": [
     {
       "id": "developer",
-      "label": "开发者"
+      "label": "\u5f00\u53d1\u8005"
     },
     {
       "id": "ci",
-      "label": "CI 与发布平台"
+      "label": "CI \u4e0e\u53d1\u5e03\u5e73\u53f0"
     },
     {
       "id": "oncall",
-      "label": "值班负责人"
+      "label": "\u503c\u73ed\u8d1f\u8d23\u4eba"
     },
     {
       "id": "audit",
-      "label": "审计旁路"
+      "label": "\u5ba1\u8ba1\u65c1\u8def"
     }
   ],
   "phases": [
     {
       "id": "build_phase",
-      "label": "提交与验证",
+      "label": "\u63d0\u4ea4\u4e0e\u9a8c\u8bc1",
       "fromCol": 0,
       "toCol": 2
     },
     {
       "id": "approval_phase",
-      "label": "预发布与审批",
+      "label": "\u9884\u53d1\u5e03\u4e0e\u5ba1\u6279",
       "fromCol": 2,
       "toCol": 4
     },
     {
       "id": "release_phase",
-      "label": "灰度与全量",
+      "label": "\u7070\u5ea6\u4e0e\u5168\u91cf",
       "fromCol": 4,
       "toCol": 5
     }
@@ -48,7 +48,7 @@
   "groups": [
     {
       "id": "parallel_checks",
-      "label": "并行检查，全部通过才汇合",
+      "label": "\u5e76\u884c\u68c0\u67e5\uff0c\u5168\u90e8\u901a\u8fc7\u624d\u6c47\u5408",
       "lane": "ci",
       "fromCol": 1,
       "toCol": 2,
@@ -72,16 +72,16 @@
       "lane": "developer",
       "col": 0,
       "type": "frontend",
-      "label": "提交版本",
-      "sublabel": "开发者发起发布"
+      "label": "\u63d0\u4ea4\u7248\u672c",
+      "sublabel": "\u5f00\u53d1\u8005\u53d1\u8d77\u53d1\u5e03"
     },
     {
       "id": "unit_tests",
       "lane": "ci",
       "col": 1,
       "type": "backend",
-      "label": "单元测试",
-      "sublabel": "并行执行",
+      "label": "\u5355\u5143\u6d4b\u8bd5",
+      "sublabel": "\u5e76\u884c\u6267\u884c",
       "yOffset": -68
     },
     {
@@ -89,8 +89,8 @@
       "lane": "ci",
       "col": 1,
       "type": "security",
-      "label": "安全扫描",
-      "sublabel": "并行执行",
+      "label": "\u5b89\u5168\u626b\u63cf",
+      "sublabel": "\u5e76\u884c\u6267\u884c",
       "yOffset": 68
     },
     {
@@ -98,87 +98,87 @@
       "lane": "ci",
       "col": 2,
       "type": "backend",
-      "label": "检查汇合",
-      "sublabel": "两项均通过"
+      "label": "\u68c0\u67e5\u6c47\u5408",
+      "sublabel": "\u4e24\u9879\u5747\u901a\u8fc7"
     },
     {
       "id": "staging_deploy",
       "lane": "ci",
       "col": 2,
       "type": "cloud",
-      "label": "预发布部署",
-      "sublabel": "部署候选版本"
+      "label": "\u9884\u53d1\u5e03\u90e8\u7f72",
+      "sublabel": "\u90e8\u7f72\u5019\u9009\u7248\u672c"
     },
     {
       "id": "smoke_test",
       "lane": "ci",
       "col": 3,
       "type": "backend",
-      "label": "冒烟测试",
-      "sublabel": "验证预发布环境"
+      "label": "\u5192\u70df\u6d4b\u8bd5",
+      "sublabel": "\u9a8c\u8bc1\u9884\u53d1\u5e03\u73af\u5883"
     },
     {
       "id": "duty_approval",
       "lane": "oncall",
       "col": 4,
       "type": "security",
-      "label": "值班负责人审批",
-      "sublabel": "批准或拒绝"
+      "label": "\u503c\u73ed\u8d1f\u8d23\u4eba\u5ba1\u6279",
+      "sublabel": "\u6279\u51c6\u6216\u62d2\u7edd"
     },
     {
       "id": "canary_5",
       "lane": "ci",
       "col": 4,
       "type": "cloud",
-      "label": "5% 灰度",
-      "sublabel": "观察生产指标"
+      "label": "5% \u7070\u5ea6",
+      "sublabel": "\u89c2\u5bdf\u751f\u4ea7\u6307\u6807"
     },
     {
       "id": "metric_gate",
       "lane": "ci",
       "col": 5,
       "type": "security",
-      "label": "指标达标？",
-      "sublabel": "灰度结果分支"
+      "label": "\u6307\u6807\u8fbe\u6807\uff1f",
+      "sublabel": "\u7070\u5ea6\u7ed3\u679c\u5206\u652f"
     },
     {
       "id": "rollback_stable",
       "lane": "ci",
       "col": 5,
       "type": "backend",
-      "label": "回滚上一稳定版本",
-      "sublabel": "指标不达标"
+      "label": "\u56de\u6eda\u4e0a\u4e00\u7a33\u5b9a\u7248\u672c",
+      "sublabel": "\u6307\u6807\u4e0d\u8fbe\u6807"
     },
     {
       "id": "rollback_end",
       "lane": "ci",
       "col": 5,
       "type": "external",
-      "label": "终止本次发布",
-      "sublabel": "通知负责人；不自动重试"
+      "label": "\u7ec8\u6b62\u672c\u6b21\u53d1\u5e03",
+      "sublabel": "\u901a\u77e5\u8d1f\u8d23\u4eba\uff1b\u4e0d\u81ea\u52a8\u91cd\u8bd5"
     },
     {
       "id": "full_release",
       "lane": "ci",
       "col": 5,
       "type": "cloud",
-      "label": "全量发布",
-      "sublabel": "指标达标"
+      "label": "\u5168\u91cf\u53d1\u5e03",
+      "sublabel": "\u6307\u6807\u8fbe\u6807"
     },
     {
       "id": "publish_success",
       "lane": "developer",
       "col": 5,
       "type": "external",
-      "label": "通知开发者成功"
+      "label": "\u901a\u77e5\u5f00\u53d1\u8005\u6210\u529f"
     },
     {
       "id": "revise_version",
       "lane": "developer",
       "col": 1,
       "type": "frontend",
-      "label": "修改版本",
-      "sublabel": "修复后重新提交",
+      "label": "\u4fee\u6539\u7248\u672c",
+      "sublabel": "\u4fee\u590d\u540e\u91cd\u65b0\u63d0\u4ea4",
       "yOffset": 175
     },
     {
@@ -186,8 +186,8 @@
       "lane": "audit",
       "col": 3,
       "type": "database",
-      "label": "审计日志",
-      "sublabel": "旁路记录：测试、审批、灰度、回滚",
+      "label": "\u5ba1\u8ba1\u65e5\u5fd7",
+      "sublabel": "\u65c1\u8def\u8bb0\u5f55\uff1a\u6d4b\u8bd5\u3001\u5ba1\u6279\u3001\u7070\u5ea6\u3001\u56de\u6eda",
       "yOffset": 112
     }
   ],
@@ -196,14 +196,14 @@
       "id": "submit_to_unit",
       "from": "submit_release",
       "to": "unit_tests",
-      "label": "提交后触发",
+      "label": "\u63d0\u4ea4\u540e\u89e6\u53d1",
       "role": "main"
     },
     {
       "id": "submit_to_scan",
       "from": "submit_release",
       "to": "security_scan",
-      "label": "提交后触发",
+      "label": "\u63d0\u4ea4\u540e\u89e6\u53d1",
       "role": "branch",
       "variant": "security"
     },
@@ -211,69 +211,69 @@
       "id": "unit_pass",
       "from": "unit_tests",
       "to": "test_join",
-      "label": "通过"
+      "label": "\u901a\u8fc7"
     },
     {
       "id": "scan_pass",
       "from": "security_scan",
       "to": "test_join",
-      "label": "通过",
+      "label": "\u901a\u8fc7",
       "variant": "security"
     },
     {
       "id": "join_to_staging",
       "from": "test_join",
       "to": "staging_deploy",
-      "label": "两项均通过",
+      "label": "\u4e24\u9879\u5747\u901a\u8fc7",
       "role": "main"
     },
     {
       "id": "staging_to_smoke",
       "from": "staging_deploy",
       "to": "smoke_test",
-      "label": "部署完成",
+      "label": "\u90e8\u7f72\u5b8c\u6210",
       "role": "main"
     },
     {
       "id": "smoke_to_approval",
       "from": "smoke_test",
       "to": "duty_approval",
-      "label": "冒烟通过",
+      "label": "\u5192\u70df\u901a\u8fc7",
       "role": "main"
     },
     {
       "id": "approval_to_canary",
       "from": "duty_approval",
       "to": "canary_5",
-      "label": "批准",
+      "label": "\u6279\u51c6",
       "role": "main"
     },
     {
       "id": "canary_to_gate",
       "from": "canary_5",
       "to": "metric_gate",
-      "label": "观察完成",
+      "label": "\u89c2\u5bdf\u5b8c\u6210",
       "role": "main"
     },
     {
       "id": "gate_to_full",
       "from": "metric_gate",
       "to": "full_release",
-      "label": "达标",
+      "label": "\u8fbe\u6807",
       "role": "main"
     },
     {
       "id": "full_to_success",
       "from": "full_release",
       "to": "publish_success",
-      "label": "发布完成",
+      "label": "\u53d1\u5e03\u5b8c\u6210",
       "role": "main"
     },
     {
       "id": "tests_fail_to_revise",
       "from": "unit_tests",
       "to": "revise_version",
-      "label": "失败，修改",
+      "label": "\u5931\u8d25\uff0c\u4fee\u6539",
       "role": "error",
       "variant": "dashed"
     },
@@ -281,7 +281,7 @@
       "id": "scan_fail_to_revise",
       "from": "security_scan",
       "to": "revise_version",
-      "label": "失败，修改",
+      "label": "\u5931\u8d25\uff0c\u4fee\u6539",
       "role": "error",
       "variant": "dashed"
     },
@@ -289,7 +289,7 @@
       "id": "smoke_fail_to_revise",
       "from": "smoke_test",
       "to": "revise_version",
-      "label": "失败，修改",
+      "label": "\u5931\u8d25\uff0c\u4fee\u6539",
       "role": "error",
       "variant": "dashed"
     },
@@ -297,7 +297,7 @@
       "id": "approval_reject_to_revise",
       "from": "duty_approval",
       "to": "revise_version",
-      "label": "拒绝，修改",
+      "label": "\u62d2\u7edd\uff0c\u4fee\u6539",
       "role": "error",
       "variant": "dashed"
     },
@@ -305,7 +305,7 @@
       "id": "revise_to_submit",
       "from": "revise_version",
       "to": "submit_release",
-      "label": "重新提交",
+      "label": "\u91cd\u65b0\u63d0\u4ea4",
       "role": "return",
       "variant": "dashed"
     },
@@ -313,7 +313,7 @@
       "id": "gate_to_rollback",
       "from": "metric_gate",
       "to": "rollback_stable",
-      "label": "不达标，回滚",
+      "label": "\u4e0d\u8fbe\u6807\uff0c\u56de\u6eda",
       "role": "error",
       "variant": "security"
     },
@@ -321,7 +321,7 @@
       "id": "rollback_to_end",
       "from": "rollback_stable",
       "to": "rollback_end",
-      "label": "回滚完成",
+      "label": "\u56de\u6eda\u5b8c\u6210",
       "role": "error",
       "variant": "dashed"
     },
@@ -329,7 +329,7 @@
       "id": "test_audit",
       "from": "test_join",
       "to": "audit_log",
-      "label": "记录测试结果",
+      "label": "\u8bb0\u5f55\u6d4b\u8bd5\u7ed3\u679c",
       "role": "async",
       "variant": "dashed"
     },
@@ -337,7 +337,7 @@
       "id": "approval_audit",
       "from": "duty_approval",
       "to": "audit_log",
-      "label": "记录审批决定",
+      "label": "\u8bb0\u5f55\u5ba1\u6279\u51b3\u5b9a",
       "role": "async",
       "variant": "dashed"
     },
@@ -345,7 +345,7 @@
       "id": "canary_audit",
       "from": "metric_gate",
       "to": "audit_log",
-      "label": "记录灰度结果",
+      "label": "\u8bb0\u5f55\u7070\u5ea6\u7ed3\u679c",
       "role": "async",
       "variant": "dashed"
     },
@@ -353,7 +353,7 @@
       "id": "rollback_audit",
       "from": "rollback_end",
       "to": "audit_log",
-      "label": "记录回滚结果",
+      "label": "\u8bb0\u5f55\u56de\u6eda\u7ed3\u679c",
       "role": "async",
       "variant": "dashed"
     }
@@ -361,18 +361,18 @@
   "cards": [
     {
       "dot": "cyan",
-      "title": "控制条件",
+      "title": "\u63a7\u5236\u6761\u4ef6",
       "items": [
-        "单元测试与安全扫描并行，只有全部通过才进入预发布。",
-        "审计日志是旁路记录，不决定成功或重试。"
+        "\u5355\u5143\u6d4b\u8bd5\u4e0e\u5b89\u5168\u626b\u63cf\u5e76\u884c\uff0c\u53ea\u6709\u5168\u90e8\u901a\u8fc7\u624d\u8fdb\u5165\u9884\u53d1\u5e03\u3002",
+        "\u5ba1\u8ba1\u65e5\u5fd7\u662f\u65c1\u8def\u8bb0\u5f55\uff0c\u4e0d\u51b3\u5b9a\u6210\u529f\u6216\u91cd\u8bd5\u3002"
       ]
     },
     {
       "dot": "amber",
-      "title": "失败路径",
+      "title": "\u5931\u8d25\u8def\u5f84",
       "items": [
-        "测试、冒烟或审批拒绝都回到开发者修改并重新提交。",
-        "灰度指标不达标时回滚并终止本次发布，不自动重新灰度。"
+        "\u6d4b\u8bd5\u3001\u5192\u70df\u6216\u5ba1\u6279\u62d2\u7edd\u90fd\u56de\u5230\u5f00\u53d1\u8005\u4fee\u6539\u5e76\u91cd\u65b0\u63d0\u4ea4\u3002",
+        "\u7070\u5ea6\u6307\u6807\u4e0d\u8fbe\u6807\u65f6\u56de\u6eda\u5e76\u7ec8\u6b62\u672c\u6b21\u53d1\u5e03\uff0c\u4e0d\u81ea\u52a8\u91cd\u65b0\u7070\u5ea6\u3002"
       ]
     }
   ]

@@ -488,7 +488,7 @@ test('an automatic readable-v2 vertical stack opts into width-first reader fitti
 });
 
 test('a readable-v2 node without an authored width grows to fit its label', () => {
-  const workflow = adjacentWorkflow({ widths: [undefined, undefined], nodeLabels: ['Start', 'TOOL_RESULT 策略'] });
+  const workflow = adjacentWorkflow({ widths: [undefined, undefined], nodeLabels: ['Start', 'TOOL_RESULT \u7b56\u7565'] });
   const before = JSON.stringify(workflow);
   const result = compileSuccessfully(workflow);
   const width = Number(result.svg.match(/data-node-id="b"[\s\S]*?<rect[^>]*width="([\d.]+)"/)[1]);
@@ -531,7 +531,7 @@ test('authored canvases and standard workflows preserve bounded sublabel fonts',
   }
   const document = adjacentWorkflow({ widths: [132, 200] });
   document.nodes[1].col = 5;
-  document.nodes[0].sublabel = 'chain / debate / synthesis 调度';
+  document.nodes[0].sublabel = 'chain / debate / synthesis \u8c03\u5ea6';
   for (const col of [0, 2, 3, 4]) document.nodes.push({ id: `wide-${col}`, lane: 'main', col, type: 'backend', label: `Step ${col}`, width: 200 });
   compileSuccessfully(document, 'standard');
 });
@@ -539,7 +539,7 @@ test('authored canvases and standard workflows preserve bounded sublabel fonts',
 test('readable-v2 sublabels must fit at the size that stays readable on the final canvas', () => {
   const workflow = adjacentWorkflow({ widths: [132, 200] });
   workflow.nodes[1].col = 5;
-  workflow.nodes[0].sublabel = 'chain / debate / synthesis 调度';
+  workflow.nodes[0].sublabel = 'chain / debate / synthesis \u8c03\u5ea6';
   for (const col of [0, 2, 3, 4]) {
     workflow.nodes.push({ id: `wide-${col}`, lane: 'main', col, type: 'backend', label: `Step ${col}`, width: 200 });
   }
@@ -1102,10 +1102,10 @@ test('explicit viewBox height capacity names the authored tall node without nami
 
 test('readable-v2 measures asymmetric custom widths and CJK edge labels', () => {
   const cases = [
-    { widths: [32, 92], label: '同步', nodeLabels: ['甲', '乙'] },
-    { widths: [102, 124], label: '資料 ready', nodeLabels: ['入口', '出口'] },
-    { widths: [132, 160], label: '审批通过', nodeLabels: ['请求', '执行'] },
-    { widths: [92, 240], label: '结果 ✅ 回传', nodeLabels: ['工具', '外部服务'] },
+    { widths: [32, 92], label: '\u540c\u6b65', nodeLabels: ['\u7532', '\u4e59'] },
+    { widths: [102, 124], label: '\u8cc7\u6599 ready', nodeLabels: ['\u5165\u53e3', '\u51fa\u53e3'] },
+    { widths: [132, 160], label: '\u5ba1\u6279\u901a\u8fc7', nodeLabels: ['\u8bf7\u6c42', '\u6267\u884c'] },
+    { widths: [92, 240], label: '\u7ed3\u679c ✅ \u56de\u4f20', nodeLabels: ['\u5de5\u5177', '\u5916\u90e8\u670d\u52a1'] },
   ];
 
   for (const current of cases) {
@@ -1157,11 +1157,11 @@ test('readable-v2 property matrix satisfies every adjacent rank across supported
       for (const targetWidth of widths) {
         const result = compileSuccessfully(adjacentWorkflow({
           fromCol,
-          label: '同步 ✅',
+          label: '\u540c\u6b65 ✅',
           widths: [sourceWidth, targetWidth],
         }), 'showcase');
         assertReadableAdjacentResult(result, {
-          label: '同步 ✅',
+          label: '\u540c\u6b65 ✅',
           widths: [sourceWidth, targetWidth],
         });
       }

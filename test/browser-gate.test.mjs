@@ -97,7 +97,7 @@ test('browser gate focuses maintained browser suites and supports explicit concu
 });
 
 test('browser gate forwards a validated test name pattern', (t) => {
-  const result = interceptedRun(t, { status: 0 }, ['test/i18n-browser.test.mjs', '--test-name-pattern=locale.*日本語']);
+  const result = interceptedRun(t, { status: 0 }, ['test/i18n-browser.test.mjs', '--test-name-pattern=locale.*\u65e5\u672c\u8a9e']);
   if (!supportsNamePattern) {
     assert.equal(result.status, 1);
     assert.equal(result.stdout, '');
@@ -107,7 +107,7 @@ test('browser gate forwards a validated test name pattern', (t) => {
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(JSON.parse(result.stdout).args, [
     '--test', ...(supportsConcurrency ? ['--test-concurrency=2'] : []),
-    '--test-name-pattern=locale.*日本語', 'test/i18n-browser.test.mjs',
+    '--test-name-pattern=locale.*\u65e5\u672c\u8a9e', 'test/i18n-browser.test.mjs',
   ]);
 });
 

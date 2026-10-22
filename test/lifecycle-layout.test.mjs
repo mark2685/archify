@@ -367,10 +367,10 @@ test('note-only transitions keep their text', () => {
   const result = render(base({
     mainPath: ['a', 'b'],
     states: [state('a', 'start'), state('b', 'success')],
-    transitions: [{ from: 'a', to: 'b', note: '审批 <通过> & "复核"' }],
+    transitions: [{ from: 'a', to: 'b', note: '\u5ba1\u6279 <\u901a\u8fc7> & "\u590d\u6838"' }],
   }));
   assert.equal(result.code, 0, result.stderr);
-  assert.match(result.svg, /data-detail="fine"[^>]*>审批 &lt;通过&gt; &amp; &quot;复核&quot;<\/text>/);
+  assert.match(result.svg, /data-detail="fine"[^>]*>\u5ba1\u6279 &lt;\u901a\u8fc7&gt; &amp; &quot;\u590d\u6838&quot;<\/text>/);
 });
 
 test('structure errors are typed diagnostics with fixes', () => {

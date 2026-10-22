@@ -2,42 +2,42 @@
   "schema_version": 2,
   "diagram_type": "workflow",
   "meta": {
-    "title": "订单处理工作流",
+    "title": "\u8ba2\u5355\u5904\u7406\u5de5\u4f5c\u6d41",
     "output": "order-reflow.html",
-    "locale": "zh-CN",
+    "locale": "en",
     "quality_profile": "showcase"
   },
   "lanes": [
     {
       "id": "order",
-      "label": "订单与支付"
+      "label": "\u8ba2\u5355\u4e0e\u652f\u4ed8"
     },
     {
       "id": "result",
-      "label": "库存与订单结果"
+      "label": "\u5e93\u5b58\u4e0e\u8ba2\u5355\u7ed3\u679c"
     },
     {
       "id": "fulfil",
-      "label": "履约与异常处理"
+      "label": "\u5c65\u7ea6\u4e0e\u5f02\u5e38\u5904\u7406"
     }
   ],
   "phases": [
     {
       "id": "submit_phase",
-      "label": "提交与校验",
+      "label": "\u63d0\u4ea4\u4e0e\u6821\u9a8c",
       "fromCol": 0,
       "toCol": 1
     },
     {
       "id": "payment_phase",
-      "label": "支付等待",
+      "label": "\u652f\u4ed8\u7b49\u5f85",
       "fromCol": 2,
       "toCol": 4,
       "variant": "emphasis"
     },
     {
       "id": "fulfillment_phase",
-      "label": "履约与收尾",
+      "label": "\u5c65\u7ea6\u4e0e\u6536\u5c3e",
       "fromCol": 5,
       "toCol": 5
     }
@@ -133,32 +133,32 @@
       "lane": "order",
       "col": 0,
       "type": "external",
-      "label": "提交订单",
-      "sublabel": "用户确认商品"
+      "label": "\u63d0\u4ea4\u8ba2\u5355",
+      "sublabel": "\u7528\u6237\u786e\u8ba4\u5546\u54c1"
     },
     {
       "id": "check_inventory",
       "lane": "order",
       "col": 1,
       "type": "backend",
-      "label": "校验库存",
-      "sublabel": "检查可售数量"
+      "label": "\u6821\u9a8c\u5e93\u5b58",
+      "sublabel": "\u68c0\u67e5\u53ef\u552e\u6570\u91cf"
     },
     {
       "id": "reserve_inventory",
       "lane": "order",
       "col": 2,
       "type": "database",
-      "label": "预占库存",
-      "sublabel": "锁定可售数量"
+      "label": "\u9884\u5360\u5e93\u5b58",
+      "sublabel": "\u9501\u5b9a\u53ef\u552e\u6570\u91cf"
     },
     {
       "id": "create_pending",
       "lane": "order",
       "col": 3,
       "type": "backend",
-      "label": "创建待支付订单",
-      "sublabel": "订单状态：待支付",
+      "label": "\u521b\u5efa\u5f85\u652f\u4ed8\u8ba2\u5355",
+      "sublabel": "\u8ba2\u5355\u72b6\u6001\uff1a\u5f85\u652f\u4ed8",
       "width": 92
     },
     {
@@ -166,64 +166,64 @@
       "lane": "order",
       "col": 4,
       "type": "external",
-      "label": "等待支付",
-      "sublabel": "等待支付结果"
+      "label": "\u7b49\u5f85\u652f\u4ed8",
+      "sublabel": "\u7b49\u5f85\u652f\u4ed8\u7ed3\u679c"
     },
     {
       "id": "payment_success",
       "lane": "order",
       "col": 5,
       "type": "backend",
-      "label": "支付成功",
-      "sublabel": "确认到账"
+      "label": "\u652f\u4ed8\u6210\u529f",
+      "sublabel": "\u786e\u8ba4\u5230\u8d26"
     },
     {
       "id": "deduct_inventory",
       "lane": "result",
       "col": 5,
       "type": "database",
-      "label": "扣减库存",
-      "sublabel": "结算预占数量"
+      "label": "\u6263\u51cf\u5e93\u5b58",
+      "sublabel": "\u7ed3\u7b97\u9884\u5360\u6570\u91cf"
     },
     {
       "id": "ship_order",
       "lane": "fulfil",
       "col": 5,
       "type": "backend",
-      "label": "发货",
-      "sublabel": "创建配送任务"
+      "label": "\u53d1\u8d27",
+      "sublabel": "\u521b\u5efa\u914d\u9001\u4efb\u52a1"
     },
     {
       "id": "notify_insufficient",
       "lane": "result",
       "col": 1,
       "type": "external",
-      "label": "提示库存不足",
-      "sublabel": "订单失败"
+      "label": "\u63d0\u793a\u5e93\u5b58\u4e0d\u8db3",
+      "sublabel": "\u8ba2\u5355\u5931\u8d25"
     },
     {
       "id": "cancel_order",
       "lane": "result",
       "col": 4,
       "type": "backend",
-      "label": "取消订单",
-      "sublabel": "支付超时"
+      "label": "\u53d6\u6d88\u8ba2\u5355",
+      "sublabel": "\u652f\u4ed8\u8d85\u65f6"
     },
     {
       "id": "release_inventory",
       "lane": "fulfil",
       "col": 4,
       "type": "database",
-      "label": "释放预占库存",
-      "sublabel": "恢复可售数量"
+      "label": "\u91ca\u653e\u9884\u5360\u5e93\u5b58",
+      "sublabel": "\u6062\u590d\u53ef\u552e\u6570\u91cf"
     },
     {
       "id": "manual_fulfillment",
       "lane": "fulfil",
       "col": 3,
       "type": "external",
-      "label": "人工处理",
-      "sublabel": "发货失败"
+      "label": "\u4eba\u5de5\u5904\u7406",
+      "sublabel": "\u53d1\u8d27\u5931\u8d25"
     }
   ],
   "edges": [
@@ -237,7 +237,7 @@
       "id": "check_to_reserve",
       "from": "check_inventory",
       "to": "reserve_inventory",
-      "label": "库存充足",
+      "label": "\u5e93\u5b58\u5145\u8db3",
       "role": "main",
       "variant": "emphasis"
     },
@@ -245,7 +245,7 @@
       "id": "reserve_to_pending",
       "from": "reserve_inventory",
       "to": "create_pending",
-      "label": "预占成功",
+      "label": "\u9884\u5360\u6210\u529f",
       "role": "main"
     },
     {
@@ -258,7 +258,7 @@
       "id": "wait_to_paid",
       "from": "wait_payment",
       "to": "payment_success",
-      "label": "支付成功",
+      "label": "\u652f\u4ed8\u6210\u529f",
       "role": "main",
       "variant": "emphasis"
     },
@@ -266,7 +266,7 @@
       "id": "paid_to_deduct",
       "from": "payment_success",
       "to": "deduct_inventory",
-      "label": "结算预占",
+      "label": "\u7ed3\u7b97\u9884\u5360",
       "role": "main"
     },
     {
@@ -280,7 +280,7 @@
       "id": "check_to_insufficient",
       "from": "check_inventory",
       "to": "notify_insufficient",
-      "label": "库存不足",
+      "label": "\u5e93\u5b58\u4e0d\u8db3",
       "role": "error",
       "variant": "security"
     },
@@ -288,7 +288,7 @@
       "id": "wait_to_timeout",
       "from": "wait_payment",
       "to": "cancel_order",
-      "label": "支付超时",
+      "label": "\u652f\u4ed8\u8d85\u65f6",
       "role": "error",
       "variant": "security"
     },
@@ -296,7 +296,7 @@
       "id": "cancel_to_release",
       "from": "cancel_order",
       "to": "release_inventory",
-      "label": "释放预占",
+      "label": "\u91ca\u653e\u9884\u5360",
       "role": "error",
       "variant": "dashed"
     },
@@ -304,7 +304,7 @@
       "id": "ship_to_manual",
       "from": "ship_order",
       "to": "manual_fulfillment",
-      "label": "发货失败",
+      "label": "\u53d1\u8d27\u5931\u8d25",
       "role": "error",
       "variant": "security"
     }
@@ -312,20 +312,20 @@
   "cards": [
     {
       "dot": "emerald",
-      "title": "库存语义",
+      "title": "\u5e93\u5b58\u8bed\u4e49",
       "items": [
-        "库存充足后先预占",
-        "支付成功再扣减",
-        "支付超时释放预占"
+        "\u5e93\u5b58\u5145\u8db3\u540e\u5148\u9884\u5360",
+        "\u652f\u4ed8\u6210\u529f\u518d\u6263\u51cf",
+        "\u652f\u4ed8\u8d85\u65f6\u91ca\u653e\u9884\u5360"
       ]
     },
     {
       "dot": "amber",
-      "title": "异常出口",
+      "title": "\u5f02\u5e38\u51fa\u53e3",
       "items": [
-        "库存不足提示订单失败",
-        "支付超时取消订单",
-        "发货失败转人工处理"
+        "\u5e93\u5b58\u4e0d\u8db3\u63d0\u793a\u8ba2\u5355\u5931\u8d25",
+        "\u652f\u4ed8\u8d85\u65f6\u53d6\u6d88\u8ba2\u5355",
+        "\u53d1\u8d27\u5931\u8d25\u8f6c\u4eba\u5de5\u5904\u7406"
       ]
     }
   ]

@@ -4,21 +4,21 @@
   "meta": {
     "title": "Mixed input and cleanup paths",
     "output": "diagram.html",
-    "locale": "zh-CN",
+    "locale": "en",
     "quality_profile": "showcase"
   },
   "stages": [
     {
-      "label": "读取"
+      "label": "\u8bfb\u53d6"
     },
     {
-      "label": "结果"
+      "label": "\u7ed3\u679c"
     },
     {
-      "label": "处理"
+      "label": "\u5904\u7406"
     },
     {
-      "label": "存储"
+      "label": "\u5b58\u50a8"
     }
   ],
   "nodes": [
@@ -27,49 +27,49 @@
       "stage": 0,
       "row": 0,
       "id": "n0",
-      "label": "读取"
+      "label": "\u8bfb\u53d6"
     },
     {
       "type": "backend",
       "stage": 2,
       "row": 2,
       "id": "n1",
-      "label": "处理"
+      "label": "\u5904\u7406"
     },
     {
       "type": "backend",
       "stage": 3,
       "row": 2,
       "id": "n2",
-      "label": "保存"
+      "label": "\u4fdd\u5b58"
     },
     {
       "type": "backend",
       "stage": 2,
       "row": 3,
       "id": "n3",
-      "label": "释放"
+      "label": "\u91ca\u653e"
     },
     {
       "type": "backend",
       "stage": 1,
       "row": 3,
       "id": "n4",
-      "label": "发布"
+      "label": "\u53d1\u5e03"
     },
     {
       "type": "backend",
       "stage": 2,
       "row": 4,
       "id": "n5",
-      "label": "一级"
+      "label": "\u4e00\u7ea7"
     },
     {
       "type": "backend",
       "stage": 3,
       "row": 4,
       "id": "n6",
-      "label": "二级"
+      "label": "\u4e8c\u7ea7"
     }
   ],
   "flows": [
@@ -91,49 +91,49 @@
       "id": "e2",
       "from": "n2",
       "to": "n6",
-      "label": "可选存储：value · TTL",
+      "label": "\u53ef\u9009\u5b58\u50a8\uff1avalue · TTL",
       "variant": "emphasis"
     },
     {
       "id": "e3",
       "from": "n6",
       "to": "n0",
-      "label": "一级未命中：二级值",
+      "label": "\u4e00\u7ea7\u672a\u547d\u4e2d\uff1a\u4e8c\u7ea7\u503c",
       "variant": "emphasis"
     },
     {
       "id": "e4",
       "from": "n2",
       "to": "n3",
-      "label": "已持有：处理完成或失败",
+      "label": "\u5df2\u6301\u6709\uff1a\u5904\u7406\u5b8c\u6210\u6216\u5931\u8d25",
       "variant": "dashed"
     },
     {
       "id": "e5",
       "from": "n1",
       "to": "n3",
-      "label": "已持有：处理异常",
+      "label": "\u5df2\u6301\u6709\uff1a\u5904\u7406\u5f02\u5e38",
       "variant": "dashed"
     },
     {
       "id": "e6",
       "from": "n2",
       "to": "n4",
-      "label": "未持有：完成或失败",
+      "label": "\u672a\u6301\u6709\uff1a\u5b8c\u6210\u6216\u5931\u8d25",
       "variant": "dashed"
     },
     {
       "id": "e7",
       "from": "n1",
       "to": "n4",
-      "label": "未持有：处理异常",
+      "label": "\u672a\u6301\u6709\uff1a\u5904\u7406\u5f02\u5e38",
       "variant": "dashed"
     },
     {
       "id": "e8",
       "from": "n3",
       "to": "n4",
-      "label": "释放完成（含异常）",
+      "label": "\u91ca\u653e\u5b8c\u6210\uff08\u542b\u5f02\u5e38\uff09",
       "variant": "dashed"
     }
   ]

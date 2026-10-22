@@ -267,7 +267,7 @@ test('Export cleanup preserves canonical artifacts and live interaction state', 
       group.setAttribute('id', 'authored-preservation');
       group.setAttribute('data-node-id', 'authored');
       group.setAttribute('data-animate', 'node');
-      group.innerHTML = '<path d="M 0 0 L 10 20" transform="translate(3 4)"/><text>Keep 中文 &amp; text</text>';
+      group.innerHTML = '<path d="M 0 0 L 10 20" transform="translate(3 4)"/><text>Keep \u4e2d\u6587 &amp; text</text>';
       clone.appendChild(group);
       const authored = group.outerHTML;
       const labels = ['original', '', null].map((value, i) => {

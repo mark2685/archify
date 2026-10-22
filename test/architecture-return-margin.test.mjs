@@ -16,10 +16,10 @@ function fixture() {
     ['executor', 40, 480, 290, 74], ['log', 420, 480, 250, 74],
   ].map(([id, x, y, width, height]) => [id, { id, x, y, width, height, cx: x + width / 2, cy: y + height / 2 }]));
   const connections = [
-    { id: 'state', from: 'executor', to: 'state', label: '取 Plan/Receipt · 更新状态' },
-    { id: 'files', from: 'executor', to: 'files', label: '检查 / 修改 / 撤销', fromSide: 'right', toSide: 'bottom' },
-    { id: 'write', from: 'executor', to: 'log', label: '先记日志 / 补偿' },
-    { id: 'restore', from: 'log', to: 'executor', label: '读取恢复材料', variant: 'dashed' },
+    { id: 'state', from: 'executor', to: 'state', label: '\u53d6 Plan/Receipt · \u66f4\u65b0\u72b6\u6001' },
+    { id: 'files', from: 'executor', to: 'files', label: '\u68c0\u67e5 / \u4fee\u6539 / \u64a4\u9500', fromSide: 'right', toSide: 'bottom' },
+    { id: 'write', from: 'executor', to: 'log', label: '\u5148\u8bb0\u65e5\u5fd7 / \u8865\u507f' },
+    { id: 'restore', from: 'log', to: 'executor', label: '\u8bfb\u53d6\u6062\u590d\u6750\u6599', variant: 'dashed' },
   ];
   return { boxes, connections };
 }

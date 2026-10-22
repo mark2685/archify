@@ -987,7 +987,7 @@ for (const side of ['base', 'head']) {
       fs.writeFileSync(output, 'trusted html');
       fs.writeFileSync(receiptPath, 'trusted receipt');
       const preload = path.join(caseRoot, 'replace-after-read.cjs');
-      // 在首次读取返回时替换原文件，避免依赖定时竞争或平台专用 FIFO。
+      // Replace the original file when the first read returns, avoiding timing races or platform-specific FIFOs.
       fs.writeFileSync(preload, `
         const fs = require('node:fs');
         const originalRead = fs.readFileSync;

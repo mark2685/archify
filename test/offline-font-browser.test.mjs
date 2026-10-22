@@ -89,7 +89,7 @@ test('fresh viewers use bundled fonts with local fonts disabled and identical of
   try {
     for (const [name, source, quality] of fixtures) render(path.join(skillRoot, 'examples', source), path.join(tmp, `${name}.html`), quality);
     const mixed = JSON.parse(fs.readFileSync(path.join(skillRoot, 'examples/web-app.architecture.json')));
-    mixed.meta.title = 'Fonts A Ā Ѡ Ж Ω ắ 中文';
+    mixed.meta.title = 'Fonts A Ā \u0460 \u0416 Ω ắ \u4e2d\u6587';
     fs.writeFileSync(path.join(tmp, 'mixed.json'), JSON.stringify(mixed));
     render(path.join(tmp, 'mixed.json'), path.join(tmp, 'mixed.html'));
     const compare = path.join(tmp, 'compare.html');
@@ -109,14 +109,14 @@ test('fresh viewers use bundled fonts with local fonts disabled and identical of
           const fonts = await actualFonts(browser, '.diagram-container svg text[data-node-label]');
           assert.ok(fonts.some(f => f.isCustomFont && /JetBrains Mono/.test(f.familyName)), JSON.stringify(fonts));
           const loaded = await evaluate(browser, `(async () => {
-            await Promise.all([400,500,600,700].map(w => document.fonts.load(w + ' 16px "JetBrains Mono"', 'A Ā Ѡ Ж Ω ắ')));
+            await Promise.all([400,500,600,700].map(w => document.fonts.load(w + ' 16px "JetBrains Mono"', 'A Ā \u0460 \u0416 Ω ắ')));
             return Array.from(document.fonts).filter(f => /JetBrains Mono/.test(f.family)).map(f => f.status);
           })()`);
           assert.deepEqual(loaded, Array(6).fill('loaded'));
         }
         await browser.inspect({ artifactPath: compare, width: 1440, height: 900, theme: 'light' });
         const frames = await evaluate(browser, `(async () => Promise.all(Array.from(document.querySelectorAll('iframe[srcdoc]')).map(async frame => {
-          await frame.contentDocument.fonts.load('400 16px "JetBrains Mono"', 'A Ā Ѡ Ж Ω ắ');
+          await frame.contentDocument.fonts.load('400 16px "JetBrains Mono"', 'A Ā \u0460 \u0416 Ω ắ');
           return Array.from(frame.contentDocument.fonts).filter(f => /JetBrains Mono/.test(f.family)).map(f => f.status);
         })))()`);
         assert.deepEqual(frames, [Array(6).fill('loaded'), Array(6).fill('loaded')]);

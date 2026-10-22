@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import { openArtifact, openLoopbackUrl } from '../archify/bin/open-artifact.mjs';
 
-const target = path.resolve("/tmp/-复杂 path 'quoted'/diagram.html");
+const target = path.resolve("/tmp/-\u590d\u6742 path 'quoted'/diagram.html");
 
 test('open artifact: uses argument arrays without shell interpolation on every supported platform', () => {
   const cases = [

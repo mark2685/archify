@@ -31,8 +31,8 @@ test('Windows CLI outputs retain native absolute, UNC, extended, and relative fo
     String.raw`C:\reports\..\diagram.html`,
     String.raw`\\server\share\reports\..\diagram.html`,
     String.raw`C:\ARCHIF~1\diagram.html`,
-    `C:\\reports\\${'界'.repeat(100)}.html`,
-    `\\\\?\\C:\\reports\\${'界'.repeat(100)}.html`,
+    `C:\\reports\\${'\u754c'.repeat(100)}.html`,
+    `\\\\?\\C:\\reports\\${'\u754c'.repeat(100)}.html`,
   ]) {
     assert.equal(validateNativeOutputPath(value, { platform: 'win32' }), value);
   }

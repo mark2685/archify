@@ -355,7 +355,7 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
     const originalInput = fs.readFileSync(input, 'utf8');
     try {
       const cjkSource = JSON.parse(originalInput);
-      cjkSource.components[0].label = '用户入口';
+      cjkSource.components[0].label = '\u7528\u6237\u5165\u53e3';
       fs.writeFileSync(input, JSON.stringify(cjkSource));
       execFileSync(process.execPath, [path.join(skillRoot, 'renderers/architecture/render-architecture.mjs'), input, file]);
       await load();
@@ -365,7 +365,7 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
       assert.ok(download.name.endsWith('.svg'));
       assert.equal(download.type, 'image/svg+xml;charset=utf-8');
       assert.ok(download.text.startsWith('<?xml version="1.0" encoding="UTF-8"?>'), 'standalone SVG must declare its UTF-8 encoding');
-      assert.ok(download.text.includes('用户入口'), 'CJK label must survive serialization');
+      assert.ok(download.text.includes('\u7528\u6237\u5165\u53e3'), 'CJK label must survive serialization');
       await record('svg-utf8');
     } finally {
       fs.writeFileSync(input, originalInput);
@@ -395,7 +395,7 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
     await run('exportWait(()=>[...exportUrls.values()].every(u=>u.revoked))');
   });
 
-  // 只替换指定的浏览器故障边界；图片、画布、流和其余编码过程仍使用真实实现。
+  // Replace only the named browser failure boundary; images, canvas, streams and the rest of encoding use the real implementation.
   async function recordingFault(fault) {
     await run(`window.webmOriginals={Image,MediaRecorder,capture:HTMLCanvasElement.prototype.captureStream,
       context:HTMLCanvasElement.prototype.getContext,draw:CanvasRenderingContext2D.prototype.drawImage};
@@ -423,7 +423,7 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
             const lateData=this.ondataavailable,lateStop=this.onstop,lateError=this.onerror;
             setTimeout(()=>{
               this.dispatchEvent(new ErrorEvent('error',{error:webmFailure}));
-              // 模拟错误之后已经排队的回调，不能恢复成功状态或重复清理资源。
+              // Callbacks already queued after the simulated error must not restore success or clean up resources twice.
               setTimeout(()=>{lateData({data:new Blob(['late'])});lateStop();lateError({error:new Error('late error')});webmLateEvents++;},20);
             },20);
           }
@@ -457,7 +457,7 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
         assert.deepEqual(await run('webmRecorders.map(r=>r.state)'),['inactive']);
         const stops=await run('webmRecorders.map(r=>r.stopCalls)');
         await run('new Promise(resolve=>setTimeout(resolve,400))');
-        assert.deepEqual(await run('webmRecorders.map(r=>r.stopCalls)'),stops,'完成后定时器不能再次停止录制');
+        assert.deepEqual(await run('webmRecorders.map(r=>r.stopCalls)'),stops,'\u5b8c\u6210\u540e\u5b9a\u65f6\u5668\u4e0d\u80fd\u518d\u6b21\u505c\u6b62\u5f55\u5236');
       }
     });
   }
@@ -466,7 +466,7 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
     await load();
     await recordingFault('capture');
     const outcome=await recordingOutcome(`Archify.exportMenu.run('webm').then(()=>new Blob())`);
-    assert.equal(outcome.status,'resolved','菜单应处理失败并完成调用');
+    assert.equal(outcome.status,'resolved','\u83dc\u5355\u5e94\u5904\u7406\u5931\u8d25\u5e76\u5b8c\u6210\u8c03\u7528');
     const failed=await record('webm-menu-boundary');
     assert.equal(failed.receipt['data-last-export-error-format'],'webm');
     assert.equal(failed.receipt['data-last-export-error'],'recording boundary: capture');
@@ -489,7 +489,7 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
     assert.ok((await record('webm-flush')).urls.every(u=>u.revoked));
     await run('restoreWebmFault()');
     const parallel=await run(`(async()=>{
-      // 保留真实图片解码，确定性地让第二次调用先完成背景加载。
+      // Keep real image decoding and deterministically let the second call finish loading its background first.
       const NativeImage=Image,ready=[];let imageSequence=0;
       window.Image=function(...args){
         const image=new NativeImage(...args),index=imageSequence++;let onload;
@@ -500,7 +500,7 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
         },{once:true});
         return image;
       };
-      // 用调用指定的帧率标识真实流，不能把编码器构造顺序当成调用顺序。
+      // Identify the real stream by the frame rate the call specified; encoder construction order is not call order.
       const capture=HTMLCanvasElement.prototype.captureStream,streamRates=new WeakMap();
       HTMLCanvasElement.prototype.captureStream=function(fps){
         const stream=capture.call(this,fps);streamRates.set(stream,fps);return stream;
@@ -524,8 +524,8 @@ test('Export preserves menu, clipboard, semantic cards and recording lifecycles'
         return {outcomes,started,overlappingStates};
       }finally{window.Image=NativeImage;window.MediaRecorder=NativeRecorder;HTMLCanvasElement.prototype.captureStream=capture;}
     })()`);
-    assert.deepEqual(parallel.started,[20,10],'第二次调用必须先启动编码器');
-    assert.deepEqual(parallel.overlappingStates,['recording','recording'],'注入错误时两次录制必须都在进行');
+    assert.deepEqual(parallel.started,[20,10],'\u7b2c\u4e8c\u6b21\u8c03\u7528\u5fc5\u987b\u5148\u542f\u52a8\u7f16\u7801\u5668');
+    assert.deepEqual(parallel.overlappingStates,['recording','recording'],'\u6ce8\u5165\u9519\u8bef\u65f6\u4e24\u6b21\u5f55\u5236\u5fc5\u987b\u90fd\u5728\u8fdb\u884c');
     assert.equal(parallel.outcomes[0].status,'rejected');assert.equal(parallel.outcomes[0].message,'first recording failed');
     assert.equal(parallel.outcomes[1].status,'resolved');assert.ok(parallel.outcomes[1].bytes>0);
     const state=await record('webm-parallel');

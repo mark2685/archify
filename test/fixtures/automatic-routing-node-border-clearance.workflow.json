@@ -2,7 +2,7 @@
   "schema_version": 1,
   "diagram_type": "workflow",
   "meta": {
-    "title": "自动连线节点边框避让回归",
+    "title": "\u81ea\u52a8\u8fde\u7ebf\u8282\u70b9\u8fb9\u6846\u907f\u8ba9\u56de\u5f52",
     "output": "automatic-routing-node-border-clearance.html",
     "quality_profile": "showcase",
     "viewBox": [720, 360]
@@ -17,15 +17,15 @@
       "lane": "orchestrator",
       "col": 2,
       "type": "backend",
-      "label": "team send 派单",
-      "sublabel": "选择目标 Worker"
+      "label": "team send \u6d3e\u5355",
+      "sublabel": "\u9009\u62e9\u76ee\u6807 Worker"
     },
     {
       "id": "inject",
       "lane": "runtime",
       "col": 1,
       "type": "security",
-      "label": "校验并注入输入",
+      "label": "\u6821\u9a8c\u5e76\u6ce8\u5165\u8f93\u5165",
       "sublabel": "UI token → PTY stdin"
     }
   ],

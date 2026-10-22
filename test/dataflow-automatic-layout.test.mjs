@@ -811,7 +811,7 @@ test('a valid mixed-port layout survives an alternative outlet that would mask i
   const diagram = mixedPortDiagram({ omitReturn: true, omitRelease: true });
   const { html } = renderedFootprint(t, diagram);
   assert.ok(html.includes('value · key · TTL'));
-  assert.ok(html.includes('未持有：完成或失败'));
+  assert.ok(html.includes('\u672a\u6301\u6709\uff1a\u5b8c\u6210\u6216\u5931\u8d25'));
 });
 
 

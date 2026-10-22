@@ -54,9 +54,9 @@ test('showcase shortens a route when a neighboring automatic label can move safe
       { id: 'feed', type: 'backend', label: 'Feed', sublabel: 'Requires SITE_URL', pos: [760, 210], size: [235, 76] },
     ],
     connections: [
-      { id: 'publish', from: 'source', to: 'published', label: '筛选' },
-      { id: 'build-input', from: 'published', to: 'build', label: '公开内容' },
-      { id: 'feed-output', from: 'build', to: 'feed', label: 'SITE_URL 有值' },
+      { id: 'publish', from: 'source', to: 'published', label: '\u7b5b\u9009' },
+      { id: 'build-input', from: 'published', to: 'build', label: '\u516c\u5f00\u5185\u5bb9' },
+      { id: 'feed-output', from: 'build', to: 'feed', label: 'SITE_URL \u6709\u503c' },
     ],
   }));
   const original = fs.readFileSync(input, 'utf8');
@@ -67,7 +67,7 @@ test('showcase shortens a route when a neighboring automatic label can move safe
   const html = fs.readFileSync(output, 'utf8');
   const points = html.match(/data-edge-id="build-input"[^>]*data-composition-points="([^"]+)"/)[1].split(';');
   assert.ok(points.length <= 4, `a movable label must not force three bends: ${points}`);
-  for (const label of ['筛选', '公开内容', 'SITE_URL 有值']) assert.ok(html.includes(`>${label}</text>`), label);
+  for (const label of ['\u7b5b\u9009', '\u516c\u5f00\u5185\u5bb9', 'SITE_URL \u6709\u503c']) assert.ok(html.includes(`>${label}</text>`), label);
   assert.equal(fs.readFileSync(input, 'utf8'), original);
 });
 
@@ -188,11 +188,11 @@ test('showcase uses a clear off-centre corner when central ports force a detour'
       { id: 'client', type: 'backend', label: 'Client', pos: [760, 390], size: [290, 90] },
     ],
     connections: [
-      { id: 'dispatch', from: 'entry', to: 'service', label: '解析空间后调用' },
-      { id: 'reply', from: 'service', to: 'entry', label: '受理 / 状态 / 失败' },
-      { id: 'register', from: 'service', to: 'catalog', label: '检查通过后选空间' },
-      { id: 'metadata', from: 'catalog', to: 'client', label: '目录 / 元数据 API' },
-      { id: 'write', from: 'service', to: 'client', label: '消息写入 / 状态查询' },
+      { id: 'dispatch', from: 'entry', to: 'service', label: '\u89e3\u6790\u7a7a\u95f4\u540e\u8c03\u7528' },
+      { id: 'reply', from: 'service', to: 'entry', label: '\u53d7\u7406 / \u72b6\u6001 / \u5931\u8d25' },
+      { id: 'register', from: 'service', to: 'catalog', label: '\u68c0\u67e5\u901a\u8fc7\u540e\u9009\u7a7a\u95f4' },
+      { id: 'metadata', from: 'catalog', to: 'client', label: '\u76ee\u5f55 / \u5143\u6570\u636e API' },
+      { id: 'write', from: 'service', to: 'client', label: '\u6d88\u606f\u5199\u5165 / \u72b6\u6001\u67e5\u8be2' },
     ],
   };
   const original = JSON.stringify(diagram);

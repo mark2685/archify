@@ -2,35 +2,35 @@
   "schema_version": 2,
   "diagram_type": "workflow",
   "meta": {
-    "title": "电商下单到发货工作流",
-    "locale": "zh-CN",
+    "title": "\u7535\u5546\u4e0b\u5355\u5230\u53d1\u8d27\u5de5\u4f5c\u6d41",
+    "locale": "en",
     "quality_profile": "showcase",
     "output": "commerce-workflow.html"
   },
   "lanes": [
     {
       "id": "buyer",
-      "label": "买家 · 提交与重试"
+      "label": "\u4e70\u5bb6 · \u63d0\u4ea4\u4e0e\u91cd\u8bd5"
     },
     {
       "id": "order",
-      "label": "订单服务 · 校验与创建"
+      "label": "\u8ba2\u5355\u670d\u52a1 · \u6821\u9a8c\u4e0e\u521b\u5efa"
     },
     {
       "id": "stock",
-      "label": "库存服务 · 预占与释放"
+      "label": "\u5e93\u5b58\u670d\u52a1 · \u9884\u5360\u4e0e\u91ca\u653e"
     },
     {
       "id": "payment",
-      "label": "支付 · 发起与结果"
+      "label": "\u652f\u4ed8 · \u53d1\u8d77\u4e0e\u7ed3\u679c"
     },
     {
       "id": "paid",
-      "label": "订单服务 · 支付确认与关闭"
+      "label": "\u8ba2\u5355\u670d\u52a1 · \u652f\u4ed8\u786e\u8ba4\u4e0e\u5173\u95ed"
     },
     {
       "id": "warehouse",
-      "label": "仓库 · 拣货与发货"
+      "label": "\u4ed3\u5e93 · \u62e3\u8d27\u4e0e\u53d1\u8d27"
     }
   ],
   "nodes": [
@@ -39,8 +39,8 @@
       "lane": "buyer",
       "col": 1,
       "type": "external",
-      "label": "提交订单",
-      "sublabel": "买家",
+      "label": "\u63d0\u4ea4\u8ba2\u5355",
+      "sublabel": "\u4e70\u5bb6",
       "width": 152,
       "height": 60,
       "yOffset": 0
@@ -50,8 +50,8 @@
       "lane": "buyer",
       "col": 0,
       "type": "external",
-      "label": "买家重试",
-      "sublabel": "支付失败后可再支付",
+      "label": "\u4e70\u5bb6\u91cd\u8bd5",
+      "sublabel": "\u652f\u4ed8\u5931\u8d25\u540e\u53ef\u518d\u652f\u4ed8",
       "width": 152,
       "height": 60,
       "yOffset": 0
@@ -61,8 +61,8 @@
       "lane": "order",
       "col": 1,
       "type": "backend",
-      "label": "校验商品和金额",
-      "sublabel": "订单服务",
+      "label": "\u6821\u9a8c\u5546\u54c1\u548c\u91d1\u989d",
+      "sublabel": "\u8ba2\u5355\u670d\u52a1",
       "width": 152,
       "height": 60,
       "yOffset": -50
@@ -72,8 +72,8 @@
       "lane": "order",
       "col": 2,
       "type": "backend",
-      "label": "创建待支付订单",
-      "sublabel": "预占成功后",
+      "label": "\u521b\u5efa\u5f85\u652f\u4ed8\u8ba2\u5355",
+      "sublabel": "\u9884\u5360\u6210\u529f\u540e",
       "width": 152,
       "height": 60,
       "yOffset": 50
@@ -83,8 +83,8 @@
       "lane": "order",
       "col": 2,
       "type": "backend",
-      "label": "告知买家并结束",
-      "sublabel": "结果：库存不足",
+      "label": "\u544a\u77e5\u4e70\u5bb6\u5e76\u7ed3\u675f",
+      "sublabel": "\u7ed3\u679c\uff1a\u5e93\u5b58\u4e0d\u8db3",
       "width": 152,
       "height": 60,
       "yOffset": -50
@@ -94,8 +94,8 @@
       "lane": "stock",
       "col": 1,
       "type": "backend",
-      "label": "预占库存",
-      "sublabel": "库存服务",
+      "label": "\u9884\u5360\u5e93\u5b58",
+      "sublabel": "\u5e93\u5b58\u670d\u52a1",
       "width": 152,
       "height": 60,
       "yOffset": -50
@@ -105,8 +105,8 @@
       "lane": "stock",
       "col": 5,
       "type": "backend",
-      "label": "释放库存",
-      "sublabel": "超时关闭后",
+      "label": "\u91ca\u653e\u5e93\u5b58",
+      "sublabel": "\u8d85\u65f6\u5173\u95ed\u540e",
       "width": 152,
       "height": 60,
       "yOffset": 50
@@ -116,8 +116,8 @@
       "lane": "payment",
       "col": 2,
       "type": "backend",
-      "label": "发起支付",
-      "sublabel": "订单服务发起",
+      "label": "\u53d1\u8d77\u652f\u4ed8",
+      "sublabel": "\u8ba2\u5355\u670d\u52a1\u53d1\u8d77",
       "width": 152,
       "height": 60,
       "yOffset": -50
@@ -127,8 +127,8 @@
       "lane": "payment",
       "col": 3,
       "type": "security",
-      "label": "支付成功？",
-      "sublabel": "支付结果判断",
+      "label": "\u652f\u4ed8\u6210\u529f\uff1f",
+      "sublabel": "\u652f\u4ed8\u7ed3\u679c\u5224\u65ad",
       "width": 152,
       "height": 60,
       "yOffset": -50
@@ -138,8 +138,8 @@
       "lane": "payment",
       "col": 0,
       "type": "security",
-      "label": "支付失败",
-      "sublabel": "结果：可重试",
+      "label": "\u652f\u4ed8\u5931\u8d25",
+      "sublabel": "\u7ed3\u679c\uff1a\u53ef\u91cd\u8bd5",
       "width": 152,
       "height": 60,
       "yOffset": 50
@@ -149,8 +149,8 @@
       "lane": "payment",
       "col": 5,
       "type": "security",
-      "label": "超时仍未支付？",
-      "sublabel": "超过 15 分钟",
+      "label": "\u8d85\u65f6\u4ecd\u672a\u652f\u4ed8\uff1f",
+      "sublabel": "\u8d85\u8fc7 15 \u5206\u949f",
       "width": 170,
       "height": 60,
       "yOffset": 50
@@ -160,8 +160,8 @@
       "lane": "paid",
       "col": 3,
       "type": "backend",
-      "label": "标记已支付",
-      "sublabel": "订单服务",
+      "label": "\u6807\u8bb0\u5df2\u652f\u4ed8",
+      "sublabel": "\u8ba2\u5355\u670d\u52a1",
       "width": 152,
       "height": 60,
       "yOffset": 0
@@ -171,8 +171,8 @@
       "lane": "paid",
       "col": 4,
       "type": "messagebus",
-      "label": "投递 OrderPaid",
-      "sublabel": "订单服务 · 异步事件",
+      "label": "\u6295\u9012 OrderPaid",
+      "sublabel": "\u8ba2\u5355\u670d\u52a1 · \u5f02\u6b65\u4e8b\u4ef6",
       "width": 152,
       "height": 60,
       "yOffset": 0
@@ -182,8 +182,8 @@
       "lane": "paid",
       "col": 5,
       "type": "backend",
-      "label": "关闭订单",
-      "sublabel": "结果：超时关闭",
+      "label": "\u5173\u95ed\u8ba2\u5355",
+      "sublabel": "\u7ed3\u679c\uff1a\u8d85\u65f6\u5173\u95ed",
       "width": 152,
       "height": 60,
       "yOffset": 0
@@ -193,8 +193,8 @@
       "lane": "warehouse",
       "col": 4,
       "type": "backend",
-      "label": "仓库拣货",
-      "sublabel": "收到 OrderPaid 事件",
+      "label": "\u4ed3\u5e93\u62e3\u8d27",
+      "sublabel": "\u6536\u5230 OrderPaid \u4e8b\u4ef6",
       "width": 152,
       "height": 60,
       "yOffset": -50
@@ -204,8 +204,8 @@
       "lane": "warehouse",
       "col": 4,
       "type": "backend",
-      "label": "发货",
-      "sublabel": "仓库完成发货",
+      "label": "\u53d1\u8d27",
+      "sublabel": "\u4ed3\u5e93\u5b8c\u6210\u53d1\u8d27",
       "width": 152,
       "height": 60,
       "yOffset": 50
@@ -221,20 +221,20 @@
     {
       "id": "validate-reserve",
       "to": "reserve",
-      "label": "校验完成",
+      "label": "\u6821\u9a8c\u5b8c\u6210",
       "from": "validate"
     },
     {
       "id": "reserve-pending",
       "to": "pending",
-      "label": "预占成功",
+      "label": "\u9884\u5360\u6210\u529f",
       "variant": "emphasis",
       "from": "reserve"
     },
     {
       "id": "reserve-no_stock",
       "to": "no_stock",
-      "label": "库存不足",
+      "label": "\u5e93\u5b58\u4e0d\u8db3",
       "role": "error",
       "variant": "security",
       "from": "reserve"
@@ -254,14 +254,14 @@
     {
       "id": "result-paid",
       "to": "paid",
-      "label": "成功",
+      "label": "\u6210\u529f",
       "variant": "emphasis",
       "from": "result"
     },
     {
       "id": "result-failed",
       "to": "failed",
-      "label": "失败",
+      "label": "\u5931\u8d25",
       "role": "error",
       "variant": "security",
       "from": "result"
@@ -269,14 +269,14 @@
     {
       "id": "failed-retry",
       "to": "retry",
-      "label": "允许重试",
+      "label": "\u5141\u8bb8\u91cd\u8bd5",
       "role": "return",
       "from": "failed"
     },
     {
       "id": "retry-pay",
       "to": "pay",
-      "label": "未超时",
+      "label": "\u672a\u8d85\u65f6",
       "role": "return",
       "variant": "dashed",
       "from": "retry"
@@ -284,7 +284,7 @@
     {
       "id": "pending-deadline",
       "to": "deadline",
-      "label": "等待支付",
+      "label": "\u7b49\u5f85\u652f\u4ed8",
       "role": "branch",
       "variant": "dashed",
       "from": "pending"
@@ -292,7 +292,7 @@
     {
       "id": "deadline-close",
       "to": "close",
-      "label": "是",
+      "label": "\u662f",
       "role": "error",
       "variant": "security",
       "from": "deadline"
@@ -320,7 +320,7 @@
     {
       "id": "close-release",
       "to": "release",
-      "label": "关闭后释放",
+      "label": "\u5173\u95ed\u540e\u91ca\u653e",
       "variant": "security",
       "from": "close"
     }

@@ -129,7 +129,7 @@ test('a short gap cannot pass by relocating its label above an endpoint', t => {
       { id: 'client', type: 'frontend', label: 'Client', pos: [45, 55], size: [180, 72] },
       { id: 'gateway', type: 'cloud', label: 'Gateway', pos: [310, 55], size: [220, 72] },
     ],
-    connections: [{ id: 'login', from: 'client', to: 'gateway', label: '登录 · 配对 · 加密帧' }],
+    connections: [{ id: 'login', from: 'client', to: 'gateway', label: '\u767b\u5f55 · \u914d\u5bf9 · \u52a0\u5bc6\u5e27' }],
   };
   const crowded = inspect(t, diagram);
   assert.equal(crowded.result.status, 1, crowded.result.stdout);

@@ -131,8 +131,8 @@ test('automatic sequence spread recovers crowded headers without losing real bro
     const spec = {
       schema_version: 1, diagram_type: 'sequence',
       meta: { title: 'Event delivery', quality_profile: 'showcase', output: 'diagram.html' },
-      participants: ['NotificationGateway', 'Access', 'Policy', 'Events', 'Cache', 'Store', '审计DeliveryService']
-        .map((label, i) => ({ id: `p${i}`, type: 'backend', label, sublabel: ['入口', 'token', 'rules', 'queue', 'hot', 'data', '审计'][i] })),
+      participants: ['NotificationGateway', 'Access', 'Policy', 'Events', 'Cache', 'Store', '\u5ba1\u8ba1DeliveryService']
+        .map((label, i) => ({ id: `p${i}`, type: 'backend', label, sublabel: ['\u5165\u53e3', 'token', 'rules', 'queue', 'hot', 'data', '\u5ba1\u8ba1'][i] })),
       messages: [{ from: 'p0', to: 'p1', y: 180, label: 'send' }],
     };
     const input = path.join(dir, 'capacity.json');

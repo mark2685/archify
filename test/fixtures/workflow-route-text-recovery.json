@@ -3,22 +3,22 @@
   "diagram_type": "workflow",
   "meta": {
     "title": "Automatic route and text recovery",
-    "locale": "zh-CN",
+    "locale": "en",
     "output": "output.html",
     "quality_profile": "showcase"
   },
   "lanes": [
     {
       "id": "intake",
-      "label": "字字 → 字字字字"
+      "label": "\u5b57\u5b57 → \u5b57\u5b57\u5b57\u5b57"
     },
     {
       "id": "fetch",
-      "label": "字字字字 ↓"
+      "label": "\u5b57\u5b57\u5b57\u5b57 ↓"
     },
     {
       "id": "compute",
-      "label": "字字字 ↓ 字字"
+      "label": "\u5b57\u5b57\u5b57 ↓ \u5b57\u5b57"
     }
   ],
   "nodes": [
@@ -27,7 +27,7 @@
       "lane": "intake",
       "col": 1,
       "type": "cloud",
-      "label": "④ 字字字字字",
+      "label": "\u2463 \u5b57\u5b57\u5b57\u5b57\u5b57",
       "sublabel": "xxxxx/{xxxxxxxxxx}",
       "yOffset": 50
     },
@@ -36,8 +36,8 @@
       "lane": "fetch",
       "col": 2,
       "type": "cloud",
-      "label": "⑤ 字字字字 xxxxxxx",
-      "sublabel": "xxxxx / xxxxxx / 字字 / 字字",
+      "label": "\u2464 \u5b57\u5b57\u5b57\u5b57 xxxxxxx",
+      "sublabel": "xxxxx / xxxxxx / \u5b57\u5b57 / \u5b57\u5b57",
       "yOffset": -50
     },
     {
@@ -45,8 +45,8 @@
       "lane": "fetch",
       "col": 4,
       "type": "security",
-      "label": "字字字字字",
-      "sublabel": "xxxxxxx + xxxx；字字",
+      "label": "\u5b57\u5b57\u5b57\u5b57\u5b57",
+      "sublabel": "xxxxxxx + xxxx\uff1b\u5b57\u5b57",
       "yOffset": -50
     },
     {
@@ -54,8 +54,8 @@
       "lane": "fetch",
       "col": 2,
       "type": "backend",
-      "label": "⑥ 字字 xxx 字字",
-      "sublabel": "xxxxxxx 字字字字字 11 字",
+      "label": "\u2465 \u5b57\u5b57 xxx \u5b57\u5b57",
+      "sublabel": "xxxxxxx \u5b57\u5b57\u5b57\u5b57\u5b57 11 \u5b57",
       "yOffset": 50
     },
     {
@@ -63,8 +63,8 @@
       "lane": "fetch",
       "col": 3,
       "type": "cloud",
-      "label": "⑦ 字字字字 xxxxxxx",
-      "sublabel": "字字 xxxx；字字 xxxxxxx",
+      "label": "\u2466 \u5b57\u5b57\u5b57\u5b57 xxxxxxx",
+      "sublabel": "\u5b57\u5b57 xxxx\uff1b\u5b57\u5b57 xxxxxxx",
       "yOffset": -50
     },
     {
@@ -72,9 +72,9 @@
       "lane": "fetch",
       "col": 3,
       "type": "cloud",
-      "label": "⑧ 字字 xxxxx 字字",
-      "sublabel": "xxxxxxx 字字字字",
-      "tag": "字字字字 111 字",
+      "label": "\u2467 \u5b57\u5b57 xxxxx \u5b57\u5b57",
+      "sublabel": "xxxxxxx \u5b57\u5b57\u5b57\u5b57",
+      "tag": "\u5b57\u5b57\u5b57\u5b57 111 \u5b57",
       "yOffset": 50
     },
     {
@@ -82,7 +82,7 @@
       "lane": "compute",
       "col": 4,
       "type": "security",
-      "label": "⑨ 字字字字字",
+      "label": "\u2468 \u5b57\u5b57\u5b57\u5b57\u5b57",
       "sublabel": "xxxxxxxxx / xxxxxxxxxx / xxxxxxxxxxx",
       "yOffset": -100
     },
@@ -91,8 +91,8 @@
       "lane": "compute",
       "col": 4,
       "type": "backend",
-      "label": "⑩ 字字字字字字",
-      "sublabel": "字字字字字字；xxxx 字字",
+      "label": "\u2469 \u5b57\u5b57\u5b57\u5b57\u5b57\u5b57",
+      "sublabel": "\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57\uff1bxxxx \u5b57\u5b57",
       "yOffset": 0
     },
     {
@@ -100,8 +100,8 @@
       "lane": "compute",
       "col": 5,
       "type": "backend",
-      "label": "⑫ 字字字字",
-      "sublabel": "字字 + 字字 + xxxxxxxx",
+      "label": "\u246b \u5b57\u5b57\u5b57\u5b57",
+      "sublabel": "\u5b57\u5b57 + \u5b57\u5b57 + xxxxxxxx",
       "yOffset": -50
     },
     {
@@ -109,8 +109,8 @@
       "lane": "fetch",
       "col": 4,
       "type": "security",
-      "label": "xxxxx 字字字字字",
-      "sublabel": "xxxxxxx；字字字字字字",
+      "label": "xxxxx \u5b57\u5b57\u5b57\u5b57\u5b57",
+      "sublabel": "xxxxxxx\uff1b\u5b57\u5b57\u5b57\u5b57\u5b57\u5b57",
       "yOffset": 50
     }
   ],
@@ -121,7 +121,7 @@
       "to": "n1",
       "role": "main",
       "variant": "default",
-      "label": "字字"
+      "label": "\u5b57\u5b57"
     },
     {
       "id": "n1-n2",
@@ -129,7 +129,7 @@
       "to": "n2",
       "role": "error",
       "variant": "security",
-      "label": "字字字字"
+      "label": "\u5b57\u5b57\u5b57\u5b57"
     },
     {
       "id": "n2-n3",
@@ -137,7 +137,7 @@
       "to": "n3",
       "role": "return",
       "variant": "dashed",
-      "label": "字字"
+      "label": "\u5b57\u5b57"
     },
     {
       "id": "n4-n5",
@@ -145,7 +145,7 @@
       "to": "n5",
       "role": "main",
       "variant": "default",
-      "label": "字字 / 字字字字字"
+      "label": "\u5b57\u5b57 / \u5b57\u5b57\u5b57\u5b57\u5b57"
     },
     {
       "id": "n5-n9",
@@ -153,7 +153,7 @@
       "to": "n9",
       "role": "error",
       "variant": "security",
-      "label": "字字 / 111 字字字"
+      "label": "\u5b57\u5b57 / 111 \u5b57\u5b57\u5b57"
     },
     {
       "id": "n9-n6",
@@ -161,7 +161,7 @@
       "to": "n6",
       "role": "return",
       "variant": "dashed",
-      "label": "字字",
+      "label": "\u5b57\u5b57",
       "route": "auto"
     }
   ]

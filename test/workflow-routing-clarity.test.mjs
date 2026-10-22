@@ -27,18 +27,18 @@ test('readable-v2 separates unrelated automatic branches that meet at a bend', (
   const workflow = {
     schema_version: 2, diagram_type: 'workflow',
     meta: { title: 'Independent failure branches', locale: 'en', output: 'branches.html' },
-    lanes: [{ id: 'sender', label: '请求处理' }, { id: 'stop', label: '失败处理', variant: 'exception' }],
+    lanes: [{ id: 'sender', label: '\u8bf7\u6c42\u5904\u7406' }, { id: 'stop', label: '\u5931\u8d25\u5904\u7406', variant: 'exception' }],
     nodes: [
-      { id: 'request', lane: 'sender', col: 0, type: 'external', label: '提交请求', sublabel: '待处理业务任务' },
-      { id: 'resolve', lane: 'sender', col: 1, type: 'security', label: '验证并选择目标', sublabel: '检查请求目标 · 排除自身' },
-      { id: 'dispatch', lane: 'sender', col: 3, type: 'messagebus', label: '发送任务卡', sublabel: '新 ID · 当前协议' },
-      { id: 'targetStop', lane: 'stop', col: 0, type: 'security', label: '目标不明确', sublabel: '无目标 / 多目标 / 当前未知' },
-      { id: 'deliveryFail', lane: 'stop', col: 1, type: 'security', label: '发送失败', sublabel: '未完成 · 保留记录' },
-      { id: 'invalid', lane: 'stop', col: 2, type: 'security', label: '拒绝错误请求', sublabel: '不执行 invalid 操作' },
+      { id: 'request', lane: 'sender', col: 0, type: 'external', label: '\u63d0\u4ea4\u8bf7\u6c42', sublabel: '\u5f85\u5904\u7406\u4e1a\u52a1\u4efb\u52a1' },
+      { id: 'resolve', lane: 'sender', col: 1, type: 'security', label: '\u9a8c\u8bc1\u5e76\u9009\u62e9\u76ee\u6807', sublabel: '\u68c0\u67e5\u8bf7\u6c42\u76ee\u6807 · \u6392\u9664\u81ea\u8eab' },
+      { id: 'dispatch', lane: 'sender', col: 3, type: 'messagebus', label: '\u53d1\u9001\u4efb\u52a1\u5361', sublabel: '\u65b0 ID · \u5f53\u524d\u534f\u8bae' },
+      { id: 'targetStop', lane: 'stop', col: 0, type: 'security', label: '\u76ee\u6807\u4e0d\u660e\u786e', sublabel: '\u65e0\u76ee\u6807 / \u591a\u76ee\u6807 / \u5f53\u524d\u672a\u77e5' },
+      { id: 'deliveryFail', lane: 'stop', col: 1, type: 'security', label: '\u53d1\u9001\u5931\u8d25', sublabel: '\u672a\u5b8c\u6210 · \u4fdd\u7559\u8bb0\u5f55' },
+      { id: 'invalid', lane: 'stop', col: 2, type: 'security', label: '\u62d2\u7edd\u9519\u8bef\u8bf7\u6c42', sublabel: '\u4e0d\u6267\u884c invalid \u64cd\u4f5c' },
     ],
     edges: [
-      { id: 'resolve-targetStop', from: 'resolve', to: 'targetStop', label: '不明确', role: 'error' },
-      { id: 'dispatch-deliveryFail', from: 'dispatch', to: 'deliveryFail', label: '拒绝', role: 'error' },
+      { id: 'resolve-targetStop', from: 'resolve', to: 'targetStop', label: '\u4e0d\u660e\u786e', role: 'error' },
+      { id: 'dispatch-deliveryFail', from: 'dispatch', to: 'deliveryFail', label: '\u62d2\u7edd', role: 'error' },
     ],
   };
   const before = structuredClone(workflow);
@@ -60,7 +60,7 @@ test('readable-v2 separates unrelated automatic branches that meet at a bend', (
   assert.deepEqual(result.receipt.nodes.map(n => n.id), workflow.nodes.map(n => n.id));
   assert.deepEqual(result.receipt.edges.map(e => [e.id, e.from, e.to]).sort(),
     workflow.edges.map(e => [e.id, e.from, e.to]).sort());
-  assert.deepEqual(result.receipt.labels.map(l => l.label).sort(), ['不明确', '拒绝'].sort());
+  assert.deepEqual(result.receipt.labels.map(l => l.label).sort(), ['\u4e0d\u660e\u786e', '\u62d2\u7edd'].sort());
   assert.deepEqual(workflow, before);
 });
 
@@ -100,25 +100,25 @@ test('readable-v2 uses a clear internal corridor for a long same-column branch',
     schema_version: 2, diagram_type: 'workflow',
     meta: { title: 'Payment and expiry', locale: 'en', output: 'expiry.html' },
     lanes: [
-      { id: 'checkout', label: '下单与支付' },
-      { id: 'fulfillment', label: '支付成功后履约' },
-      { id: 'exceptions', label: '库存不足 / 支付失败', variant: 'exception' },
-      { id: 'expiry', label: '超时关闭与回收', variant: 'exception' },
+      { id: 'checkout', label: '\u4e0b\u5355\u4e0e\u652f\u4ed8' },
+      { id: 'fulfillment', label: '\u652f\u4ed8\u6210\u529f\u540e\u5c65\u7ea6' },
+      { id: 'exceptions', label: '\u5e93\u5b58\u4e0d\u8db3 / \u652f\u4ed8\u5931\u8d25', variant: 'exception' },
+      { id: 'expiry', label: '\u8d85\u65f6\u5173\u95ed\u4e0e\u56de\u6536', variant: 'exception' },
     ],
     nodes: [
-      { id: 'pending', lane: 'checkout', col: 2, type: 'backend', label: '创建待支付订单', sublabel: '订单服务' },
-      { id: 'pay', lane: 'checkout', col: 2, yOffset: 80, type: 'cloud', label: '发起支付', sublabel: '支付服务', icon: 'decision' },
-      { id: 'failed', lane: 'exceptions', col: 2, type: 'external', label: '支付失败，可重试', sublabel: '买家重试支付', icon: 'failure' },
-      { id: 'event', lane: 'fulfillment', col: 3, type: 'messagebus', label: '投递 OrderPaid', sublabel: '订单服务' },
-      { id: 'timeout', lane: 'expiry', col: 2, type: 'security', label: '超过 15 分钟？', sublabel: '订单服务检查未支付订单', icon: 'decision' },
-      { id: 'close', lane: 'expiry', col: 1, type: 'backend', label: '超时关闭订单', sublabel: '订单服务', icon: 'stop' },
+      { id: 'pending', lane: 'checkout', col: 2, type: 'backend', label: '\u521b\u5efa\u5f85\u652f\u4ed8\u8ba2\u5355', sublabel: '\u8ba2\u5355\u670d\u52a1' },
+      { id: 'pay', lane: 'checkout', col: 2, yOffset: 80, type: 'cloud', label: '\u53d1\u8d77\u652f\u4ed8', sublabel: '\u652f\u4ed8\u670d\u52a1', icon: 'decision' },
+      { id: 'failed', lane: 'exceptions', col: 2, type: 'external', label: '\u652f\u4ed8\u5931\u8d25\uff0c\u53ef\u91cd\u8bd5', sublabel: '\u4e70\u5bb6\u91cd\u8bd5\u652f\u4ed8', icon: 'failure' },
+      { id: 'event', lane: 'fulfillment', col: 3, type: 'messagebus', label: '\u6295\u9012 OrderPaid', sublabel: '\u8ba2\u5355\u670d\u52a1' },
+      { id: 'timeout', lane: 'expiry', col: 2, type: 'security', label: '\u8d85\u8fc7 15 \u5206\u949f\uff1f', sublabel: '\u8ba2\u5355\u670d\u52a1\u68c0\u67e5\u672a\u652f\u4ed8\u8ba2\u5355', icon: 'decision' },
+      { id: 'close', lane: 'expiry', col: 1, type: 'backend', label: '\u8d85\u65f6\u5173\u95ed\u8ba2\u5355', sublabel: '\u8ba2\u5355\u670d\u52a1', icon: 'stop' },
     ],
     edges: [
       { id: 'pending-pay', from: 'pending', to: 'pay', role: 'main' },
-      { id: 'pay-failed', from: 'pay', to: 'failed', role: 'error', label: '支付失败', variant: 'security' },
-      { id: 'retry-pay', from: 'failed', to: 'pay', role: 'return', label: '未超时，重试', variant: 'dashed' },
-      { id: 'pending-timeout', from: 'pending', to: 'timeout', role: 'branch', label: '持续未支付', variant: 'dashed' },
-      { id: 'timeout-close', from: 'timeout', to: 'close', role: 'error', label: '是，仍未支付', variant: 'security' },
+      { id: 'pay-failed', from: 'pay', to: 'failed', role: 'error', label: '\u652f\u4ed8\u5931\u8d25', variant: 'security' },
+      { id: 'retry-pay', from: 'failed', to: 'pay', role: 'return', label: '\u672a\u8d85\u65f6\uff0c\u91cd\u8bd5', variant: 'dashed' },
+      { id: 'pending-timeout', from: 'pending', to: 'timeout', role: 'branch', label: '\u6301\u7eed\u672a\u652f\u4ed8', variant: 'dashed' },
+      { id: 'timeout-close', from: 'timeout', to: 'close', role: 'error', label: '\u662f\uff0c\u4ecd\u672a\u652f\u4ed8', variant: 'security' },
     ],
   };
   const original = structuredClone(workflow);
@@ -143,14 +143,14 @@ test('readable-v2 keeps clear backward branches straight after provisional port 
       meta: { title: 'Timeout branch', locale: 'en', output: 'timeout.html' },
       lanes: ['checkout', 'fulfillment', 'expiry'].map(id => ({ id, label: id })),
       nodes: [
-        { id: 'pending', lane: 'checkout', col: 3, type: 'backend', label: '创建待支付订单' },
-        { id: 'pick', lane: 'fulfillment', col: 4, type: 'backend', label: '拣货' },
-        { id: 'timeout', lane: 'expiry', col: 4, type: 'security', label: '超过 15 分钟？' },
-        { id: 'close', lane: 'expiry', col: 3, type: 'backend', label: '超时关闭订单' },
+        { id: 'pending', lane: 'checkout', col: 3, type: 'backend', label: '\u521b\u5efa\u5f85\u652f\u4ed8\u8ba2\u5355' },
+        { id: 'pick', lane: 'fulfillment', col: 4, type: 'backend', label: '\u62e3\u8d27' },
+        { id: 'timeout', lane: 'expiry', col: 4, type: 'security', label: '\u8d85\u8fc7 15 \u5206\u949f\uff1f' },
+        { id: 'close', lane: 'expiry', col: 3, type: 'backend', label: '\u8d85\u65f6\u5173\u95ed\u8ba2\u5355' },
       ],
       edges: [
-        { id: 'pending-timeout', from: 'pending', to: 'timeout', role: 'branch', label: '持续未支付', variant: 'dashed' },
-        { id: 'timeout-close', from: 'timeout', to: 'close', role, label: '是，仍未支付', variant: 'security' },
+        { id: 'pending-timeout', from: 'pending', to: 'timeout', role: 'branch', label: '\u6301\u7eed\u672a\u652f\u4ed8', variant: 'dashed' },
+        { id: 'timeout-close', from: 'timeout', to: 'close', role, label: '\u662f\uff0c\u4ecd\u672a\u652f\u4ed8', variant: 'security' },
       ],
     };
     const before = structuredClone(workflow);
@@ -160,7 +160,7 @@ test('readable-v2 keeps clear backward branches straight after provisional port 
     assert.equal(edge.points.length, 2, 'a clear backward branch must not loop below the lane');
     assert.equal(edge.points[0][1], edge.points[1][1], 'keep the facing route horizontal');
     assert.ok(edge.points[0][0] > edge.points[1][0], 'preserve the backward relationship');
-    assert.equal(result.receipt.labels.find(entry => entry.edge === edge.id).label, '是，仍未支付');
+    assert.equal(result.receipt.labels.find(entry => entry.edge === edge.id).label, '\u662f\uff0c\u4ecd\u672a\u652f\u4ed8');
     assert.equal(result.receipt.nodes.length, workflow.nodes.length);
     assert.equal(result.receipt.edges.length, workflow.edges.length);
     assert.deepEqual(workflow, before, 'routing must preserve the authored document');

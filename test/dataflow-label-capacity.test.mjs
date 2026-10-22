@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { flowLabelSize, wrapBlockedFlowLabels } from '../archify/renderers/dataflow/label-capacity.mjs';
 import { rectsOverlap, segmentRectClearanceWithin } from '../archify/renderers/shared/geometry.mjs';
 
-function fixture(text = '保存 / 复制结果') {
+function fixture(text = '\u4fdd\u5b58 / \u590d\u5236\u7ed3\u679c') {
   const relation = { id: 'output', label: text };
   const size = flowLabelSize(relation);
   return {
@@ -19,7 +19,7 @@ function fixture(text = '保存 / 复制结果') {
   };
 }
 
-for (const text of ['保存 / 复制结果', 'save / copy result', '👩‍💻 / e\u0301 result']) {
+for (const text of ['\u4fdd\u5b58 / \u590d\u5236\u7ed3\u679c', 'save / copy result', '👩‍💻 / e\u0301 result']) {
   test(`a blocked label stays beside its own arrow with complete two-line text: ${text}`, () => {
     const scene = fixture(text), before = structuredClone(scene);
     const [label] = wrapBlockedFlowLabels(scene);

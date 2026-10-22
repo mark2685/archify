@@ -93,7 +93,7 @@ test('lifecycle clears its right-hand sigil and retains the step and text detail
 });
 test('Chinese stage titles retain every character when wrapped', () => {
   const doc = load('examples/product-analytics.dataflow.json');
-  const title = '用户行为采集与事件清洗标准化处理以及后续数据分发'; doc.stages[0].label = title;
+  const title = '\u7528\u6237\u884c\u4e3a\u91c7\u96c6\u4e0e\u4e8b\u4ef6\u6e05\u6d17\u6807\u51c6\u5316\u5904\u7406\u4ee5\u53ca\u540e\u7eed\u6570\u636e\u5206\u53d1'; doc.stages[0].label = title;
   assert.ok(find(deliver('dataflow', doc), n => n.tagName === 'text' && text(n) === `01 / ${title}`).length);
 });
 

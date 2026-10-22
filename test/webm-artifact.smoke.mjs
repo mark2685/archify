@@ -179,12 +179,12 @@ execFileSync(process.execPath, [
   parallelOutput,
 ], { stdio: ['ignore', 'ignore', 'pipe'] });
 
-const specialSourceLabel = '入口 <script>window.__routeLabelExecuted = true</script> 汉字 🚀 with an intentionally very long endpoint label';
-const specialTargetLabel = '终点服务 ✅ emoji + CJK + a second deliberately long endpoint label for header fitting';
+const specialSourceLabel = '\u5165\u53e3 <script>window.__routeLabelExecuted = true</script> \u6c49\u5b57 🚀 with an intentionally very long endpoint label';
+const specialTargetLabel = '\u7ec8\u70b9\u670d\u52a1 ✅ emoji + CJK + a second deliberately long endpoint label for header fitting';
 const specialComponents = Array.from({ length: 11 }, (_, index) => ({
   id: index === 0 ? 'Route_Source-01' : index === 10 ? 'Route_Target-10' : `route_step-${index}`,
   type: index === 0 ? 'external' : index === 10 ? 'database' : 'backend',
-  label: index === 0 ? specialSourceLabel : index === 10 ? specialTargetLabel : `步骤 ${index} · service_${index} ⚙️`,
+  label: index === 0 ? specialSourceLabel : index === 10 ? specialTargetLabel : `\u6b65\u9aa4 ${index} · service_${index} ⚙️`,
   sublabel: `hop ${index}`,
   pos: [40 + index * 820, 280],
   size: [index === 0 || index === 10 ? 780 : 220, 72],
@@ -193,7 +193,7 @@ const specialRouteSource = {
   schema_version: 1,
   diagram_type: 'architecture',
   meta: {
-    title: '多语言 Route Share Card 🚀 with a deliberately long original diagram title that must fit safely',
+    title: '\u591a\u8bed\u8a00 Route Share Card 🚀 with a deliberately long original diagram title that must fit safely',
     subtitle: 'Ten exact authored hops',
     output: 'special-route.architecture.html',
     animation: 'trace',

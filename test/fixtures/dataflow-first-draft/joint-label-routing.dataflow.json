@@ -3,25 +3,25 @@
   "diagram_type": "dataflow",
   "meta": {
     "title": "Automatic label and route clearance",
-    "locale": "zh-CN",
+    "locale": "en",
     "output": "diagram.html",
     "quality_profile": "showcase"
   },
   "stages": [
     {
-      "label": "文文文文文"
+      "label": "\u6587\u6587\u6587\u6587\u6587"
     },
     {
-      "label": "文文文文文"
+      "label": "\u6587\u6587\u6587\u6587\u6587"
     },
     {
-      "label": "文文文文文"
+      "label": "\u6587\u6587\u6587\u6587\u6587"
     },
     {
-      "label": "文文文文文"
+      "label": "\u6587\u6587\u6587\u6587\u6587"
     },
     {
-      "label": "文文文文文"
+      "label": "\u6587\u6587\u6587\u6587\u6587"
     }
   ],
   "nodes": [
@@ -37,31 +37,31 @@
       "id": "n01",
       "type": "backend",
       "label": "aaa(aaa)",
-      "sublabel": "N1 文文；文文 N1",
+      "sublabel": "N1 \u6587\u6587\uff1b\u6587\u6587 N1",
       "stage": 1,
       "row": 0
     },
     {
       "id": "n02",
       "type": "backend",
-      "label": "N1 文文",
-      "sublabel": "文文 NaaaaNaaaaaa",
+      "label": "N1 \u6587\u6587",
+      "sublabel": "\u6587\u6587 NaaaaNaaaaaa",
       "stage": 1,
       "row": 1
     },
     {
       "id": "n03",
       "type": "backend",
-      "label": "N1 文文",
-      "sublabel": "文文 NaaaaNaaaaaa",
+      "label": "N1 \u6587\u6587",
+      "sublabel": "\u6587\u6587 NaaaaNaaaaaa",
       "stage": 2,
       "row": 0
     },
     {
       "id": "n04",
       "type": "backend",
-      "label": "文文 aaaaa",
-      "sublabel": "文文文文文文文",
+      "label": "\u6587\u6587 aaaaa",
+      "sublabel": "\u6587\u6587\u6587\u6587\u6587\u6587\u6587",
       "stage": 4,
       "row": 0
     },
@@ -69,23 +69,23 @@
       "id": "n05",
       "type": "backend",
       "label": "aaaaaa-aaaaaa",
-      "sublabel": "文 aaa 文文 Naaaaa",
+      "sublabel": "\u6587 aaa \u6587\u6587 Naaaaa",
       "stage": 0,
       "row": 2
     },
     {
       "id": "n06",
       "type": "backend",
-      "label": "文文文 Naaaaa",
-      "sublabel": "aaaaaa 文文；文文文文",
+      "label": "\u6587\u6587\u6587 Naaaaa",
+      "sublabel": "aaaaaa \u6587\u6587\uff1b\u6587\u6587\u6587\u6587",
       "stage": 0,
       "row": 3
     },
     {
       "id": "n07",
       "type": "backend",
-      "label": "文文文文文",
-      "sublabel": "文文 NaaaaaaNaaaaNaaaaaa",
+      "label": "\u6587\u6587\u6587\u6587\u6587",
+      "sublabel": "\u6587\u6587 NaaaaaaNaaaaNaaaaaa",
       "stage": 1,
       "row": 2
     },
@@ -100,8 +100,8 @@
     {
       "id": "n09",
       "type": "backend",
-      "label": "文文 aaa(aaa)",
-      "sublabel": "文 aaaaa，文文 N1/N1",
+      "label": "\u6587\u6587 aaa(aaa)",
+      "sublabel": "\u6587 aaaaa\uff0c\u6587\u6587 N1/N1",
       "stage": 3,
       "row": 2
     },
@@ -109,7 +109,7 @@
       "id": "n10",
       "type": "backend",
       "label": "aaaaa aaaaaa()",
-      "sublabel": "文文文文文文文",
+      "sublabel": "\u6587\u6587\u6587\u6587\u6587\u6587\u6587",
       "stage": 2,
       "row": 3
     },
@@ -117,23 +117,23 @@
       "id": "n11",
       "type": "backend",
       "label": "aaa(aaa,aaaaa,NNN)",
-      "sublabel": "文文 N1，文文文 N1",
+      "sublabel": "\u6587\u6587 N1\uff0c\u6587\u6587\u6587 N1",
       "stage": 3,
       "row": 3
     },
     {
       "id": "n12",
       "type": "backend",
-      "label": "文文文文 Naaaaa",
-      "sublabel": "aaa_aaaaaa；aaaaaaa 文文",
+      "label": "\u6587\u6587\u6587\u6587 Naaaaa",
+      "sublabel": "aaa_aaaaaa\uff1baaaaaaa \u6587\u6587",
       "stage": 4,
       "row": 3
     },
     {
       "id": "n13",
       "type": "backend",
-      "label": "文文文文",
-      "sublabel": "aaa_aaaaaaaaa；aaaaaaa 文文",
+      "label": "\u6587\u6587\u6587\u6587",
+      "sublabel": "aaa_aaaaaaaaa\uff1baaaaaaa \u6587\u6587",
       "stage": 4,
       "row": 4
     },
@@ -141,7 +141,7 @@
       "id": "n14",
       "type": "backend",
       "label": "aaaaaaa_aaaa",
-      "sublabel": "文文文文文文文文；aaaaaaa",
+      "sublabel": "\u6587\u6587\u6587\u6587\u6587\u6587\u6587\u6587\uff1baaaaaaa",
       "stage": 3,
       "row": 4
     }
@@ -153,143 +153,143 @@
       "to": "n01",
       "label": "aaa",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f2",
       "from": "n02",
       "to": "n01",
-      "label": "N1 文文文",
+      "label": "N1 \u6587\u6587\u6587",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f3",
       "from": "n01",
       "to": "n03",
-      "label": "N1 文文文",
+      "label": "N1 \u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f4",
       "from": "n03",
       "to": "n01",
-      "label": "N1 文文文",
+      "label": "N1 \u6587\u6587\u6587",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f5",
       "from": "n01",
       "to": "n02",
-      "label": "N1 文文文",
+      "label": "N1 \u6587\u6587\u6587",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f6",
       "from": "n01",
       "to": "n04",
-      "label": "文文文",
+      "label": "\u6587\u6587\u6587",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f7",
       "from": "n01",
       "to": "n05",
-      "label": "文文文",
+      "label": "\u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f8",
       "from": "n05",
       "to": "n06",
-      "label": "文文 Naaaaa",
+      "label": "\u6587\u6587 Naaaaa",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f9",
       "from": "n05",
       "to": "n07",
-      "label": "文文文 aaaaa",
+      "label": "\u6587\u6587\u6587 aaaaa",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f10",
       "from": "n07",
       "to": "n10",
-      "label": "文文文文",
+      "label": "\u6587\u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f11",
       "from": "n07",
       "to": "n08",
-      "label": "文文文文文",
+      "label": "\u6587\u6587\u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f12",
       "from": "n08",
       "to": "n10",
-      "label": "文文文文文文",
+      "label": "\u6587\u6587\u6587\u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f13",
       "from": "n08",
       "to": "n09",
-      "label": "文文文文",
+      "label": "\u6587\u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f14",
       "from": "n09",
       "to": "n01",
-      "label": "文文 aaa",
+      "label": "\u6587\u6587 aaa",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f15",
       "from": "n01",
       "to": "n09",
-      "label": "文文文文文文",
+      "label": "\u6587\u6587\u6587\u6587\u6587\u6587",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f16",
       "from": "n09",
       "to": "n12",
-      "label": "文文文文文",
+      "label": "\u6587\u6587\u6587\u6587\u6587",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f17",
       "from": "n09",
       "to": "n10",
-      "label": "文文文文文文",
+      "label": "\u6587\u6587\u6587\u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f18",
       "from": "n10",
       "to": "n11",
-      "label": "aaaaaa 文文",
+      "label": "aaaaaa \u6587\u6587",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f19",
@@ -297,79 +297,79 @@
       "to": "n02",
       "label": "aaaaa · NNN",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f20",
       "from": "n11",
       "to": "n03",
-      "label": "N1 文文文",
+      "label": "N1 \u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f21",
       "from": "n11",
       "to": "n12",
-      "label": "文文文 aaaaa",
+      "label": "\u6587\u6587\u6587 aaaaa",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f22",
       "from": "n12",
       "to": "n06",
-      "label": "文文 aaaaa",
+      "label": "\u6587\u6587 aaaaa",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f23",
       "from": "n12",
       "to": "n04",
-      "label": "aaaaa 文 aaaaa",
+      "label": "aaaaa \u6587 aaaaa",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f24",
       "from": "n06",
       "to": "n04",
-      "label": "文文文文 aaaaa",
+      "label": "\u6587\u6587\u6587\u6587 aaaaa",
       "variant": "default",
-      "classification": "文文文文文文"
+      "classification": "\u6587\u6587\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f25",
       "from": "n10",
       "to": "n13",
-      "label": "aaaaaa 文文",
+      "label": "aaaaaa \u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f26",
       "from": "n11",
       "to": "n13",
-      "label": "N1 文文文",
+      "label": "N1 \u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f27",
       "from": "n13",
       "to": "n06",
-      "label": "文文文文",
+      "label": "\u6587\u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     },
     {
       "id": "f28",
       "from": "n08",
       "to": "n14",
-      "label": "文文文文文文",
+      "label": "\u6587\u6587\u6587\u6587\u6587\u6587",
       "variant": "dashed",
-      "classification": "文文文文"
+      "classification": "\u6587\u6587\u6587\u6587"
     }
   ]
 }

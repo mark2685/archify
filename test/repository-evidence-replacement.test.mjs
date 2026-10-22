@@ -26,7 +26,7 @@ function fixture(t, scenario) {
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const repo = path.join(root, 'repo');
   fs.mkdirSync(repo);
-  // 隔离调用者的 Git 环境与配置，不改动真实 HOME 或全局配置。
+  // Isolate the caller's Git environment and configuration without touching the real HOME or global config.
   const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_')));
   Object.assign(env, {
     GIT_CONFIG_NOSYSTEM: '1',
@@ -79,7 +79,7 @@ function fixture(t, scenario) {
     git('replace', replaced, replacement);
     const ref = `${scenario.refBase || 'refs/replace/'}${replaced}`;
     assert.equal(git('rev-parse', ref), replacement);
-    // 证明夹具确实改变 Git 读取结果，而非只创建无效的 replacement ref。
+    // Prove the fixture really changes what Git reads rather than only creating an ineffective replacement ref.
     if (scenario.replacement === null) {
       assert.throws(() => git('show', `${revision}:source.js`));
     } else {

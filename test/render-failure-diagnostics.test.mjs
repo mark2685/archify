@@ -109,7 +109,7 @@ test('render layout rejection exposes the existing diagnostic and preserves an e
       quality_profile: 'standard',
       viewBox: [975, 395],
     },
-    components: [{ id: 'node', type: 'security', label: '字'.repeat(40), pos: [40, 40], size: [88, 71] }],
+    components: [{ id: 'node', type: 'security', label: '\u5b57'.repeat(40), pos: [40, 40], size: [88, 71] }],
   }));
   fs.writeFileSync(output, 'trusted artifact');
   const result = run([cli, 'render', 'architecture', input, output], cwd);
@@ -411,7 +411,7 @@ test('renderer and standalone CLI format the same diagnostics consistently', () 
     return vm.runInNewContext(`(${source.slice(start, end)})`);
   });
   for (const diagnostics of [[], [
-    { code: 'layout/constraint', message: '标签过宽', supportedFixes: ['widen size', 'shorten label'] },
+    { code: 'layout/constraint', message: '\u6807\u7b7e\u8fc7\u5bbd', supportedFixes: ['widen size', 'shorten label'] },
     { code: 'internal/unclassified', message: 'No repair available' },
   ]]) {
     assert.equal(formatters[0]('Render failed', diagnostics), formatters[1]('Render failed', diagnostics));

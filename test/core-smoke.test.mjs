@@ -126,9 +126,9 @@ test('core smoke: public CLI diagrams, compatibility and delivery safety', async
 
   for (const [type, filename, collection] of examples) {
     await t.test(`${type}: validate, render and deliver the official example`, () => {
-      const directory = path.join(workspace, `${type} 空间 Ω`);
+      const directory = path.join(workspace, `${type} \u7a7a\u95f4 Ω`);
       fs.mkdirSync(directory);
-      const input = path.join(directory, `输入 ${filename}`);
+      const input = path.join(directory, `\u8f93\u5165 ${filename}`);
       fs.copyFileSync(path.join(skillRoot, 'examples', filename), input);
       const document = JSON.parse(fs.readFileSync(input, 'utf8'));
       assert.equal(document.diagram_type, type);
@@ -146,7 +146,7 @@ test('core smoke: public CLI diagrams, compatibility and delivery safety', async
       run(['render', type, input, rendered], directory);
       assertDiagram(rendered, document, collection);
 
-      const output = path.join(directory, '交付 diagram.html');
+      const output = path.join(directory, '\u4ea4\u4ed8 diagram.html');
       const delivered = receipt(['deliver', type, input, output, '--json'], directory);
       assert.equal(delivered.ok, true);
       assert.equal(delivered.command, 'deliver');

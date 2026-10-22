@@ -3,7 +3,7 @@
   "diagram_type": "workflow",
   "meta": {
     "title": "Automatic exception corridors",
-    "locale": "zh-CN",
+    "locale": "en",
     "output": "diagram.html",
     "quality_profile": "showcase"
   },
@@ -22,7 +22,7 @@
     },
     {
       "id": "lane3",
-      "label": "人工复核与重试 · retry-route 状态流"
+      "label": "\u4eba\u5de5\u590d\u6838\u4e0e\u91cd\u8bd5 · retry-route \u72b6\u6001\u6d41"
     },
     {
       "id": "lane4",
@@ -65,7 +65,7 @@
       "col": 3,
       "type": "security",
       "label": "Step 5",
-      "sublabel": "输入验证 · 批处理 · 异常流"
+      "sublabel": "\u8f93\u5165\u9a8c\u8bc1 · \u6279\u5904\u7406 · \u5f02\u5e38\u6d41"
     },
     {
       "id": "n09",

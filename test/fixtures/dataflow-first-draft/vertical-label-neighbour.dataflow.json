@@ -27,32 +27,32 @@
     {
       "id": "content",
       "type": "backend",
-      "label": "文案与标题",
-      "sublabel": "内存：narrations / title",
+      "label": "\u6587\u6848\u4e0e\u6807\u9898",
+      "sublabel": "\u5185\u5b58\uff1anarrations / title",
       "stage": 1,
       "row": 0
     },
     {
       "id": "board",
       "type": "backend",
-      "label": "构建分镜",
-      "sublabel": "内存：Storyboard / config",
+      "label": "\u6784\u5efa\u5206\u955c",
+      "sublabel": "\u5185\u5b58\uff1aStoryboard / config",
       "stage": 1,
       "row": 1
     },
     {
       "id": "visual",
       "type": "backend",
-      "label": "视觉提示规划",
-      "sublabel": "内存：提示词或 None",
+      "label": "\u89c6\u89c9\u63d0\u793a\u89c4\u5212",
+      "sublabel": "\u5185\u5b58\uff1a\u63d0\u793a\u8bcd\u6216 None",
       "stage": 1,
       "row": 2
     },
     {
       "id": "records",
       "type": "database",
-      "label": "任务 JSON 文件",
-      "sublabel": "metadata / storyboard / 索引",
+      "label": "\u4efb\u52a1 JSON \u6587\u4ef6",
+      "sublabel": "metadata / storyboard / \u7d22\u5f15",
       "stage": 1,
       "row": 4
     }
@@ -61,13 +61,13 @@
     {
       "id": "f2",
       "to": "board",
-      "label": "标题与旁白",
+      "label": "\u6807\u9898\u4e0e\u65c1\u767d",
       "from": "content"
     },
     {
       "id": "f4",
       "to": "visual",
-      "label": "旁白列表",
+      "label": "\u65c1\u767d\u5217\u8868",
       "from": "content"
     }
   ]

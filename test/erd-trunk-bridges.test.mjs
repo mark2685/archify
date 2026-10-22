@@ -26,8 +26,8 @@ function fixture({ horizontal = false, conflict, dashed = false, offset = 0, wid
     ],
   };
   if (conflict) {
-    // 两条逻辑主干之间留下 24px 空隙；独立关系的显式 U 形路线进入该空隙。
-    // 相切用 16px 回转段，圆角恰好在总线上相接；重叠用 20px 留下真正的直线墨迹。
+    // Leave a 24px gap between the two logical trunks; an independent relationship's explicit U-shaped route enters that gap.
+    // Tangency uses a 16px return segment so the rounded corner touches the bus exactly; overlap uses 20px to leave real straight ink.
     const x = conflict === 'crossing' ? 164 : 172 + offset;
     const [top, bottom] = width > 1.5 || conflict === 'touch' ? [130, 146] : [128, 148];
     document.relationships.push({
@@ -39,7 +39,7 @@ function fixture({ horizontal = false, conflict, dashed = false, offset = 0, wid
     });
   }
   if (horizontal) {
-    // 方形实体的转置保留其尺寸，显式端口和途经点一起转置。
+    // Transposing a square entity keeps its size; explicit ports and waypoints are transposed with it.
     document.entities.forEach(entity => { entity.pos.reverse(); });
     document.relationships.forEach(relationship => {
       const sides = { left: 'top', right: 'bottom' };
@@ -63,13 +63,13 @@ function render(t, document) {
     env: { ...process.env, ARCHIFY_UPDATE_CHECK_DISABLED: '1' },
   });
   assert.equal(result.status, 0, `${result.error || ''}\n${result.stdout}\n${result.stderr}`);
-  assert.equal(fs.readFileSync(input, 'utf8'), source, '作者输入必须保持原样');
+  assert.equal(fs.readFileSync(input, 'utf8'), source, '\u4f5c\u8005\u8f93\u5165\u5fc5\u987b\u4fdd\u6301\u539f\u6837');
   const svg = fs.readFileSync(output, 'utf8').match(/<svg\b[\s\S]*?<\/svg>/)[0];
   const boxes = new Map([...svg.matchAll(/<g\b[^>]*data-node-id="([^"]+)"[^>]*>[\s\S]*?<rect\b([^>]*)>/g)]
     .map(match => [match[1], attributes(match[2])]));
   for (const entity of document.entities) {
     const box = boxes.get(entity.id);
-    assert.deepEqual([Number(box.x), Number(box.y), Number(box.width)], [...entity.pos, entity.width], '显式实体坐标和宽度保持不变');
+    assert.deepEqual([Number(box.x), Number(box.y), Number(box.width)], [...entity.pos, entity.width], '\u663e\u5f0f\u5b9e\u4f53\u5750\u6807\u548c\u5bbd\u5ea6\u4fdd\u6301\u4e0d\u53d8');
   }
   const paths = [...svg.matchAll(/<path\b[^>]*data-composition-points="[^"]+"[^>]*>/g)].map(match => {
     const attrs = attributes(match[0]);
@@ -80,21 +80,21 @@ function render(t, document) {
   });
   const trunks = paths.filter(route => Object.hasOwn(route.attrs, 'data-er-trunk'));
   const relationships = paths.filter(route => route.attrs['data-edge-id']);
-  assert.ok(trunks.length, '安全的主干段仍然绘制');
-  assert.equal(relationships.length, document.relationships.length, '所有关系及其基数均须保留');
+  assert.ok(trunks.length, '\u5b89\u5168\u7684\u4e3b\u5e72\u6bb5\u4ecd\u7136\u7ed8\u5236');
+  assert.equal(relationships.length, document.relationships.length, '\u6240\u6709\u5173\u7cfb\u53ca\u5176\u57fa\u6570\u5747\u987b\u4fdd\u7559');
   for (const authored of document.relationships) {
     const route = relationships.find(candidate => candidate.attrs['data-edge-id'] === authored.id);
     assert.deepEqual([route.attrs['data-edge-from'], route.attrs['data-edge-to']], [authored.from, authored.to]);
     assert.equal(route.attrs['marker-start'], `url(#er-${authored.fromCardinality}-start)`);
     assert.equal(route.attrs['marker-end'], `url(#er-${authored.toCardinality}-end)`);
     assert.equal(route.attrs.class, authored.identifying === false ? 'a-dashed' : 'a-default');
-    if (authored.via) assert.deepEqual(route.points.slice(1, -1), authored.via, '显式途经点不能为了总线而移动');
+    if (authored.via) assert.deepEqual(route.points.slice(1, -1), authored.via, '\u663e\u5f0f\u9014\u7ecf\u70b9\u4e0d\u80fd\u4e3a\u4e86\u603b\u7ebf\u800c\u79fb\u52a8');
   }
   return { trunks, relationships };
 }
 
-// 总线为轴对齐直线；从实际 d 的直线和曲线采样判断交叉、端点接触及正长度重叠。
-// 不读逻辑 data-composition-points 来代替真实墨迹，否则会漏掉这次额外补出的桥接段。
+// The bus is an axis-aligned line; crossings, endpoint contact and positive-length overlap are judged from the straight and curved samples of the actual d.
+// Do not read the logical data-composition-points instead of the real ink, or the extra bridge segment added here would be missed.
 function hitsTrunk({ start: a, end: b }, { start, end }) {
   const axis = Math.abs(a[0] - b[0]) < epsilon ? 0 : 1;
   const low = Math.min(a[1 - axis], b[1 - axis]);
@@ -119,7 +119,7 @@ for (const scenario of [
     const independent = relationships.find(route => route.attrs['data-edge-id'] === 'c_d');
     for (const trunk of trunks) {
       assert.ok(trunk.segments.every(bus => independent.segments.every(segment => !hitsTrunk(bus, segment))),
-        '额外桥接不能把无关关系画成总线的分支');
+        '\u989d\u5916\u6865\u63a5\u4e0d\u80fd\u628a\u65e0\u5173\u5173\u7cfb\u753b\u6210\u603b\u7ebf\u7684\u5206\u652f');
     }
   });
 }
@@ -133,7 +133,7 @@ test('ERD clear vertical and horizontal fan-in gaps retain one continuous shared
       const values = trunk.points.map(point => point[along]);
       return Math.min(...values) <= Math.min(...ports.map(point => point[along]))
         && Math.max(...values) >= Math.max(...ports.map(point => point[along]));
-    }), '同一总线的合法分支间隙仍须连通');
+    }), '\u540c\u4e00\u603b\u7ebf\u7684\u5408\u6cd5\u5206\u652f\u95f4\u9699\u4ecd\u987b\u8fde\u901a');
   }
 });
 
@@ -160,7 +160,7 @@ for (const horizontal of [false, true]) {
         const separation = (Number(trunk.attrs['stroke-width']) + Number(independent.attrs['stroke-width'])) / 2;
         assert.ok(trunk.segments.every(bus => independent.segments.every(segment =>
           centerlineDistance(bus, segment) > separation + epsilon)),
-        `距离 ${offset} 的实际描边不能被桥接连在一起，包含显式加粗关系`);
+        `\u8ddd\u79bb ${offset} \u7684\u5b9e\u9645\u63cf\u8fb9\u4e0d\u80fd\u88ab\u6865\u63a5\u8fde\u5728\u4e00\u8d77\uff0c\u5305\u542b\u663e\u5f0f\u52a0\u7c97\u5173\u7cfb`);
       }
     }
   });
@@ -174,7 +174,7 @@ for (const horizontal of [false, true]) {
         const values = trunk.points.map(point => point[along]);
         return Math.min(...values) <= Math.min(...ports.map(point => point[along]))
           && Math.max(...values) >= Math.max(...ports.map(point => point[along]));
-      }), '有足够描边间距时仍保留连通主干，不能用过大的固定间距一律删除桥接');
+      }), '\u6709\u8db3\u591f\u63cf\u8fb9\u95f4\u8ddd\u65f6\u4ecd\u4fdd\u7559\u8fde\u901a\u4e3b\u5e72\uff0c\u4e0d\u80fd\u7528\u8fc7\u5927\u7684\u56fa\u5b9a\u95f4\u8ddd\u4e00\u5f8b\u5220\u9664\u6865\u63a5');
     }
   });
 }

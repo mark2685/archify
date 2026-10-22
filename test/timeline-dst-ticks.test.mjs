@@ -39,20 +39,20 @@ function run(t, document) {
   };
   const report = JSON.parse(command([renderer, input, output, '--layout-json']));
   command([cli, 'render', 'timeline', input, output]);
-  assert.equal(fs.readFileSync(input, 'utf8'), original, '时区刻度不能改写作者时间或布局要求');
+  assert.equal(fs.readFileSync(input, 'utf8'), original, '\u65f6\u533a\u523b\u5ea6\u4e0d\u80fd\u6539\u5199\u4f5c\u8005\u65f6\u95f4\u6216\u5e03\u5c40\u8981\u6c42');
   const svg = fs.readFileSync(output, 'utf8').match(/<svg\b[\s\S]*?<\/svg>/)[0];
   const labels = [...svg.matchAll(/<text\b[^>]*\btl-tick\b[^>]*>([^<]*)<\/text>/g)].map((match) => match[1]);
   const times = report.ticks.map(({ t: instant }) => instant);
   assert.ok(times.every((instant, index) => Number.isFinite(instant) && (!index || instant > times[index - 1])),
-    '每个刻度必须对应唯一、递增的真实时刻');
+    '\u6bcf\u4e2a\u523b\u5ea6\u5fc5\u987b\u5bf9\u5e94\u552f\u4e00\u3001\u9012\u589e\u7684\u771f\u5b9e\u65f6\u523b');
   const expectedEvents = document.events.map(({ at }) => Date.parse(at)).sort((a, b) => a - b);
-  assert.deepEqual(report.events.map(({ t: instant }) => instant), expectedEvents, '事件的绝对时间不能随刻度修复移动');
+  assert.deepEqual(report.events.map(({ t: instant }) => instant), expectedEvents, '\u4e8b\u4ef6\u7684\u7edd\u5bf9\u65f6\u95f4\u4e0d\u80fd\u968f\u523b\u5ea6\u4fee\u590d\u79fb\u52a8');
   for (const tick of report.ticks) {
     const segment = report.segments.find(({ start, end }) => tick.t >= start && tick.t <= end);
-    assert.ok(segment, '刻度只能落在真实时间段内');
+    assert.ok(segment, '\u523b\u5ea6\u53ea\u80fd\u843d\u5728\u771f\u5b9e\u65f6\u95f4\u6bb5\u5185');
     if (segment.start !== segment.end) {
       const expected = segment.x0 + (tick.t - segment.start) / (segment.end - segment.start) * (segment.x1 - segment.x0);
-      assert.ok(Math.abs(tick.x - expected) <= 0.011, '刻度位置仍按实际流逝时间线性计算');
+      assert.ok(Math.abs(tick.x - expected) <= 0.011, '\u523b\u5ea6\u4f4d\u7f6e\u4ecd\u6309\u5b9e\u9645\u6d41\u901d\u65f6\u95f4\u7ebf\u6027\u8ba1\u7b97');
     }
   }
   return { report, svg, labels, command, input };
@@ -122,7 +122,7 @@ test('timeline: equal endpoint offsets do not hide the daylight-saving season in
   assert.ok(report.ticks.length > 2);
   assert.ok(report.ticks.every(({ t: instant }) => local.format(instant) === '00:00'));
   assert.deepEqual(new Set(report.ticks.map(({ t: instant }) => new Date(instant).getUTCHours())), new Set([4, 5]),
-    '冬夏两个偏移都必须参与真实刻度生成');
+    '\u51ac\u590f\u4e24\u4e2a\u504f\u79fb\u90fd\u5fc5\u987b\u53c2\u4e0e\u771f\u5b9e\u523b\u5ea6\u751f\u6210');
 });
 
 test('timeline: a short segment keeps its start tick and automatic breaks retain real local dates', (t) => {
@@ -138,5 +138,5 @@ test('timeline: a short segment keeps its start tick and automatic breaks retain
   const { report } = run(t, document);
   assert.ok(report.breaks.length > 0);
   const clock = new Intl.DateTimeFormat('en-GB', { timeZone: document.meta.timezone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
-  assert.ok(report.ticks.every(({ t: instant }) => clock.format(instant) === '00:00'), '压缩段内仍使用真实的当地午夜');
+  assert.ok(report.ticks.every(({ t: instant }) => clock.format(instant) === '00:00'), '\u538b\u7f29\u6bb5\u5185\u4ecd\u4f7f\u7528\u771f\u5b9e\u7684\u5f53\u5730\u5348\u591c');
 });

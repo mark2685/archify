@@ -17,7 +17,7 @@ function sequence(count = 6) {
     meta: { title: 'Background task request', viewBox: [1080, 690], quality_profile: 'showcase', output: 'diagram.html' },
     participants: ['Caller', 'Session', 'Host', 'Sandbox', 'Worker', 'Files'].slice(0, count)
       .map((label, i) => ({ id: `p${i}`, type: 'backend', label })),
-    messages: [{ from: 'p0', to: `p${count - 1}`, y: 200, label: '请求结果', variant: 'emphasis' }],
+    messages: [{ from: 'p0', to: `p${count - 1}`, y: 200, label: '\u8bf7\u6c42\u7ed3\u679c', variant: 'emphasis' }],
   };
 }
 
@@ -83,7 +83,7 @@ test('the suggested one-field spread edit clears the advice and retains message 
   assert.equal(summary(report).layoutReviewRecommendation, undefined);
   const nodes = html => [...html.matchAll(/<g id="node-([^"]+)"/g)].map(x => x[1]);
   assert.deepEqual(nodes(repaired.html), nodes(original.html));
-  assert.ok(repaired.html.includes('>请求结果</text>'));
+  assert.ok(repaired.html.includes('>\u8bf7\u6c42\u7ed3\u679c</text>'));
   assert.ok(repaired.html.includes(' L 965.5 200'));
 });
 
@@ -111,7 +111,7 @@ test('an automatic six-column canvas spreads by default while explicit fixed kee
   assert.equal(fixedCheck.report.composition.sequenceColumnSpace.reviewSuggested, true);
   const nodes = html => [...html.matchAll(/<g id="node-([^"]+)"/g)].map(x => x[1]);
   assert.deepEqual(nodes(automatic.html), nodes(fixed.html));
-  assert.ok(automatic.html.includes('>请求结果</text>'));
+  assert.ok(automatic.html.includes('>\u8bf7\u6c42\u7ed3\u679c</text>'));
 });
 
 test('explicit fixed retains historical coordinates and advice preserves authored intent', t => {
@@ -168,7 +168,7 @@ test('small conversations and a compact fixed canvas are not advised to stretch'
 test('meaningful CJK message labels occupy the right-hand region', t => {
   const spec = sequence();
   spec.meta.column_fit = 'fixed';
-  spec.messages = [{ from: 'p4', to: 'p5', y: 200, label: '这是需要保留的中文说明'.repeat(4) }];
+  spec.messages = [{ from: 'p4', to: 'p5', y: 200, label: '\u8fd9\u662f\u9700\u8981\u4fdd\u7559\u7684\u4e2d\u6587\u8bf4\u660e'.repeat(4) }];
   const { report } = check(render(t, spec).output);
   const space = report.composition.sequenceColumnSpace;
   assert.equal(space.measured, true);
@@ -179,7 +179,7 @@ test('meaningful CJK message labels occupy the right-hand region', t => {
 test('a long CJK note wraps inside its lane gap, so the unused width stays measurable', t => {
   const spec = sequence();
   spec.meta.column_fit = 'fixed';
-  spec.messages = [{ from: 'p4', to: 'p5', y: 200, label: '结果', note: '这是需要保留的中文说明'.repeat(3) }];
+  spec.messages = [{ from: 'p4', to: 'p5', y: 200, label: '\u7ed3\u679c', note: '\u8fd9\u662f\u9700\u8981\u4fdd\u7559\u7684\u4e2d\u6587\u8bf4\u660e'.repeat(3) }];
   const { output, html } = render(t, spec);
   assert.match(html, /<tspan /, 'the note wraps onto several lines');
   const space = check(output).report.composition.sequenceColumnSpace;

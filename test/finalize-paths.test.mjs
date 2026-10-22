@@ -24,7 +24,7 @@ function finalize(output, options = []) {
 
 test('finalize uses bounded canonical delivery and evidence names for long output components', t => {
   const dir = workspace(t);
-  const output = path.join(dir, `${'审'.repeat(78)}.html`);
+  const output = path.join(dir, `${'\u5ba1'.repeat(78)}.html`);
   const result = finalize(output);
   assert.equal(result.status, 2, result.stdout || result.stderr);
   assert.deepEqual(result.receipt.gates, { validate: 'pass', deliver: 'pass', check: 'pass', 'browser-check': 'skipped' });

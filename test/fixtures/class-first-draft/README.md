@@ -9,7 +9,7 @@ showcase` on `dev` before the class first-draft routing and label fixes:
 | --- | --- |
 | `notifications.class.json` | "records to" crossed the "has" route and sat 2 units from a route |
 | `repository.class.json` | "publishes" crossed "creates" through the gap under OrderService, and its label overlapped the Order type |
-| `shapes.class.json` | "包含" (contains) sat on the inheritance trunk, inside the route clearance |
+| `shapes.class.json` | the "contains" label (authored in Chinese, kept as escapes) sat on the inheritance trunk, inside the route clearance |
 
 The regression test asserts that each renders at `showcase` and that the
 specific defects stay fixed. A draft that passes is one valid answer, not a

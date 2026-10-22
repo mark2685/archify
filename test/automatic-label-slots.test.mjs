@@ -80,7 +80,7 @@ test('a blocked label can use a slot vacated by a later automatic label', () => 
 
 test('a complete label can move outside a close reciprocal pair without extra endpoint padding', () => {
   const scene = {
-    labels: [{ relation: {}, relationIndex: 0, label: '同步支付请求',
+    labels: [{ relation: {}, relationIndex: 0, label: '\u540c\u6b65\u652f\u4ed8\u8bf7\u6c42',
       x: 246.2, y: 64, width: 67.6, height: 14, lx: 280, ly: 74 }],
     routes: [
       { relationIndex: 0, points: [[240, 84], [320, 84]] },

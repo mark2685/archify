@@ -2,8 +2,8 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "跨租户审计日志导出与脱敏编排服务（含异步导出、留存策略和人工复核边界）",
-    "locale": "zh-CN",
+    "title": "\u8de8\u79df\u6237\u5ba1\u8ba1\u65e5\u5fd7\u5bfc\u51fa\u4e0e\u8131\u654f\u7f16\u6392\u670d\u52a1\uff08\u542b\u5f02\u6b65\u5bfc\u51fa\u3001\u7559\u5b58\u7b56\u7565\u548c\u4eba\u5de5\u590d\u6838\u8fb9\u754c\uff09",
+    "locale": "en",
     "quality_profile": "showcase",
     "output": "audit-luna.html"
   },
@@ -11,7 +11,7 @@
     {
       "id": "caller",
       "type": "external",
-      "label": "调用方",
+      "label": "\u8c03\u7528\u65b9",
       "sublabel": "tenantId + range",
       "pos": [
         40,
@@ -25,7 +25,7 @@
     {
       "id": "entry",
       "type": "backend",
-      "label": "审计导出入口",
+      "label": "\u5ba1\u8ba1\u5bfc\u51fa\u5165\u53e3",
       "sublabel": "requestAuditExport",
       "pos": [
         270,
@@ -39,8 +39,8 @@
     {
       "id": "policy",
       "type": "security",
-      "label": "策略配置",
-      "sublabel": "policy · 配置声明",
+      "label": "\u7b56\u7565\u914d\u7f6e",
+      "sublabel": "policy · \u914d\u7f6e\u58f0\u660e",
       "pos": [
         275,
         105
@@ -54,7 +54,7 @@
     {
       "id": "scheduler",
       "type": "backend",
-      "label": "导出计划器",
+      "label": "\u5bfc\u51fa\u8ba1\u5212\u5668",
       "sublabel": "createExport().schedule",
       "pos": [
         510,
@@ -68,8 +68,8 @@
     {
       "id": "query",
       "type": "database",
-      "label": "审计日志查询",
-      "sublabel": "queryAuditLog · 内存占位实现",
+      "label": "\u5ba1\u8ba1\u65e5\u5fd7\u67e5\u8be2",
+      "sublabel": "queryAuditLog · \u5185\u5b58\u5360\u4f4d\u5b9e\u73b0",
       "pos": [
         750,
         210
@@ -83,7 +83,7 @@
     {
       "id": "redactor",
       "type": "security",
-      "label": "脱敏处理",
+      "label": "\u8131\u654f\u5904\u7406",
       "sublabel": "redact(row, redactFields)",
       "pos": [
         750,
@@ -98,8 +98,8 @@
     {
       "id": "writer",
       "type": "cloud",
-      "label": "对象结果写出",
-      "sublabel": "writeObject · 路径返回",
+      "label": "\u5bf9\u8c61\u7ed3\u679c\u5199\u51fa",
+      "sublabel": "writeObject · \u8def\u5f84\u8fd4\u56de",
       "pos": [
         1010,
         390
@@ -113,7 +113,7 @@
     {
       "id": "notifier",
       "type": "backend",
-      "label": "完成通知器",
+      "label": "\u5b8c\u6210\u901a\u77e5\u5668",
       "sublabel": "notifyReady",
       "pos": [
         1260,
@@ -127,8 +127,8 @@
     {
       "id": "topic",
       "type": "messagebus",
-      "label": "通知主题",
-      "sublabel": "audit-export-ready · 配置通道",
+      "label": "\u901a\u77e5\u4e3b\u9898",
+      "sublabel": "audit-export-ready · \u914d\u7f6e\u901a\u9053",
       "pos": [
         1480,
         195
@@ -141,8 +141,8 @@
     {
       "id": "review",
       "type": "messagebus",
-      "label": "人工复核队列",
-      "sublabel": "requestReview · 可调用声明",
+      "label": "\u4eba\u5de5\u590d\u6838\u961f\u5217",
+      "sublabel": "requestReview · \u53ef\u8c03\u7528\u58f0\u660e",
       "pos": [
         1480,
         400
@@ -157,7 +157,7 @@
   "boundaries": [
     {
       "kind": "region",
-      "label": "导出编排运行时（已实现调用链）",
+      "label": "\u5bfc\u51fa\u7f16\u6392\u8fd0\u884c\u65f6\uff08\u5df2\u5b9e\u73b0\u8c03\u7528\u94fe\uff09",
       "wraps": [
         "entry",
         "scheduler",
@@ -170,7 +170,7 @@
     },
     {
       "kind": "security-group",
-      "label": "配置驱动的数据边界",
+      "label": "\u914d\u7f6e\u9a71\u52a8\u7684\u6570\u636e\u8fb9\u754c",
       "wraps": [
         "policy",
         "redactor",
@@ -191,7 +191,7 @@
       "id": "policy-entry",
       "from": "policy",
       "to": "entry",
-      "label": "导入 policy"
+      "label": "\u5bfc\u5165 policy"
     },
     {
       "id": "policy-schedule",
@@ -246,7 +246,7 @@
       "id": "review-declared",
       "from": "policy",
       "to": "review",
-      "label": "reviewQueue 配置",
+      "label": "reviewQueue \u914d\u7f6e",
       "variant": "dashed"
     },
     {
@@ -260,26 +260,26 @@
   "cards": [
     {
       "dot": "cyan",
-      "title": "实际执行链",
+      "title": "\u5b9e\u9645\u6267\u884c\u94fe",
       "items": [
-        "入口校验 tenantId 与 range 后返回 queued 计划",
-        "run 异步查询、逐行脱敏、写对象并通知完成"
+        "\u5165\u53e3\u6821\u9a8c tenantId \u4e0e range \u540e\u8fd4\u56de queued \u8ba1\u5212",
+        "run \u5f02\u6b65\u67e5\u8be2\u3001\u9010\u884c\u8131\u654f\u3001\u5199\u5bf9\u8c61\u5e76\u901a\u77e5\u5b8c\u6210"
       ]
     },
     {
       "dot": "amber",
-      "title": "配置驱动边界",
+      "title": "\u914d\u7f6e\u9a71\u52a8\u8fb9\u754c",
       "items": [
-        "脱敏字段、分段上限、对象存储名与 180 天留存来自 policy",
-        "queryAuditLog 与 writeObject 是受控 fixture 中的占位实现"
+        "\u8131\u654f\u5b57\u6bb5\u3001\u5206\u6bb5\u4e0a\u9650\u3001\u5bf9\u8c61\u5b58\u50a8\u540d\u4e0e 180 \u5929\u7559\u5b58\u6765\u81ea policy",
+        "queryAuditLog \u4e0e writeObject \u662f\u53d7\u63a7 fixture \u4e2d\u7684\u5360\u4f4d\u5b9e\u73b0"
       ]
     },
     {
       "dot": "rose",
-      "title": "人工复核状态",
+      "title": "\u4eba\u5de5\u590d\u6838\u72b6\u6001",
       "items": [
-        "requestReview 只构造 manual-review 对象并未在主链路调用",
-        "reviewQueue 是配置声明，不能据此推断已有消费者或人工处理流程"
+        "requestReview \u53ea\u6784\u9020 manual-review \u5bf9\u8c61\u5e76\u672a\u5728\u4e3b\u94fe\u8def\u8c03\u7528",
+        "reviewQueue \u662f\u914d\u7f6e\u58f0\u660e\uff0c\u4e0d\u80fd\u636e\u6b64\u63a8\u65ad\u5df2\u6709\u6d88\u8d39\u8005\u6216\u4eba\u5de5\u5904\u7406\u6d41\u7a0b"
       ]
     }
   ]

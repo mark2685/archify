@@ -3,7 +3,7 @@
   "diagram_type": "workflow",
   "meta": {
     "title": "Agent Turn Workflow",
-    "locale": "zh-CN",
+    "locale": "en",
     "output": "workflow-routing-clarity.html",
     "quality_profile": "showcase"
   },
@@ -13,9 +13,9 @@
     { "id": "evidence", "label": "Events + Projections" }
   ],
   "phases": [
-    { "id": "admit", "label": "准入与路由", "fromCol": 0, "toCol": 1 },
-    { "id": "execute", "label": "Turn 执行", "fromCol": 2, "toCol": 4, "variant": "emphasis" },
-    { "id": "project", "label": "持久化与投影", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+    { "id": "admit", "label": "\u51c6\u5165\u4e0e\u8def\u7531", "fromCol": 0, "toCol": 1 },
+    { "id": "execute", "label": "Turn \u6267\u884c", "fromCol": 2, "toCol": 4, "variant": "emphasis" },
+    { "id": "project", "label": "\u6301\u4e45\u5316\u4e0e\u6295\u5f71", "fromCol": 5, "toCol": 5, "variant": "dashed" }
   ],
   "mainPath": ["request", "admit", "start", "turn", "commit", "project"],
   "nodes": [

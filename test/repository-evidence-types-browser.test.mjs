@@ -49,7 +49,7 @@ test('verified sources remain in Focus and Finder with accessible counts and no 
       label: 'Offline mode', sublabel: 'source data', tag: 'waiting', step: undefined, brand: 'github',
     }],
     ['lifecycle', 'states', 'deployment-release.lifecycle.json', false, 'light', {
-      label: '等待人工审批确认', sublabel: '来源已核验', tag: '等待中', step: '02',
+      label: '\u7b49\u5f85\u4eba\u5de5\u5ba1\u6279\u786e\u8ba4', sublabel: '\u6765\u6e90\u5df2\u6838\u9a8c', tag: '\u7b49\u5f85\u4e2d', step: '02',
     }],
     ['erd', 'entities', 'orders.erd.json', true, 'light'],
     ['tree', 'nodes', 'payment-platform.tree.json', false, 'dark'],

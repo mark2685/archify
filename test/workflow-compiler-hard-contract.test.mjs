@@ -852,7 +852,7 @@ function outsideRightLabelWorkflow() {
       { id: 'rescan', lane: 'return', col: 5, type: 'backend', label: 'Rescan' },
     ],
     edges: [{
-      id: 'follow-up', from: 'receipt', to: 'rescan', label: '成功后按需另行 Scan',
+      id: 'follow-up', from: 'receipt', to: 'rescan', label: '\u6210\u529f\u540e\u6309\u9700\u53e6\u884c Scan',
       role: 'branch', variant: 'dashed', route: 'outside-right', fromSide: 'right', toSide: 'right',
     }],
   });
@@ -900,7 +900,7 @@ for (const qualityProfile of ['standard', 'showcase']) {
     assert.equal(baseline.ok, true);
     assert.deepEqual(verified.receipt.edges, baseline.receipt.edges, 'the explicit preset route must remain intact');
     assert.deepEqual(verified.receipt.nodes, baseline.receipt.nodes);
-    assert.match(verified.svg, />成功后按需另行 Scan<\/text>/);
+    assert.match(verified.svg, />\u6210\u529f\u540e\u6309\u9700\u53e6\u884c Scan<\/text>/);
     const label = verified.receipt.labels[0];
     const rect = { x: label.x - label.width / 2, y: label.y - 10, width: label.width, height: label.height };
     for (const node of verified.receipt.nodes) {
@@ -914,7 +914,7 @@ for (const qualityProfile of ['standard', 'showcase']) {
 test('readable-v2 preset label repair requires a complete same-profile pass', () => {
   const document = outsideRightLabelWorkflow();
   document.nodes[0].width = 132;
-  document.nodes[0].sublabel = 'chain / debate / synthesis 调度';
+  document.nodes[0].sublabel = 'chain / debate / synthesis \u8c03\u5ea6';
   for (const col of [0, 1, 2, 3, 4]) {
     document.nodes.push({ id: `wide-${col}`, lane: 'undo', col, type: 'backend', label: `Step ${col}`, width: 200 });
   }

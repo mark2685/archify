@@ -862,22 +862,22 @@ test('labelPoint: explicit labelAt wins outright', () => {
 
 test('textUnits: ASCII=1, CJK=2, mixed sums, fullwidth supplementary=2', () => {
   assert.equal(textUnits('abc'), 3);
-  assert.equal(textUnits('中文'), 4);
-  assert.equal(textUnits('a中'), 3);
+  assert.equal(textUnits('\u4e2d\u6587'), 4);
+  assert.equal(textUnits('a\u4e2d'), 3);
   assert.equal(textUnits(''), 0);
   assert.equal(textUnits(null), 0);
-  assert.equal(textUnits('𠀀'), 2); // CJK Ext-B (supplementary plane)
+  assert.equal(textUnits('\ud840\udc00'), 2); // CJK Ext-B (supplementary plane)
   assert.equal(textUnits('🚀'), 2); // emoji
-  assert.equal(textUnits('注入提示词'), 10); // issue #14 original label
-  assert.equal(textUnits('！＠＃０１２'), 12); // fullwidth punctuation + digits
+  assert.equal(textUnits('\u6ce8\u5165\u63d0\u793a\u8bcd'), 10); // issue #14 original label
+  assert.equal(textUnits('\uff01\uff20\uff03\uff10\uff11\uff12'), 12); // fullwidth punctuation + digits
 });
 
 test('textUnits follows wide and halfwidth East Asian presentation boundaries', () => {
-  assert.equal(textUnits('あカ'), 4); // Hiragana + Katakana are wide
-  assert.equal(textUnits('ㄅㆠ'), 4); // Bopomofo + extended Bopomofo are wide
-  assert.equal(textUnits('ㄱ'), 2); // Hangul compatibility letter is wide
+  assert.equal(textUnits('\u3042\u30ab'), 4); // Hiragana + Katakana are wide
+  assert.equal(textUnits('\u3105ㆠ'), 4); // Bopomofo + extended Bopomofo are wide
+  assert.equal(textUnits('\u3131'), 2); // Hangul compatibility letter is wide
   assert.equal(textUnits('︐︙'), 4); // vertical punctuation forms are wide
-  assert.equal(textUnits('ｶﾀｶﾅ'), 4); // halfwidth Katakana stays one unit per glyph
+  assert.equal(textUnits('\uff76\uff80\uff76\uff85'), 4); // halfwidth Katakana stays one unit per glyph
   assert.equal(textUnits('ꥠ'), 2); // Hangul Jamo Extended-A is wide
 });
 
@@ -899,7 +899,7 @@ test('textUnits counts emoji-presentation symbols in the BMP as wide', () => {
   // Narrow and ambiguous neighbours in the same blocks stay one unit.
   assert.equal(textUnits('→'), 1); // rightwards arrow
   assert.equal(textUnits('☎'), 1); // black telephone
-  assert.equal(textUnits('①'), 1); // circled digit one
+  assert.equal(textUnits('\u2460'), 1); // circled digit one
   // Unicode 16.0 moved these from Neutral to Wide.
   assert.equal(textUnits('☰'), 2); // trigram for heaven
   assert.equal(textUnits('☷'), 2); // trigram for earth
@@ -936,7 +936,7 @@ test('textUnits keeps a Wide base wide when VS15 asks for text presentation', ()
   // rather than to the base, so every Wide base it followed was measured at
   // half its estimated width. In particular, a CJK font may ignore VS15,
   // leaving a wide glyph that the former one-unit estimate undercounted.
-  for (const base of ['⭐', '❗', '⛔', '⚓', '⚡', '✅', '⭕', '㊙', '〽', '中']) {
+  for (const base of ['⭐', '❗', '⛔', '⚓', '⚡', '✅', '⭕', '㊙', '\u303d', '\u4e2d']) {
     assert.equal(textUnits(base + '︎'), textUnits(base), `VS15 changed the width of ${JSON.stringify(base)}`);
     assert.equal(textUnits(base + '︎'), 2);
   }
@@ -993,7 +993,7 @@ test('every authored icon has SVG geometry while keeping its node tone and place
 });
 
 test('suggestLabelObstacleFix includes rects and labelAt/labelDy hints', () => {
-  const labelRect = { x: 100, y: 180, width: 48, height: 14, label: '写入' };
+  const labelRect = { x: 100, y: 180, width: 48, height: 14, label: '\u5199\u5165' };
   const obstacle = { id: 'memtool', x: 30, y: 130, width: 230, height: 58 };
   const hint = suggestLabelObstacleFix(labelRect, 124, 188, obstacle);
   assert.match(hint, /label rect: \[100, 180, 48, 14\]/);
@@ -1004,7 +1004,7 @@ test('suggestLabelObstacleFix includes rects and labelAt/labelDy hints', () => {
 
 // Agents parse this hint, so pin the whole string for the no-viewBox contract.
 test('suggestLabelObstacleFix states its no-viewBox hint as replacement values', () => {
-  const labelRect = { x: 100, y: 180, width: 48, height: 14, label: '写入' };
+  const labelRect = { x: 100, y: 180, width: 48, height: 14, label: '\u5199\u5165' };
   const obstacle = { id: 'memtool', x: 30, y: 130, width: 230, height: 58 };
   assert.equal(suggestLabelObstacleFix(labelRect, 124, 188, obstacle), [
     '  label rect: [100, 180, 48, 14]',
