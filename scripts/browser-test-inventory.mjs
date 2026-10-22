@@ -47,4 +47,5 @@ export const browserTestFiles = [
   'hadrian-shape-browser.test.mjs',
   'hadrian-contrast.test.mjs',
   'hadrian-default-browser.test.mjs',
+  'hadrian-category-paint-browser.test.mjs',
 ];
