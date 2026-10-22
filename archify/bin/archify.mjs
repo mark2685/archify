@@ -2202,7 +2202,7 @@ const COMMAND_USAGE = {
   check: '<output.html> [--json] [--require-provenance]',
   'browser-check': '<output.html> [--json|--summary] [--require-provenance] [--out-dir <dir>]',
   'visual-check': '<output.html> [--json|--summary] [--require-provenance] [--out-dir <dir>]',
-  guide: '[scenario or question] [--json] [--lang en|zh]',
+  guide: '[scenario or question] [--json] [--lang en]',
   brands: ['[name, alias, domain, or category] [--json]', 'capture <url> [--json]'],
   examples: '',
   doctor: '',
@@ -6201,12 +6201,12 @@ async function commandGuide(args) {
       json = true;
     } else if (arg === '--lang') {
       const value = args[index + 1];
-      if (value !== 'en' && value !== 'zh') fail('--lang must be "en" or "zh".');
+      if (value !== 'en') fail('--lang must be "en".');
       lang = value;
       index += 1;
     } else if (arg.startsWith('--lang=')) {
       const value = arg.slice('--lang='.length);
-      if (value !== 'en' && value !== 'zh') fail('--lang must be "en" or "zh".');
+      if (value !== 'en') fail('--lang must be "en".');
       lang = value;
     } else if (arg.startsWith('--')) {
       fail(`Unknown guide option "${arg}".`);

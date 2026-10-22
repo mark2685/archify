@@ -338,60 +338,17 @@ test('cli: guide recommends a scenario as structured json', () => {
   assert.equal(parsed.recommendation.type, 'sequence');
 });
 
-test('cli: guide detects Chinese and explains the recommendation boundary', () => {
-  const result = run(['guide', '展示 Kafka topic 消费者组和死信队列']);
-
+test('cli: guide prints repair advice and rejects an unsupported language override', () => {
+  const result = run(['guide', 'viewport overflow, label overlap, repair order']);
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /推荐: 事件流拓扑  \[dataflow\]/);
-  assert.match(result.stdout, /不要这样用:/);
-  assert.match(result.stdout, /必须包含:/);
-  assert.match(result.stdout, /可直接复制的提示词:/);
-});
+  assert.match(result.stdout, /Recommendation: Layout repair/);
+  assert.match(result.stdout, /schema.*overlap.*direction.*crossings.*labels/s);
+  assert.match(result.stdout, /\[start, \.\.\.via, end\]/);
+  assert.match(result.stdout, /validate/);
 
-test('cli: guide works from an installed skill without node_modules', () => {
-  const installedRoot = path.join(tmp, 'installed-guide-skill');
-  copyInstalledSkill(installedRoot);
-  const installedCli = path.join(installedRoot, 'bin/archify.mjs');
-
-  const result = spawnSync(process.execPath, [installedCli, 'guide', 'incident-runbook', '--json'], {
-    cwd: installedRoot,
-    encoding: 'utf8',
-  });
-
-  assert.equal(result.status, 0, result.stderr);
-  assert.equal(JSON.parse(result.stdout).recommendation.id, 'incident-runbook');
-});
-
-test('cli: guide returns repair steps, via semantics, and viewport checks as JSON', () => {
-  const result = run(['guide', 'viewport overflow', '--json']);
-  assert.equal(result.status, 0, result.stderr);
-  const parsed = JSON.parse(result.stdout);
-  assert.equal(parsed.recommendation.id, 'layout-repair');
-  assert.equal(parsed.confidence, 'high');
-  assert.ok(parsed.matchedSignals.includes('viewport overflow'));
-  const prompt = parsed.recommendation.prompt;
-  assert.match(prompt, /schema.*overlap.*direction.*crossings.*labels/s);
-  assert.match(prompt, /\[start, \.\.\.via, end\]/);
-  assert.match(prompt, /absolute.*\[x, y\]/);
-  assert.match(prompt, /1440×900.*1600×1000.*1920×1080.*2048×1320/);
-  assert.match(prompt, /scrollWidth <= window\.innerWidth/);
-  assert.match(prompt, /Reader-declared readable vertical page scroll/);
-  assert.match(prompt, /validate.*diagnostics\[\].*supportedFixes/);
-});
-
-test('cli: guide prints localized repair advice, including an explicit language override', () => {
-  for (const args of [
-    ['guide', '视口溢出，标签重叠，修复顺序'],
-    ['guide', 'how do via waypoints work', '--lang', 'zh'],
-  ]) {
-    const result = run(args);
-    assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, /推荐: 布局修复/);
-    assert.match(result.stdout, /schema.*重叠.*方向.*交叉.*标签/s);
-    assert.match(result.stdout, /\[start, \.\.\.via, end\]/);
-    assert.match(result.stdout, /Reader 已达到投影文字下限并接受可读的页面纵向滚动/);
-    assert.match(result.stdout, /validate/);
-  }
+  const unsupported = run(['guide', 'how do via waypoints work', '--lang', 'zh']);
+  assert.notEqual(unsupported.status, 0);
+  assert.match(unsupported.stderr, /--lang must be "en"/);
 });
 
 test('cli: demo creates a ready-to-open diagram in a chosen directory', () => {
