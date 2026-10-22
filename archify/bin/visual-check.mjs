@@ -1528,6 +1528,10 @@ export function chromeVisualBrowserArgs(profileRoot, {
     '--remote-debugging-pipe',
     '--disable-gpu',
     '--hide-scrollbars',
+    // The evidence browser never stores cookies or passwords. Without this,
+    // every fresh profile asks the macOS keychain for a "Safe Storage" key, and
+    // Chrome for Testing cannot keep an "Always Allow" grant.
+    '--use-mock-keychain',
     '--disable-background-networking',
     '--disable-component-update',
     '--disable-default-apps',
