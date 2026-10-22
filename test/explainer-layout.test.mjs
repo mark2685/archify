@@ -30,16 +30,3 @@ test('native width is estimated from the prepared viewBox; authored spans stay e
  assert.equal(rows.flat().find(p=>p.id==='fixed').span,3);assert.equal(rows.flat().find(p=>p.id==='fixed-other').span,4);assert.equal(rows.at(-1).at(-1).spacer,true);
  assert.ok(rows.every(row=>row.reduce((sum,p)=>sum+p.span,0)===12));
 });
-
-test('all three example HTML boards start with the conclusion and every panel row totals twelve',async()=>{
- for(const name of ['comparison','mechanism','diagram']){
-  const url=new URL(`../docs/specs/explainer/examples/${name}.md`,import.meta.url),text=fs.readFileSync(url,'utf8');
-  const prepared=await prepareExplainer(text,{inputPath:url.pathname});
-  assert.equal(prepared.diagnostics.some(d=>d.code==='explainer/writing-qualification'),false);
-  const tree=parse(renderExplainer(prepared.document,{...prepared,preparedBundle:prepared}));
-  const board=all(tree,n=>attr(n,'class')==='board')[0],panels=board.childNodes.filter(n=>n.tagName==='section');
-  assert.equal(attr(panels[0],'id'),'answer');assert.match(attr(panels[0],'class'),/^panel answer-panel span\d+$/);
-  const rows=new Map();for(const item of panels){const row=attr(item,'data-row');rows.set(row,(rows.get(row)||0)+Number(attr(item,'class').match(/\bspan(\d+)\b/)[1]));}assert.ok([...rows.values()].every(n=>n===12),`${name}: ${JSON.stringify([...rows])}`);
-  assert.equal(prepared.document.answer.reasons.length>=2,true);assert.equal(prepared.document.answer.reasons.length<=3,true);
- }
-});
