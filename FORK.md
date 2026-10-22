@@ -45,6 +45,7 @@ Carried over from the Hadrian documentation-site rules (`Hadrian-MTV/quorum` `do
 | Stratosphere Blue only for interactive state on navy | Used once: the keyboard-focus ring (`outline-color`) in dark; blue-600 in light. Upstream's single accent (`--frontend-stroke`) stays the frontend category colour, so Stratosphere does not become a general accent. | `hadrian-tokens` |
 | Gold reserved for one meaning | Gold colours only the **message bus** (and its async-edge labels): "events in transit". | `hadrian-tokens` |
 | Text ≥ 4.5:1 | Every ink token against every surface it can sit on, and ~100 rendered text elements per mode and theme, in both themes. | `test/hadrian-contrast.test.mjs` |
+| Categories tell apart | Every pair of category fills is at least 8 CIE76 ΔE apart and every pair of outlines at least 15, in each theme; see [Node fills](#node-fills). Rendered architecture and workflow nodes paint exactly those tokens. | `test/hadrian-distinguishability.test.mjs`, `test/hadrian-category-paint-browser.test.mjs` |
 
 Why derived colours are hex rather than `color-mix()`: Chrome serialises `color-mix()` results as `color(srgb …)`, which upstream's contrast tests cannot parse, and exported SVGs would then depend on `color-mix()` support outside browsers. Plain colours export everywhere; the derivation is still verifiable.
 
@@ -54,18 +55,42 @@ Archify's semantic categories map to one hub family each. Ratios are contrast ag
 
 | Category (also lifecycle state) | Dark on navy `#002548`, raised `#062e54` | Light on gray-100 `#f4f6f9`, white | Family and meaning |
 | --- | --- | --- | --- |
-| frontend (start, active) | blue-200 `#a2cef7` · 9.4 / 8.3 / 6.2 | Heritage Blue `#13497d` · 8.5 / 9.2 / 7.8 | the brand's primary blue: user-facing |
-| backend (success) | status-green `#9bc08f` · 7.6 / 6.8 / 5.3 | status-green 50 % over black `#4e6048` · 6.3 / 6.8 / 5.9 | hub's "completed work" colour |
-| database (decision) | Defense Green 60 % over white `#b3b197` · 7.1 / 6.3 / 5.0 | Defense Green 75 % over black `#615e3d` · 6.1 / 6.6 / 5.7 | the brand's Secondary: grounded, persisted |
-| message bus (async edges) | gold-400 `#ffb830` · 8.9 / 8.0 / 6.3 | gold-700 `#8c5d01` · 5.3 / 5.7 / 5.0 | Liberty Gold's one meaning: events in transit |
-| security (failure) | status-red `#e79089` · 6.4 / 5.7 / 4.7 | status-red 60 % over black `#8b5652` · 5.5 / 5.9 / 5.1 | hub's "declined work" colour |
-| cloud (waiting; region frames) | gray-400 `#a5aeb6` · 6.9 / 6.1 / 4.8 | gray-700 `#5c6167` · 5.8 / 6.2 / 5.4 | neutral container, like lanes |
-| external | gray-300 `#c6cacd` · 9.4 / 8.3 / 6.3 | gray-800 `#414448` · 9.0 / 9.8 / 8.3 | quiet: the same ink as muted text, as upstream's classic does |
+| frontend (start, active) | blue-200 `#a2cef7` · 9.4 / 8.3 / 6.8 | Heritage Blue `#13497d` · 8.5 / 9.2 / 7.6 | the brand's primary blue: user-facing |
+| backend (success) | status-green `#9bc08f` · 7.6 / 6.8 / 5.6 | status-green 50 % over black `#4e6048` · 6.3 / 6.8 / 5.1 | hub's "completed work" colour |
+| database (decision) | Defense Green 60 % over white `#b3b197` · 7.1 / 6.3 / 4.8 | Defense Green 45 % over black `#3a3824` · 11.0 / 11.9 / 9.0 | the brand's Secondary: grounded, persisted |
+| message bus (async edges) | gold-400 `#ffb830` · 8.9 / 8.0 / 6.3 | gold-700 `#8c5d01` · 5.3 / 5.7 / 4.6 | Liberty Gold's one meaning: events in transit |
+| security (failure) | status-red `#e79089` · 6.4 / 5.7 / 4.6 | status-red 60 % over black `#8b5652` · 5.5 / 5.9 / 4.8 | hub's "declined work" colour |
+| cloud (waiting; region frames) | gray-400 `#a5aeb6` · 6.9 / 6.1 / 5.5 | gray-700 `#5c6167` · 5.8 / 6.2 / 5.8 | neutral container, like lanes |
+| external | gray-300 `#c6cacd` · 9.4 / 8.3 / 8.3 | gray-800 `#414448` · 9.0 / 9.8 / 9.8 | quiet: the same ink as muted text, as upstream's classic does |
 | text / muted / dim | white 15.5 · white 72 % over navy `#b8c2cc` 8.6 · gray-400 6.9 | navy 14.3 · gray-800 9.0 · gray-700 5.8 | hub ink ladder |
 | relationship arrows / **emphasis path** | gray-400 / **white** | gray-700 / **navy** | the primary path is drawn in ink; this also removes upstream's light-mode label contrast bug (#1017) |
 | focus ring | Stratosphere Blue `#70b8fd` · 7.3 | blue-600 `#0258ab` · 6.5 | interactive state only |
 
-The hub has five chromatic families for seven categories, so **cloud and external share the gray family** one step apart; both already carry distinct sigils and cloud is mostly dashed frames. In light mode the backend (status-green shade) and database (Defense Green shade) inks are close in hue; sigils and legend labels separate them. Lifecycle `success`/`failure` reuse the backend/security tokens; a `svg[data-lifecycle-layout]` override pins them to the status colours should the architecture mapping ever move away from them.
+The hub has five chromatic families for seven categories, so **cloud and external share the gray family** one step apart; both already carry distinct sigils and cloud is mostly dashed frames. Backend (status green) and database (Defense Green) are both yellow-greens, so in light mode the database shade is deep (45 % over black) to sit 18 ΔE from the backend shade. Lifecycle `success`/`failure` reuse the backend/security tokens; a `svg[data-lifecycle-layout]` override pins them to the status colours should the architecture mapping ever move away from them.
+
+#### Node fills
+
+A node's fill must name its category on its own, not only through a 1px outline. The first palette tinted every node 13 % (dark) or 10 % (light) of the muted hub colour, which left most fill pairs 1–3 ΔE apart (backend/database 0.9 in light), below what anyone sees. The fills now follow two rules, each as strong as text contrast allows:
+
+- **Dark:** the most saturated member of the category's family mixed into the navy ground, as far as gray-400 ink (`--text-dim`, `--arrow`) and the category's own tag ink keep 4.5:1. That cap is what limits dark fills: they all sit near L\* 25–27 and differ in hue, so mixing a vivid source (blue-500, Liberty Gold, Defense Green itself) at 16–34 % carries more colour than a pale one at a higher percentage.
+- **Light:** the family's light member over white, as deep as gray-700 ink keeps 4.5:1. Message bus uses the hub's own gold-200 step.
+- **Quiet grays:** cloud barely lifts (gray-400 6 % over raised; gray-100 in light) and external keeps the panel colour (raised; white), so both read as neutral beside five tinted categories.
+
+| Category | Dark fill | Light fill |
+| --- | --- | --- |
+| frontend | blue-500 24 % over navy `#063b6e` | blue-200 39 % over white `#dbecfc` |
+| backend | status-green 16 % over navy `#193e53` | status-green 45 % over white `#d2e3cd` |
+| database | Defense Green 34 % over navy `#2c434b` | Defense Green 23 % over white `#e2e1d7` |
+| message bus | Liberty Gold 22 % over navy `#354038` | gold-200 `#ffe5b2` |
+| security | status-red 21 % over navy `#313b56` | status-red 25 % over white `#f9e3e2` |
+| cloud | gray-400 6 % over raised `#10365a` | gray-100 `#f4f6f9` |
+| external | raised `#062e54` | white `#ffffff` |
+
+The closest pairs are 8.9 ΔE in dark (security/cloud) and 9.1 in light (backend/database); outlines are at least 16.8 apart (light database/external). The lowest text-on-fill ratios are 4.63 (dark security tag ink on its fill), 4.64 (dark gray-400 on database, light gray-700 on backend) and 4.65 (light gold-700 on gold-200): above the floor, with little margin, which is the price of the stronger tints. Any further strengthening of the dark fills needs a lighter `--text-dim`/`--arrow` ink first.
+
+`test/hadrian-distinguishability.test.mjs` measures every category pair's fill and outline in CIELAB (CIE76) in both themes: fills ≥ 8, outlines ≥ 15. Cloud/external share the gray family and are allowlisted, with the reason in the test, at fills ≥ 3 and outlines ≥ 10 (currently 4.1/3.6 and 11.0/12.3). Its second test proves the check rejects a palette where database collides with backend.
+
+Upstream's shared card style (`archify/renderers/shared/node-card-style.mjs`) recomputes dark architecture and workflow nodes as 13 % of the stroke over the mask with a 72 % stroke. The fork skips that rule for the Hadrian preset, so nodes paint the tuned tokens; `test/hadrian-category-paint-browser.test.mjs` compares every rendered node's fill and stroke with its tokens in Chrome so the token guards keep measuring what is painted.
 
 ### English-only
 
@@ -134,7 +159,7 @@ git checkout hadrian && git merge upstream/main               # or merge the rel
 
 Then, in order:
 
-1. **Resolve conflicts.** Expect them in: `archify/package.json` and `package-lock.json` (take upstream's dependencies, keep the fork's version string), `README.md` (ours), `viewer/template.source.html` (both: keep the `HADRIAN_CSS` marker, the picker entries and the `KNOWN`/`PRESETS` arrays), `archify/renderers/shared/cli.mjs`, `utils.mjs` and `viewer/export.js` (`'hadrian'` defaults), `archify/renderers/shared/node-card-style.mjs`, `archify/schemas/*.json` enums, `archify/locales/en.json` (ours adds two `viewer.preset.hadrian*` keys), `scripts/check-release-identity.mjs` (ours), and tests the fork edited (`test/i18n*.test.mjs`, `test/release-identity.test.mjs`, `test/preset-tryon.test.mjs`, `test/explainer-*.test.mjs`).
+1. **Resolve conflicts.** Expect them in: `archify/package.json` and `package-lock.json` (take upstream's dependencies, keep the fork's version string), `README.md` (ours), `viewer/template.source.html` (both: keep the `HADRIAN_CSS` marker, the picker entries and the `KNOWN`/`PRESETS` arrays), `archify/renderers/shared/cli.mjs`, `utils.mjs` and `viewer/export.js` (`'hadrian'` defaults), `archify/renderers/shared/node-card-style.mjs` (ours: square Hadrian chips and the Hadrian exclusion from the dark card tint), `archify/schemas/*.json` enums, `archify/locales/en.json` (ours adds two `viewer.preset.hadrian*` keys), `scripts/check-release-identity.mjs` (ours), and tests the fork edited (`test/i18n*.test.mjs`, `test/release-identity.test.mjs`, `test/preset-tryon.test.mjs`, `test/explainer-*.test.mjs`).
 2. **Remove re-added surfaces.** Upstream adds files under the dropped directories constantly; a merge re-creates them without conflict:
    `git rm -rq --ignore-unmatch website community integrations journal experiments benchmarks tools docs/cases docs/gallery docs/specs docs/evidence docs/reviews docs/research docs/reading-evidence docs/releases docs/skill-updates docs/index.html docs/gallery.html docs/guide.html docs/start.html README_EN.md README_ZH.md README_JA.md README_KO.md`
    and delete any new non-English catalog under `archify/locales/` or `archify/examples/locales/`.
@@ -155,8 +180,8 @@ Never push to, or open issues or pull requests on, `tt-a1i/archify` from this fo
 ## Open items
 
 - **Explainer restyle.** Explainer pages (`archify/explainer/reader.css`) keep upstream's four page styles and palette; only their embedded diagrams are Hadrian. A `hadrian` page style is the natural follow-up.
-- **Cloud and external share the gray family**; see the colour mapping. If it reads ambiguously in practice, the candidate change is cloud → a second blue step, which needs a lighter dark-mode fill to keep tag text at 4.5:1.
-- **Backend/security colours.** Mapping A (status-green/status-red for architecture backend/security) is implemented; the alternative B (Defense Green backend, danger-red security, gold database, blue-400/blue-600 message bus) changes six token lines in `viewer/hadrian.css` and the lifecycle override.
+- **Cloud and external share the gray family** and both have neutral fills (cloud a slight lift, external the panel colour), so they differ by outline (11.0 ΔE dark, 12.3 light), sigil and cloud's dashed frames; see [Node fills](#node-fills). If that reads ambiguously in practice, the candidate change is cloud → a second blue step; it must then clear the distinguishability guard against frontend, so the frontend fill would have to move too.
+- **Backend/security colours.** Mapping A (status-green/status-red for architecture backend/security) is implemented; the alternative B (Defense Green backend, danger-red security, gold database, blue-400/blue-600 message bus) changes the stroke and fill tokens of those four categories in `viewer/hadrian.css` and the lifecycle override, and must pass `test/hadrian-distinguishability.test.mjs`.
 - **Private-repository install** from `Hadrian-MTV/archify` is to be verified once the repository exists; local-path installation with the real Skills CLI is verified.
 - **Upstream contrast fixes** (#1055/#1040/#1017) will land in `viewer.css` for the upstream presets; the Hadrian preset already clears the floor, so merging them needs no change here.
 - `npm run test:webm` (real WebM decoding with ffmpeg) was not part of this rebrand's verification.
