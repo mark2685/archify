@@ -206,17 +206,6 @@ test('CI binds a public notifier manifest to the Release asset, tagged archive, 
   assert.match(job, /missing the deterministic archive builder/);
 });
 
-test('release docs disclose that mutable Release assets are verified only at deployment time', () => {
-  const design = fs.readFileSync(
-    path.join(repoRoot, 'docs', 'skill-embedded-optional-update-notifier-design.md'),
-    'utf8',
-  );
-  assert.match(design, /\u90e8\u7f72\u65f6\u70b9/);
-  assert.match(design, /\u90e8\u7f72\u540e\u66ff\u6362[^\u3002]*\u4e0d\u4f1a\u81ea\u52a8\u89e6\u53d1\u590d\u9a8c/);
-  assert.match(design, /immutable release/i);
-  assert.doesNotMatch(design, /\u5373\u4f7f Release \u8d44\u4ea7\u540e\u6765\u53ef\u88ab\u66ff\u6362\uff0c\u4e5f\u4e0d\u80fd\u8131\u79bb/);
-});
-
 test('GitHub Pages deploys the verified website artifact only after every repository gate succeeds', () => {
   const workflow = fs.readFileSync(path.join(repoRoot, '.github', 'workflows', 'ci.yml'), 'utf8');
   const job = workflowJob(workflow, 'deploy-pages');

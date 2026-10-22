@@ -1486,6 +1486,7 @@ export async function checkForUpdate({
   } catch {
     return silent('invalid-local-release');
   }
+  if (localRelease.updateChecks === false) return silent('disabled');
 
   const nowMs = Number(now());
   if (!Number.isFinite(nowMs)) return silent('invalid-clock');
@@ -1625,6 +1626,7 @@ export async function setUpdatePreference({
   } catch {
     return silent('invalid-local-release');
   }
+  if (localRelease.updateChecks === false) return silent('disabled');
   let stateDirectory = versionCacheDirectory(cacheDirectory, localRelease.version);
   try {
     stateDirectory = await prepareCacheDirectory(stateDirectory);

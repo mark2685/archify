@@ -76,8 +76,14 @@ export function compareSemver(leftValue, rightValue) {
   return comparePrerelease(left.prerelease, right.prerelease);
 }
 
+// The Hadrian fork releases as X.Y.Z-hadrian.N, its own channel beside
+// upstream's stable and development identities. See FORK.md.
+export const FORK_PRERELEASE_IDENTIFIER = 'hadrian';
+
 export function releaseChannelForVersion(value) {
-  return parseSemver(value).prerelease ? 'development' : 'stable';
+  const { prerelease } = parseSemver(value);
+  if (!prerelease) return 'stable';
+  return prerelease[0] === FORK_PRERELEASE_IDENTIFIER ? FORK_PRERELEASE_IDENTIFIER : 'development';
 }
 
 export function isStableCoreVersion(value) {
@@ -102,9 +108,12 @@ export function validateCanonicalUtcTimestamp(value) {
 }
 
 export function validateLocalRelease(value) {
-  if (!hasExactKeys(value, [
-    'schemaVersion', 'skillId', 'channel', 'version', 'source', 'updateManifestUrl',
-  ])
+  // The fork ships with updateChecks: false, which turns the upstream update
+  // notifier off without changing the recorded upstream release lineage.
+  const updateChecks = value?.updateChecks;
+  const keys = ['schemaVersion', 'skillId', 'channel', 'version', 'source', 'updateManifestUrl'];
+  if (!hasExactKeys(value, updateChecks === undefined ? keys : [...keys, 'updateChecks'])
+    || (updateChecks !== undefined && updateChecks !== false)
     || value.schemaVersion !== 1
     || value.skillId !== SKILL_ID
     || !hasExactKeys(value.source, ['repository'])
@@ -123,6 +132,7 @@ export function validateLocalRelease(value) {
     version: value.version,
     source: { repository: value.source.repository },
     updateManifestUrl: value.updateManifestUrl,
+    ...(updateChecks === false ? { updateChecks: false } : {}),
   };
 }
 

@@ -1,5 +1,7 @@
 # Update awareness
 
+This Hadrian fork ships `skill-release.json` with `updateChecks: false`, so receipts always report `update.status: "unavailable"` with `reason: "disabled"` and the notice below is never required. The rest of this file is upstream's contract, kept for merges.
+
 Read this file when a `finalize` or standalone `deliver` receipt has `update.noticeRequired: true`.
 
 Give one compact update notice in the user's language, with `installedVersion`, `availableVersion`, and the official `releaseNotes` link. Briefly describe the changes using `update.summary` when present, then ask whether the user would like help updating (for example, “Would you like me to update Archify?”). Do not name the current client or prescribe a number of summary points. A process message or tool output does not replace the final notice.

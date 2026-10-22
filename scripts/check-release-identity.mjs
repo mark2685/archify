@@ -1,16 +1,21 @@
 #!/usr/bin/env node
+// Release identity for the Hadrian fork. The fork releases as
+// <upstream core>-hadrian.<n>: the core names the upstream release the fork is
+// built on and the hadrian counter the fork revision. Every surface that
+// states a version must agree with archify/package.json, and the shipped
+// release identity must keep the upstream update notifier off. See FORK.md.
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parse } from 'parse5';
 
 import {
+  FORK_PRERELEASE_IDENTIFIER,
   compareSemver,
   isStableCoreVersion,
   parseSemver,
+  releaseChannelForVersion,
   validateLocalRelease,
-  validateStableUpdateManifest,
 } from '../archify/scripts/update-contract.mjs';
 
 const scriptRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -42,127 +47,18 @@ function readJson(relativePath) {
   }
 }
 
-function checkSkillRelease(value, version, isDevelopment) {
-  const expectedChannel = isDevelopment ? 'development' : 'stable';
-  try {
-    const release = validateLocalRelease(value);
-    if (release.version === version && release.channel === expectedChannel) return;
-  } catch {
-    // Report the repository-specific cross-artifact requirement below.
-  }
-  fail(`archify/skill-release.json must identify archify ${version} as ${expectedChannel}, use the official repository, and pin the trusted update manifest URL.`);
-}
-
-function checkStableUpdateManifest(value, expectedVersion, previousVersion, packageVersion, isDevelopment) {
-  try {
-    const manifest = validateStableUpdateManifest(value);
-    const allowedVersions = isDevelopment
-      ? [expectedVersion]
-      : [expectedVersion, previousVersion].filter(Boolean);
-    if (expectedVersion && allowedVersions.includes(manifest.version)
-      && (isDevelopment || packageVersion === expectedVersion)) return;
-  } catch {
-    // Report the repository-specific cross-artifact requirement below.
-  }
-  const releaseWindow = !isDevelopment && previousVersion
-    ? `newest stable v${expectedVersion} or immediate prior v${previousVersion} during the enforced post-Release publication window`
-    : `newest published stable v${expectedVersion || '(missing)'}`;
-  fail(`docs/skill-updates/archify/stable.json must describe the ${releaseWindow} with the fixed repository, immutable tree/archive digests, and official release-notes URL.`);
-}
-
 function shieldEscape(value) {
   return value.replaceAll('_', '__').replaceAll('-', '--');
 }
 
-function versionLabels(source) {
-  return [...source.matchAll(/\bv(\d+\.\d+\.\d+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?)\b/g)]
-    .map((match) => match[1]);
-}
-
-const readmeMarkers = {
-  en: { development: 'Current development version:', stable: 'Current stable version:' },
-  zh: { development: '当前开发版本：', stable: '当前稳定版本：' },
-  ja: { development: '現在の開発版:', stable: '現在の安定版:' },
-};
-
-function checkReadme(relativePath, source, version, language, isDevelopment) {
-  const badge = `/badge/version-${shieldEscape(version)}-`;
-  const markerLabel = readmeMarkers[language][isDevelopment ? 'development' : 'stable'];
-  const identity = isDevelopment ? 'development' : 'stable';
-  const hasMarker = source.split('\n').some((line) => line.includes(markerLabel) && line.includes(`\`v${version}\``));
-  if (!source.includes(badge) || !hasMarker) {
-    fail(`${relativePath} must advertise ${identity} identity v${version} with an exact escaped badge and explicit ${identity} marker.`);
-  }
-}
-
-function checkDocument(relativePath, source, version, isDevelopment) {
-  const labels = versionLabels(source);
-  const identity = isDevelopment ? 'development' : 'stable';
-  const englishLabel = isDevelopment ? /development/i : /stable/i;
-  const chineseLabel = isDevelopment ? /开发版/ : /稳定版/;
-  if (labels.length === 0 || labels.some((label) => label !== version)
-    || !englishLabel.test(source) || !chineseLabel.test(source)) {
-    fail(`${relativePath} must advertise ${identity} identity v${version} in both languages without a conflicting version alias.`);
-  }
-}
-
-function checkNoRavenSwitcher(relativePath, source) {
-  if (/data-agent=["']raven["']|--agent\s+raven\b|[?&]agent=raven\b/i.test(source)) {
-    fail(`${relativePath}: Raven is not an agent-switcher target.`);
-  }
-}
-
-function checkIdentityTemplate(relativePath, source, isDevelopment) {
-  // SVG path coordinates can resemble SemVer (for example, `4.3.6-3.1`).
-  // Remove only real SVG d attributes, not path-like text inside other
-  // attributes or scripts. Keep the original bytes everywhere else.
-  const pathDataRanges = [];
-  function collectPathData(node) {
-    const location = node.sourceCodeLocation?.attrs?.d;
-    if (node.namespaceURI === 'http://www.w3.org/2000/svg' && node.tagName === 'path' && location) {
-      pathDataRanges.push(location);
-    }
-    for (const child of node.childNodes || []) collectPathData(child);
-    if (node.content) collectPathData(node.content);
-  }
-  collectPathData(parse(source, { sourceCodeLocationInfo: true }));
-  let sourceWithoutPathData = source;
-  for (const { startOffset, endOffset } of pathDataRanges.sort((a, b) => b.startOffset - a.startOffset)) {
-    sourceWithoutPathData = sourceWithoutPathData.slice(0, startOffset) + sourceWithoutPathData.slice(endOffset);
-  }
-  const hasHardcodedVersion = /\b\d+\.\d+\.\d+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?\b/.test(sourceWithoutPathData);
-  const identity = isDevelopment ? 'development and 开发版' : 'stable and 稳定版';
-  const hasIdentity = isDevelopment
-    ? /development/i.test(source) && /开发版/.test(source)
-    : /stable/i.test(source) && /稳定版/.test(source);
-  if (!source.includes('[[ARCHIFY_VERSION]]') || !hasIdentity || hasHardcodedVersion) {
-    fail(`${relativePath} must use [[ARCHIFY_VERSION]] with ${identity} labels, never a hardcoded package version.`);
-  }
-  const versionLines = source.split('\n').filter(line => line.includes('[[ARCHIFY_VERSION]]'));
-  const staleIdentity = isDevelopment ? /\bstable\b|稳定版/i : /\bdevelopment\b|开发版/i;
-  if (versionLines.some(line => staleIdentity.test(line))) {
-    const staleLabel = isDevelopment ? 'stable or 稳定版' : 'development or 开发版';
-    fail(`${relativePath} must not label [[ARCHIFY_VERSION]] as ${staleLabel}.`);
-  }
-}
-
-function checkRoadmap(relativePath, source, version, isDevelopment) {
-  const identity = isDevelopment ? 'development line' : 'stable version';
-  const marker = `The current ${identity} is \`v${version}\``;
-  if (!source.includes(marker)) {
-    fail(`${relativePath} must declare the current ${identity} as v${version}.`);
-  }
+function isForkVersion(parsed) {
+  return Boolean(parsed?.prerelease)
+    && parsed.prerelease.length === 2
+    && parsed.prerelease[0] === FORK_PRERELEASE_IDENTIFIER
+    && /^[1-9]\d*$/.test(parsed.prerelease[1]);
 }
 
 const packageJson = readJson('archify/package.json');
-const changelog = read('CHANGELOG.md');
-const unreleasedStart = changelog.search(/^## \[Unreleased\][^\n]*(?:\n|$)/m);
-const afterUnreleased = unreleasedStart === -1
-  ? ''
-  : changelog.slice(unreleasedStart).replace(/^## \[Unreleased\][^\n]*(?:\n|$)/, '');
-const nextRelease = afterUnreleased.search(/^## \[/m);
-const unreleased = nextRelease === -1 ? afterUnreleased : afterUnreleased.slice(0, nextRelease);
-const hasRealUnreleasedChanges = /^\s*-\s+\S/m.test(unreleased);
 const version = packageJson.version;
 let parsedVersion = null;
 try {
@@ -170,46 +66,47 @@ try {
 } catch {
   // The consolidated error below owns package-version policy reporting.
 }
-const supportedPrerelease = parsedVersion?.prerelease === null
-  || (parsedVersion?.prerelease?.length === 2
-    && parsedVersion.prerelease[0] === 'dev'
-    && /^\d+$/.test(parsedVersion.prerelease[1]));
-const hasSupportedVersion = Boolean(parsedVersion && parsedVersion.build === null && supportedPrerelease);
-const isDevelopment = Boolean(hasSupportedVersion && parsedVersion.prerelease);
+const isFork = isForkVersion(parsedVersion);
+const hasSupportedVersion = Boolean(parsedVersion && parsedVersion.build === null
+  && (parsedVersion.prerelease === null || isFork));
+
+if (!hasSupportedVersion) {
+  fail(`package version is not a supported fork identity (X.Y.Z or X.Y.Z-${FORK_PRERELEASE_IDENTIFIER}.N): ${JSON.stringify(version)}`);
+}
+
+// CHANGELOG.md is upstream's record. The fork does not edit it; it only checks
+// that the upstream core the fork names is a published upstream release.
+const changelog = read('CHANGELOG.md');
 const publishedLabels = [...changelog.matchAll(/^## \[([^\]]+)\]/gm)]
   .map((match) => match[1])
   .filter((label) => label !== 'Unreleased');
 for (const label of publishedLabels) {
   if (!isStableCoreVersion(label)) fail(`CHANGELOG published version is not stable SemVer: ${label}.`);
 }
-const stableLabels = publishedLabels
-  .filter(isStableCoreVersion)
-  .sort((left, right) => compareSemver(right, left));
-const newestStableLabel = stableLabels[0] ?? null;
-const previousStableLabel = stableLabels[1] ?? null;
-
-if (!hasSupportedVersion) {
-  fail(`package version is not a supported SemVer identity: ${JSON.stringify(version)}`);
-} else if (hasRealUnreleasedChanges && !isDevelopment) {
-  fail(`Unreleased changes require a prerelease package version; found stable ${version}.`);
-}
-
-if (hasSupportedVersion && hasRealUnreleasedChanges) {
-  const currentCore = parsedVersion.core.join('.');
-  if (newestStableLabel && compareSemver(currentCore, newestStableLabel) <= 0) {
-    fail(`Unreleased package core ${currentCore} must be newer than published ${newestStableLabel}.`);
+const stableLabels = publishedLabels.filter(isStableCoreVersion).sort((left, right) => compareSemver(right, left));
+if (hasSupportedVersion) {
+  const core = parsedVersion.core.join('.');
+  if (!stableLabels.includes(core)) {
+    fail(`package core ${core} must name a published upstream release from CHANGELOG.md (newest: ${stableLabels[0] || '(none)'}).`);
   }
 }
 
 if (hasSupportedVersion) {
-  checkSkillRelease(readJson('archify/skill-release.json'), version, isDevelopment);
-  checkStableUpdateManifest(
-    readJson('docs/skill-updates/archify/stable.json'),
-    newestStableLabel,
-    previousStableLabel,
-    version,
-    isDevelopment,
-  );
+  const release = readJson('archify/skill-release.json');
+  try {
+    const validated = validateLocalRelease(release);
+    if (validated.version !== version) {
+      fail(`archify/skill-release.json must identify archify ${version}; found ${validated.version}.`);
+    }
+    if (validated.channel !== releaseChannelForVersion(version)) {
+      fail(`archify/skill-release.json channel must be ${releaseChannelForVersion(version)} for ${version}.`);
+    }
+    if (validated.updateChecks !== false) {
+      fail('archify/skill-release.json must set "updateChecks": false so the fork never prompts for upstream updates.');
+    }
+  } catch (error) {
+    fail(`archify/skill-release.json is not a valid release identity: ${error.message}`);
+  }
 
   const lock = readJson('archify/package-lock.json');
   if (lock.version !== version || lock.packages?.['']?.version !== version) {
@@ -223,59 +120,31 @@ if (hasSupportedVersion) {
     fail(`archify/SKILL.md metadata version ${skillVersion || '(missing)'} must map to package ${version} as ${expectedSkillVersion}.`);
   }
 
-  const rendererTemplate = read('archify/assets/template.html');
-  const generatorVersions = [...rendererTemplate.matchAll(/<meta\s+name="generator"\s+content="archify\s+([^"]+)"\s*\/?>/g)]
-    .map((match) => match[1]);
-  if (generatorVersions.length !== 1 || generatorVersions[0] !== version) {
-    fail(`archify/assets/template.html generator must be archify ${version}; found ${generatorVersions.join(', ') || '(missing)'}.`);
-  }
-
-  const english = read('README.md');
-  const englishMirror = read('README_EN.md');
-  const chinese = read('README_ZH.md');
-  const japanese = read('README_JA.md');
-  checkReadme('README.md', english, version, 'en', isDevelopment);
-  checkReadme('README_EN.md', englishMirror, version, 'en', isDevelopment);
-  checkReadme('README_ZH.md', chinese, version, 'zh', isDevelopment);
-  checkReadme('README_JA.md', japanese, version, 'ja', isDevelopment);
-  for (const [path, content] of [['README.md', english], ['README_EN.md', englishMirror], ['README_ZH.md', chinese], ['README_JA.md', japanese]]) {
-    checkNoRavenSwitcher(path, content);
-  }
-  if (english !== englishMirror) fail('README_EN.md must remain byte-identical to README.md.');
-
-  if (newestStableLabel && isDevelopment) {
-    const stableMinor = newestStableLabel.split('.').slice(0, 2).join('\\.');
-    if (new RegExp(`Archify ${stableMinor} includes\\b`).test(english)
-      || new RegExp(`Archify ${stableMinor} 已覆盖`).test(chinese)) {
-      fail(`README capability summary must describe v${version} as development, not published ${newestStableLabel}.`);
+  for (const templatePath of ['viewer/template.source.html', 'archify/assets/template.html']) {
+    const template = read(templatePath);
+    const generatorVersions = [...template.matchAll(/<meta\s+name="generator"\s+content="archify\s+([^"]+)"\s*\/?>/g)]
+      .map((match) => match[1]);
+    if (generatorVersions.length !== 1 || generatorVersions[0] !== version) {
+      fail(`${templatePath} generator must be archify ${version}; found ${generatorVersions.join(', ') || '(missing)'}.`);
     }
   }
 
-  const landing = read('docs/index.html');
-  checkDocument('docs/index.html', landing, version, isDevelopment);
-  checkNoRavenSwitcher('docs/index.html', landing);
-  const proofCounts = [...landing.matchAll(/\b\d+\/\d+\b/g)].map((match) => match[0]);
-  const staleProofCounts = [...new Set(proofCounts.filter((count) => count !== '9/9'))];
-  if (proofCounts.length === 0 || staleProofCounts.length > 0) {
-    const found = staleProofCounts.length > 0 ? `; found ${staleProofCounts.join(', ')}` : '';
-    fail(`docs/index.html proof receipt must say 9/9 everywhere; every N/N proof receipt must be exactly 9/9${found}.`);
+  const readme = read('README.md');
+  const badge = `/badge/version-${shieldEscape(version)}-`;
+  const marker = readme.split('\n').some((line) => line.includes('**Current version:**') && line.includes(`\`v${version}\``));
+  if (!readme.includes(badge) || !marker) {
+    fail(`README.md must advertise v${version} with an exact escaped badge and a "Current version" marker.`);
   }
-  const start = read('docs/start.html');
-  checkDocument('docs/start.html', start, version, isDevelopment);
-  checkNoRavenSwitcher('docs/start.html', start);
-  checkRoadmap('ROADMAP.md', read('ROADMAP.md'), version, isDevelopment);
-
-  for (const templatePath of [
-    'scripts/start-template.html',
-    'scripts/guide-template.html',
-    'scripts/gallery-template.html',
-  ]) {
-    checkIdentityTemplate(templatePath, read(templatePath), isDevelopment);
+  if (isFork) {
+    const core = parsedVersion.core.join('.');
+    if (!readme.includes(`built on upstream \`v${core}\``)) {
+      fail(`README.md must name the upstream release the fork is built on: built on upstream \`v${core}\`.`);
+    }
   }
 
-  const changelogMarker = `Development identity: \`v${version}\``;
-  if (hasRealUnreleasedChanges && !unreleased.includes(changelogMarker)) {
-    fail(`CHANGELOG.md Unreleased must declare ${changelogMarker}.`);
+  const fork = read('FORK.md');
+  if (fork && !fork.includes(`\`${version}\``)) {
+    fail(`FORK.md must record the current fork version \`${version}\`.`);
   }
 }
 

@@ -46,7 +46,25 @@ export async function verifyPackagedUpdateChecker(skillRoot, cacheDirectory) {
     releaseNotes: `https://github.com/tt-a1i/archify/releases/tag/v${candidateVersion}`,
     severity: 'normal',
   };
+  // The fork ships skill-release.json with updateChecks: false, so the packaged
+  // checker must stay silent and never fetch. The notifier machinery is then
+  // exercised against a copy of the release file without that flag.
+  const shippedReceipt = await checker.checkForUpdate({
+    cacheDirectory,
+    fetchImpl: async () => { throw new Error('the shipped release identity must not fetch'); },
+    now: () => Date.parse('2026-08-28T00:00:00Z'),
+    random: () => 0.5,
+  });
+  if (shippedReceipt.status !== 'silent' || shippedReceipt.reason !== 'disabled') {
+    throw new Error(`packaged update checker is not disabled by skill-release.json: ${JSON.stringify(shippedReceipt)}`);
+  }
+  const shippedRelease = JSON.parse(fs.readFileSync(path.join(skillRoot, 'skill-release.json'), 'utf8'));
+  delete shippedRelease.updateChecks;
+  const enabledReleasePath = path.join(cacheDirectory, 'enabled-skill-release.json');
+  fs.mkdirSync(cacheDirectory, { recursive: true });
+  fs.writeFileSync(enabledReleasePath, `${JSON.stringify(shippedRelease, null, 2)}\n`);
   const notifierReceipt = await checker.checkForUpdate({
+    releasePath: enabledReleasePath,
     cacheDirectory,
     fetchImpl: async () => new Response(JSON.stringify(candidate), {
       status: 200,
@@ -59,7 +77,7 @@ export async function verifyPackagedUpdateChecker(skillRoot, cacheDirectory) {
     throw new Error(`packaged update checker did not return an update candidate: ${JSON.stringify(notifierReceipt)}`);
   }
   const notifierSnooze = await checker.setUpdatePreference({
-    releasePath: path.join(skillRoot, 'skill-release.json'),
+    releasePath: enabledReleasePath,
     cacheDirectory,
     eventKey: notifierReceipt.eventKey,
     mode: 'snooze',

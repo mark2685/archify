@@ -9,13 +9,13 @@
 <p align="center"><img src="docs/assets/archify-readme-hero.png" alt="Archify interactive diagrams" width="960" /></p>
 
 <p align="center">
-  <a href="CHANGELOG.md#320--2026-10-18"><img src="https://img.shields.io/badge/version-3.2.0-002548?style=flat-square" alt="Version 3.2.0" /></a>
+  <a href="FORK.md#versioning"><img src="https://img.shields.io/badge/version-3.2.0--hadrian.1-002548?style=flat-square" alt="Version 3.2.0-hadrian.1" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-002548?style=flat-square" alt="MIT license" /></a>
 </p>
 
 > **This is Hadrian's fork of [Archify](https://github.com/tt-a1i/archify).** Diagrams render in the Hadrian brand by default, in light and dark, in the browser and in every export; the repository is English-only; and the upstream update reminder is off. [FORK.md](FORK.md) lists every difference from upstream, how to merge upstream releases, and how to install. Everything else, including the typed JSON contract, validation, delivery receipts and the Viewer, is upstream Archify.
 
-**Current stable version:** `v3.2.0`. Upstream history is in the [Changelog](CHANGELOG.md).
+**Current version:** `v3.2.0-hadrian.1`, built on upstream `v3.2.0`. Upstream history is in the [Changelog](CHANGELOG.md); fork history is in [FORK.md](FORK.md#versioning).
 
 ## What it does
 

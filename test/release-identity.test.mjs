@@ -6,6 +6,11 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
+// The fork's release identity: archify/package.json carries
+// <upstream core>-hadrian.<n>, every version-bearing surface agrees with it,
+// the shipped release identity keeps the upstream update notifier off, and the
+// upstream core names a published upstream release. See FORK.md.
+
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
 const checker = path.join(repoRoot, 'scripts', 'check-release-identity.mjs');
@@ -17,537 +22,158 @@ function writeFile(root, relativePath, content) {
 }
 
 function runCheck(root) {
-  return spawnSync(process.execPath, [checker, '--root', root], {
-    encoding: 'utf8',
-  });
+  return spawnSync(process.execPath, [checker, '--root', root], { encoding: 'utf8' });
 }
 
-function stableUpdateManifest(version) {
+function release(version, extra = {}) {
   return JSON.stringify({
     schemaVersion: 1,
     skillId: 'archify',
-    channel: 'stable',
+    channel: version.includes('-hadrian.') ? 'hadrian' : 'stable',
     version,
-    publishedAt: '2026-07-29T00:00:00Z',
-    source: {
-      repository: 'https://github.com/tt-a1i/archify',
-      ref: `v${version}`,
-      treeSha: 'a'.repeat(40),
-    },
-    artifact: { sha256: 'b'.repeat(64) },
-    summary: 'Published stable release.',
-    releaseNotes: `https://github.com/tt-a1i/archify/releases/tag/v${version}`,
-    severity: 'normal',
+    source: { repository: 'https://github.com/tt-a1i/archify' },
+    updateManifestUrl: 'https://tt-a1i.github.io/archify/skill-updates/archify/stable.json',
+    updateChecks: false,
+    ...extra,
   });
 }
 
-function writeValidDevelopmentFixture(root, overrides = {}) {
-  const version = '2.13.0-dev.0';
-  const english = [
-    '![Development Version](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
+function writeValidFixture(root, overrides = {}) {
+  const version = overrides.version || '2.13.0-hadrian.1';
+  const core = version.split('-')[0];
+  const escaped = version.replaceAll('-', '--');
+  const readme = [
+    `![Version](https://img.shields.io/badge/version-${escaped}-002548)`,
     '',
-    `Current development version: \`v${version}\``,
-    '',
-  ].join('\n');
-  const chinese = [
-    '![\u5f00\u53d1\u7248\u672c](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
-    '',
-    `\u5f53\u524d\u5f00\u53d1\u7248\u672c\uff1a\`v${version}\``,
+    `**Current version:** \`v${version}\`, built on upstream \`v${core}\`.`,
     '',
   ].join('\n');
-  const japanese = [
-    '![\u958b\u767a\u7248](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
-    '',
-    `\u73fe\u5728\u306e\u958b\u767a\u7248: \`v${version}\``,
-    '',
-  ].join('\n');
+  const template = `<!DOCTYPE html>\n<html>\n<head>\n  <meta name="generator" content="archify ${version}">\n</head>\n</html>\n`;
   const files = {
-    'archify/package.json': JSON.stringify({ version }),
-    'archify/package-lock.json': JSON.stringify({ version, packages: { '': { version } } }),
-    'archify/skill-release.json': JSON.stringify({
-      schemaVersion: 1,
-      skillId: 'archify',
-      channel: 'development',
-      version,
-      source: { repository: 'https://github.com/tt-a1i/archify' },
-      updateManifestUrl: 'https://tt-a1i.github.io/archify/skill-updates/archify/stable.json',
-    }),
-    'docs/skill-updates/archify/stable.json': stableUpdateManifest('2.12.0'),
-    'archify/SKILL.md': '---\nmetadata:\n  version: "2.13"\n---\n',
-    'archify/assets/template.html': '<meta name="generator" content="archify 2.13.0-dev.0">',
-    'CHANGELOG.md': [
-      '# Changelog',
-      '',
-      '## [Unreleased]',
-      '',
-      `> Development identity: \`v${version}\`. Not a stable release.`,
-      '',
-      '### Added',
-      '- Real unreleased work.',
-      '',
-      '## [2.12.0] — 2026-07-23',
-      '',
-    ].join('\n'),
-    'README.md': english,
-    'README_EN.md': english,
-    'README_ZH.md': chinese,
-    'README_JA.md': japanese,
-    'scripts/start-template.html': 'development · \u5f00\u53d1\u7248 · [[ARCHIFY_VERSION]]',
-    'scripts/guide-template.html': 'development · \u5f00\u53d1\u7248 · [[ARCHIFY_VERSION]]',
-    'scripts/gallery-template.html': 'development · \u5f00\u53d1\u7248 · [[ARCHIFY_VERSION]]',
-    'docs/index.html': `<span>development · v${version} · \u5f00\u53d1\u7248 · 9/9 checks</span>`,
-    'docs/start.html': `<span>development · v${version} · \u5f00\u53d1\u7248</span>`,
-    'ROADMAP.md': `The current development line is \`v${version}\`; it contains the work under Changelog Unreleased and is not a stable release.`,
+    'archify/package.json': JSON.stringify({ name: 'archify', version }),
+    'archify/package-lock.json': JSON.stringify({ name: 'archify', version, packages: { '': { name: 'archify', version } } }),
+    'archify/skill-release.json': release(version),
+    'archify/SKILL.md': `---\nname: archify\nversion: "${core.split('.').slice(0, 2).join('.')}"\n---\n`,
+    'archify/assets/template.html': template,
+    'viewer/template.source.html': template,
+    'README.md': readme,
+    'FORK.md': `# Fork\n\nCurrent fork version \`${version}\`.\n`,
+    'CHANGELOG.md': `# Changelog\n\n## [Unreleased]\n\n## [${core}] — 2026-07-29\n\n- Published.\n\n## [2.12.0] — 2026-07-01\n\n- Earlier.\n`,
+    ...overrides.files,
   };
-  for (const [relativePath, content] of Object.entries({ ...files, ...overrides })) {
-    writeFile(root, relativePath, content);
+  for (const [relativePath, content] of Object.entries(files)) {
+    if (content !== null) writeFile(root, relativePath, content);
+  }
+  return version;
+}
+
+function withFixture(run) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
+  try {
+    return run(root);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
   }
 }
 
-function writeValidStableFixture(root, overrides = {}) {
-  const version = '2.13.0';
-  const english = [
-    '![Stable Version](https://img.shields.io/badge/version-2.13.0-blue)',
-    '',
-    `Current stable version: \`v${version}\``,
-    '',
-  ].join('\n');
-  const chinese = [
-    '![\u7a33\u5b9a\u7248\u672c](https://img.shields.io/badge/version-2.13.0-blue)',
-    '',
-    `\u5f53\u524d\u7a33\u5b9a\u7248\u672c\uff1a\`v${version}\``,
-    '',
-  ].join('\n');
-  const japanese = [
-    '![\u5b89\u5b9a\u7248](https://img.shields.io/badge/version-2.13.0-blue)',
-    '',
-    `\u73fe\u5728\u306e\u5b89\u5b9a\u7248: \`v${version}\``,
-    '',
-  ].join('\n');
-  const files = {
-    'archify/package.json': JSON.stringify({ version }),
-    'archify/package-lock.json': JSON.stringify({ version, packages: { '': { version } } }),
-    'archify/skill-release.json': JSON.stringify({
-      schemaVersion: 1,
-      skillId: 'archify',
-      channel: 'stable',
-      version,
-      source: { repository: 'https://github.com/tt-a1i/archify' },
-      updateManifestUrl: 'https://tt-a1i.github.io/archify/skill-updates/archify/stable.json',
-    }),
-    'docs/skill-updates/archify/stable.json': stableUpdateManifest(version),
-    'archify/SKILL.md': '---\nmetadata:\n  version: "2.13"\n---\n',
-    'archify/assets/template.html': '<meta name="generator" content="archify 2.13.0">',
-    'CHANGELOG.md': [
-      '# Changelog',
-      '',
-      '## [Unreleased]',
-      '',
-      '## [2.13.0] — 2026-07-29',
-      '- Published work.',
-      '',
-    ].join('\n'),
-    'README.md': english,
-    'README_EN.md': english,
-    'README_ZH.md': chinese,
-    'README_JA.md': japanese,
-    'scripts/start-template.html': 'stable · \u7a33\u5b9a\u7248 · [[ARCHIFY_VERSION]]',
-    'scripts/guide-template.html': 'stable · \u7a33\u5b9a\u7248 · [[ARCHIFY_VERSION]]',
-    'scripts/gallery-template.html': 'stable · \u7a33\u5b9a\u7248 · [[ARCHIFY_VERSION]]',
-    'docs/index.html': `<span>stable · v${version} · \u7a33\u5b9a\u7248 · 9/9 checks</span>`,
-    'docs/start.html': `<span>stable · v${version} · \u7a33\u5b9a\u7248</span>`,
-    'ROADMAP.md': `The current stable version is \`v${version}\`.`,
-  };
-  for (const [relativePath, content] of Object.entries({ ...files, ...overrides })) {
-    writeFile(root, relativePath, content);
-  }
-}
-
-test('an empty Unreleased section accepts a coherent stable release identity', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidStableFixture(fixture);
-
-    const result = runCheck(fixture);
-    assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, /release identity ok: 2\.13\.0/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
+test('the repository passes its own release identity check', () => {
+  const result = runCheck(repoRoot);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const version = JSON.parse(fs.readFileSync(path.join(repoRoot, 'archify/package.json'), 'utf8')).version;
+  assert.match(version, /^\d+\.\d+\.\d+-hadrian\.[1-9]\d*$/);
+  assert.match(result.stdout, new RegExp(`release identity ok: ${version.replaceAll('.', '\\.')}`));
 });
 
-test('stable release preparation allows only the immediate prior public manifest', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    const changelog = [
-      '# Changelog',
-      '',
-      '## [Unreleased]',
-      '',
-      '## [2.13.0] — 2026-07-29',
-      '- Release being prepared.',
-      '',
-      '## [2.12.0] — 2026-07-23',
-      '- Previously published release.',
-      '',
-    ].join('\n');
-    writeValidStableFixture(fixture, {
-      'CHANGELOG.md': changelog,
-      'docs/skill-updates/archify/stable.json': stableUpdateManifest('2.12.0'),
+test('a coherent fork identity passes', () => {
+  withFixture((root) => {
+    writeValidFixture(root);
+    const result = runCheck(root);
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+  });
+});
+
+test('a plain upstream stable version is accepted when every surface agrees', () => {
+  withFixture((root) => {
+    const version = '2.13.0';
+    writeValidFixture(root, { version, files: {
+      'README.md': `![Version](https://img.shields.io/badge/version-${version}-002548)\n\n**Current version:** \`v${version}\`.\n`,
+    } });
+    const result = runCheck(root);
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+  });
+});
+
+test('the hadrian counter starts at one and rejects other prerelease identifiers', () => {
+  for (const version of ['2.13.0-hadrian.0', '2.13.0-hadrian', '2.13.0-dev.1', '2.13.0-hadrian.1.2', '2.13.0+build']) {
+    withFixture((root) => {
+      writeValidFixture(root, { version });
+      const result = runCheck(root);
+      assert.notEqual(result.status, 0, version);
+      assert.match(result.stderr, /not a supported fork identity/, version);
     });
-
-    const prior = runCheck(fixture);
-    assert.equal(prior.status, 0, prior.stderr);
-
-    writeFile(fixture, 'docs/skill-updates/archify/stable.json', stableUpdateManifest('2.11.0'));
-    const stale = runCheck(fixture);
-    assert.notEqual(stale.status, 0);
-    assert.match(stale.stderr, /immediate prior v2\.12\.0/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
   }
 });
 
-test('the embedded update identity must match the package release exactly', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'archify/skill-release.json': JSON.stringify({
-        schemaVersion: 1,
-        skillId: 'archify',
-        channel: 'stable',
-        version: '2.12.0',
-        source: { repository: 'https://example.com/untrusted/archify' },
-        updateManifestUrl: 'https://example.com/latest.json',
-      }),
+test('the upstream core must be a published upstream release', () => {
+  withFixture((root) => {
+    writeValidFixture(root, { version: '2.14.0-hadrian.1', files: {
+      'CHANGELOG.md': '# Changelog\n\n## [Unreleased]\n\n- Not yet released upstream.\n\n## [2.13.0] — 2026-07-29\n\n- Published.\n',
+    } });
+    const result = runCheck(root);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /package core 2\.14\.0 must name a published upstream release/);
+  });
+});
+
+test('the shipped release identity must keep the update notifier off', () => {
+  withFixture((root) => {
+    const version = writeValidFixture(root);
+    const enabled = JSON.parse(release(version));
+    delete enabled.updateChecks;
+    writeFile(root, 'archify/skill-release.json', JSON.stringify(enabled));
+    const result = runCheck(root);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /must set "updateChecks": false/);
+  });
+  withFixture((root) => {
+    const version = writeValidFixture(root);
+    writeFile(root, 'archify/skill-release.json', release(version, { channel: 'development' }));
+    const result = runCheck(root);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /archify\/skill-release\.json/);
+  });
+});
+
+test('package, lockfile, Skill metadata, templates, README and FORK.md share one identity', () => {
+  const version = '2.13.0-hadrian.1';
+  const drift = [
+    ['archify/package-lock.json', JSON.stringify({ name: 'archify', version: '2.13.0-hadrian.2', packages: { '': { name: 'archify', version: '2.13.0-hadrian.2' } } }), /package-lock\.json must match/],
+    ['archify/SKILL.md', '---\nname: archify\nversion: "2.12"\n---\n', /SKILL\.md metadata version/],
+    ['archify/assets/template.html', '<meta name="generator" content="archify 2.13.0">', /archify\/assets\/template\.html generator must be archify 2\.13\.0-hadrian\.1/],
+    ['viewer/template.source.html', '<meta name="generator" content="archify 2.13.0-hadrian.2">', /viewer\/template\.source\.html generator/],
+    ['README.md', `![Version](https://img.shields.io/badge/version-2.13.0-002548)\n\n**Current version:** \`v${version}\`, built on upstream \`v2.13.0\`.\n`, /exact escaped badge/],
+    ['README.md', `![Version](https://img.shields.io/badge/version-2.13.0--hadrian.1-002548)\n\n**Current version:** \`v${version}\`.\n`, /built on upstream/],
+    ['FORK.md', '# Fork\n\nCurrent fork version `2.13.0-hadrian.2`.\n', /FORK\.md must record/],
+  ];
+  for (const [relativePath, content, expected] of drift) {
+    withFixture((root) => {
+      writeValidFixture(root, { version });
+      writeFile(root, relativePath, content);
+      const result = runCheck(root);
+      assert.notEqual(result.status, 0, relativePath);
+      assert.match(result.stderr, expected, relativePath);
     });
+  }
+});
 
-    const result = runCheck(fixture);
+test('version-bearing surfaces are reported together rather than stopping at the first drift', () => {
+  withFixture((root) => {
+    writeValidFixture(root);
+    writeFile(root, 'archify/SKILL.md', '---\nname: archify\nversion: "2.12"\n---\n');
+    writeFile(root, 'FORK.md', '# Fork\n');
+    const result = runCheck(root);
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /archify\/skill-release\.json must identify archify 2\.13\.0-dev\.0 as development/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('the published update manifest must track the newest stable changelog release', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'docs/skill-updates/archify/stable.json': stableUpdateManifest('2.11.0'),
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /stable\.json must describe the newest published stable v2\.12\.0/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('the published update manifest must use a canonical UTC timestamp', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    const manifest = JSON.parse(stableUpdateManifest('2.12.0'));
-    manifest.publishedAt = '2026-07-29T08:00:00+08:00';
-    writeValidDevelopmentFixture(fixture, {
-      'docs/skill-updates/archify/stable.json': JSON.stringify(manifest),
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /stable\.json must describe the newest published stable v2\.12\.0/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('package identities reject leading-zero core and prerelease identifiers', () => {
-  for (const version of ['02.13.0', '2.13.0-dev.01']) {
-    const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-    try {
-      writeValidDevelopmentFixture(fixture, {
-        'archify/package.json': JSON.stringify({ version }),
-      });
-      const result = runCheck(fixture);
-      assert.notEqual(result.status, 0);
-      assert.match(result.stderr, /not a supported SemVer identity/, version);
-    } finally {
-      fs.rmSync(fixture, { recursive: true, force: true });
-    }
-  }
-});
-
-test('the newest stable release is selected by SemVer rather than changelog order', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'CHANGELOG.md': [
-        '# Changelog',
-        '',
-        '## [Unreleased]',
-        '',
-        '> Development identity: `v2.13.0-dev.0`. Not a stable release.',
-        '',
-        '### Added',
-        '- Real unreleased work.',
-        '',
-        '## [2.11.0] — 2026-07-16',
-        '',
-        '## [2.12.0] — 2026-07-23',
-        '',
-      ].join('\n'),
-    });
-
-    const result = runCheck(fixture);
-    assert.equal(result.status, 0, result.stderr);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('real Unreleased changes cannot reuse a stable published package identity', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeFile(fixture, 'archify/package.json', JSON.stringify({ version: '2.12.0' }));
-    writeFile(fixture, 'CHANGELOG.md', [
-      '# Changelog',
-      '',
-      '## [Unreleased]',
-      '',
-      '### Added',
-      '- Real unreleased work.',
-      '',
-      '## [2.12.0] — 2026-07-23',
-      '',
-    ].join('\n'));
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /Unreleased changes require a prerelease package version/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('package, lockfile, Skill metadata, escaped Shields badge, and public docs share one development identity', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeFile(fixture, 'archify/package.json', JSON.stringify({ version: '2.13.0-dev.0' }));
-    writeFile(fixture, 'archify/package-lock.json', JSON.stringify({
-      version: '2.12.0',
-      packages: { '': { version: '2.12.0' } },
-    }));
-    writeFile(fixture, 'archify/SKILL.md', '---\nmetadata:\n  version: "2.12"\n---\n');
-    writeFile(fixture, 'CHANGELOG.md', [
-      '# Changelog',
-      '',
-      '## [Unreleased]',
-      '',
-      '### Added',
-      '- Real unreleased work.',
-      '',
-      '## [2.12.0] — 2026-07-23',
-      '',
-    ].join('\n'));
-    const staleEnglish = [
-      '![Version](https://img.shields.io/badge/version-2.13.0-blue)',
-      '',
-      'Archify 2.12 includes unreleased capabilities.',
-    ].join('\n');
-    writeFile(fixture, 'README.md', staleEnglish);
-    writeFile(fixture, 'README_EN.md', staleEnglish);
-    writeFile(fixture, 'README_ZH.md', '![Version](https://img.shields.io/badge/version-2.13.0-blue)\n\nArchify 2.12 \u5305\u542b\u672a\u53d1\u5e03\u80fd\u529b\u3002\n');
-    writeFile(fixture, 'README_JA.md', '![Version](https://img.shields.io/badge/version-2.13.0-blue)\n\nArchify 2.12 \u306f\u672a\u30ea\u30ea\u30fc\u30b9\u6a5f\u80fd\u3092\u542b\u307f\u307e\u3059\u3002\n');
-    writeFile(fixture, 'docs/index.html', '<span>Agent Skill · v2.12.0</span>');
-    writeFile(fixture, 'docs/start.html', '<span>Archify v2.12.0</span>');
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /package-lock\.json must match 2\.13\.0-dev\.0/);
-    assert.match(result.stderr, /SKILL\.md metadata version 2\.12 must map to package 2\.13\.0-dev\.0/);
-    assert.match(result.stderr, /README\.md must advertise development identity v2\.13\.0-dev\.0/);
-    assert.match(result.stderr, /README_JA\.md must advertise development identity v2\.13\.0-dev\.0/);
-    assert.match(result.stderr, /docs\/index\.html must advertise development identity v2\.13\.0-dev\.0/);
-    assert.match(result.stderr, /docs\/start\.html must advertise development identity v2\.13\.0-dev\.0/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('landing proof receipt matches the current nine-check artifact contract', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'docs/index.html': '<span>development · v2.13.0-dev.0 · \u5f00\u53d1\u7248 · 8/8 checks</span>',
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /docs\/index\.html proof receipt must say 9\/9/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('landing rejects every stale N/N contract count even when 9/9 is also present', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'docs/index.html': [
-        '<span>development · v2.13.0-dev.0 · \u5f00\u53d1\u7248 · 9/9 checks</span>',
-        '<span>legacy receipt · 7/7 checks</span>',
-      ].join('\n'),
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /every N\/N proof receipt must be exactly 9\/9; found 7\/7/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('Raven is not a generated agent-switcher target', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'docs/start.html': [
-        '<span>development · v2.13.0-dev.0 · \u5f00\u53d1\u7248</span>',
-        '<button data-agent="raven">Raven</button>',
-        '<pre>npx skills add tt-a1i/archify --agent raven</pre>',
-      ].join('\n'),
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /docs\/start\.html: Raven is not an agent-switcher target/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('the Japanese README must carry its own development marker, not the English one', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'README_JA.md': [
-        '![\u958b\u767a\u7248](https://img.shields.io/badge/version-2.13.0--dev.0-blue)',
-        '',
-        'Current development version: `v2.13.0-dev.0`',
-        '',
-      ].join('\n'),
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /README_JA\.md must advertise development identity v2\.13\.0-dev\.0/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('renderer template generator carries the complete package prerelease identity', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'archify/assets/template.html': '<meta name="generator" content="archify 2.12.0">',
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /archify\/assets\/template\.html generator must be archify 2\.13\.0-dev\.0/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('roadmap current identity follows the package release state', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'ROADMAP.md': 'The current development line is `v2.12.0`; it is not a stable release.',
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /ROADMAP\.md must declare the current development line as v2\.13\.0-dev\.0/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('generated public-page templates keep a development marker and version placeholder', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidDevelopmentFixture(fixture, {
-      'scripts/gallery-template.html': 'Proof Lab / 2.12.0',
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /scripts\/gallery-template\.html must use \[\[ARCHIFY_VERSION\]\] with development and \u5f00\u53d1\u7248 labels/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('stable public-page templates reject development labels on version-bearing fallbacks', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  try {
-    writeValidStableFixture(fixture, {
-      'scripts/guide-template.html': [
-        '<span data-i18n="versionLabel">Scenario guide / development / v[[ARCHIFY_VERSION]]</span>',
-        "versionLabel:'Scenario guide / stable / v[[ARCHIFY_VERSION]]'",
-        "versionLabel:'\u573a\u666f\u6307\u5357 / \u7a33\u5b9a\u7248 / v[[ARCHIFY_VERSION]]'",
-      ].join('\n'),
-    });
-
-    const result = runCheck(fixture);
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /scripts\/guide-template\.html must not label \[\[ARCHIFY_VERSION\]\] as development or \u5f00\u53d1\u7248/);
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
-});
-
-test('public-page identity ignores compact SVG coordinates without hiding real version literals', () => {
-  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'archify-release-identity-'));
-  const templatePath = 'scripts/start-template.html';
-  const identity = 'development · \u5f00\u53d1\u7248 · [[ARCHIFY_VERSION]]';
-  const coordinates = 'M8 1.6l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.4z';
-  try {
-    for (const pathElement of [
-      `<path d="${coordinates}"/>`,
-      `<path d='${coordinates}'/>`,
-      `<path aria-label="x > y" d = "${coordinates}"/>`,
-    ]) {
-      writeValidDevelopmentFixture(fixture, {
-        [templatePath]: `${identity}<svg>${pathElement}</svg>`,
-      });
-      const valid = runCheck(fixture);
-      assert.equal(valid.status, 0, valid.stderr);
-    }
-
-    // A nearby path attribute, another element's d attribute, and visible text
-    // still belong to the release-identity contract, not SVG coordinate data.
-    for (const content of [
-      `<svg><path data-version="2.12.0" d="${coordinates}"/></svg>`,
-      `<svg><path d="${coordinates}" data-version="2.12.0"/></svg>`,
-      `<div d="2.12.0"></div>`,
-      `<path-data d="2.12.0"></path-data>`,
-      `<svg><path aria-label="release d='2.12.0'" d="M0 0"/></svg>`,
-      `<div title="<path d='2.12.0'>"></div>`,
-      `<script>const markup = "<path d='2.12.0'>";</script>`,
-      `<path d="2.12.0"></path>`,
-      `<svg><path d="${coordinates}"/></svg><span>2.12.0</span>`,
-    ]) {
-      writeFile(fixture, templatePath, `${identity}${content}`);
-      const stale = runCheck(fixture);
-      assert.notEqual(stale.status, 0, content);
-      assert.match(stale.stderr, /scripts\/start-template\.html must use \[\[ARCHIFY_VERSION\]\]/);
-    }
-  } finally {
-    fs.rmSync(fixture, { recursive: true, force: true });
-  }
+    assert.match(result.stderr, /SKILL\.md metadata version/);
+    assert.match(result.stderr, /FORK\.md must record/);
+  });
 });

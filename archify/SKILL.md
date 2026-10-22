@@ -50,7 +50,7 @@ Use this path for ordinary generation. Read branch references only when their st
 
 ## Update awareness
 
-`finalize` and standalone `deliver` include `update` in their receipts. Do not run a separate check for the same delivery. If `update.noticeRequired` is true, read `references/update-awareness.md` and keep one compact update notice in your final response to the user, even after a quality gate fails. For a task with several diagrams, mention the update once in the final response. Snooze or ignore a reminder only when the user explicitly asks; never install or update on your own initiative.
+`finalize` and standalone `deliver` include `update` in their receipts. In this Hadrian fork the upstream update check is off (`update.status` is `unavailable`, `update.reason` is `disabled`); updates arrive by reinstalling from the Hadrian repository, as FORK.md describes. Do not run a separate check for the same delivery. If `update.noticeRequired` is true, read `references/update-awareness.md` and keep one compact update notice in your final response to the user, even after a quality gate fails. For a task with several diagrams, mention the update once in the final response. Snooze or ignore a reminder only when the user explicitly asks; never install or update on your own initiative.
 
 Before the first candidate, use the authoring references and relevant repository source, not Archify implementation or tests. Inspect Archify implementation if diagnostics remain unactionable after focused repairs.
 
