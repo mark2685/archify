@@ -109,8 +109,8 @@ test('Stratosphere Blue is only the focus ring on navy and gold means only the m
   const gold = declarations.filter(({ property, value }) => !property.startsWith('--color-') && /var\(--color-gold(-\d+)?\)/.test(value));
   assert.ok(gold.length >= 2);
   for (const { property } of gold) assert.match(property, /^--messagebus-/, `gold must only colour the message bus, found ${property}`);
-  const goldDerived = [...derivations].filter(([, { top }]) => /^--color-gold/.test(top)).map(([name]) => name);
-  assert.deepEqual(goldDerived, ['--color-fill-messagebus-navy', '--color-fill-messagebus-light']);
+  const goldDerived = [...derivations].filter(([, { top, under }]) => /^--color-gold/.test(top) || /^--color-gold/.test(under)).map(([name]) => name);
+  assert.deepEqual(goldDerived, ['--color-fill-messagebus-navy']);
 });
 
 test('the preset squares every corner and casts no shadow or glow', () => {

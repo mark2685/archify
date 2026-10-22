@@ -37,7 +37,9 @@
   --color-raised-hi: #0b3a66;
   /* Ramps */
   --color-blue-200: #a2cef7;
+  --color-blue-500: #1880e5;
   --color-blue-600: #0258ab;
+  --color-gold-200: #ffe5b2;
   --color-gold-400: #ffb830;
   --color-gold-700: #8c5d01;
   --color-gray-100: #f4f6f9;
@@ -54,27 +56,30 @@
   --color-ink-dim-navy: #b8c2cc; /* derived: white 72% over navy */
   --color-hairline-navy: #294865; /* derived: white 16% over navy */
   --color-hairline-strong-navy: #526b83; /* derived: white 32% over navy */
-  /* Derived: category inks that need a tint or shade to clear 4.5:1. */
+  /* Derived: category inks that need a tint or shade to clear 4.5:1. The
+     light database shade is deep enough to stay apart from the backend green
+     (test/hadrian-distinguishability.test.mjs). */
   --color-defense-green-tint: #b3b197; /* derived: defense-green 60% over white */
-  --color-defense-green-shade: #615e3d; /* derived: defense-green 75% over black */
+  --color-defense-green-shade: #3a3824; /* derived: defense-green 45% over black */
   --color-status-green-shade: #4e6048; /* derived: status-green 50% over black */
   --color-status-red-shade: #8b5652; /* derived: status-red 60% over black */
-  /* Derived: node fills, 13% of the stroke over the raised navy. */
-  --color-fill-frontend-navy: #1a4369; /* derived: blue-200 13% over raised */
-  --color-fill-backend-navy: #19415c; /* derived: status-green 13% over raised */
-  --color-fill-database-navy: #1c3f5d; /* derived: defense-green-tint 13% over raised */
-  --color-fill-messagebus-navy: #26404f; /* derived: gold-400 13% over raised */
-  --color-fill-security-navy: #233b5b; /* derived: status-red 13% over raised */
-  --color-fill-cloud-navy: #1b3f61; /* derived: gray-400 13% over raised */
-  --color-fill-external-navy: #1f4264; /* derived: gray-300 13% over raised */
-  /* Derived: node fills, 10% of the stroke over white. */
-  --color-fill-frontend-light: #e7edf2; /* derived: heritage 10% over white */
-  --color-fill-backend-light: #edefed; /* derived: status-green-shade 10% over white */
-  --color-fill-database-light: #efefec; /* derived: defense-green-shade 10% over white */
-  --color-fill-messagebus-light: #f4efe6; /* derived: gold-700 10% over white */
-  --color-fill-security-light: #f3eeee; /* derived: status-red-shade 10% over white */
-  --color-fill-cloud-light: #efeff0; /* derived: gray-700 10% over white */
-  --color-fill-external-light: #ececed; /* derived: gray-800 10% over white */
+  /* Derived: dark node fills. Each chromatic category mixes the most
+     saturated member of its family into the navy ground, as far as the
+     dimmest ink (gray-400) and the category's own tag ink keep 4.5:1; the
+     quiet grays barely lift (cloud) or keep the raised panel (external). */
+  --color-fill-frontend-navy: #063b6e; /* derived: blue-500 24% over navy */
+  --color-fill-backend-navy: #193e53; /* derived: status-green 16% over navy */
+  --color-fill-database-navy: #2c434b; /* derived: defense-green 34% over navy */
+  --color-fill-messagebus-navy: #354038; /* derived: gold 22% over navy */
+  --color-fill-security-navy: #313b56; /* derived: status-red 21% over navy */
+  --color-fill-cloud-navy: #10365a; /* derived: gray-400 6% over raised */
+  /* Derived: light node fills, the family's light member over white, as deep
+     as gray-700 ink keeps 4.5:1. Message bus uses the hub's gold-200 step;
+     cloud and external take gray-100 and white. */
+  --color-fill-frontend-light: #dbecfc; /* derived: blue-200 39% over white */
+  --color-fill-backend-light: #d2e3cd; /* derived: status-green 45% over white */
+  --color-fill-database-light: #e2e1d7; /* derived: defense-green 23% over white */
+  --color-fill-security-light: #f9e3e2; /* derived: status-red 25% over white */
 
   --hadrian-font-sans: "Sohne", "Inter", system-ui, -apple-system, Arial, sans-serif;
   --hadrian-font-mono: "Sohne Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -113,7 +118,7 @@
   --messagebus-fill: var(--color-fill-messagebus-navy);
   --security-fill: var(--color-fill-security-navy);
   --cloud-fill: var(--color-fill-cloud-navy);
-  --external-fill: var(--color-fill-external-navy);
+  --external-fill: var(--color-raised);
 
   --toolbar-bg: var(--color-raised);
   --toolbar-border: var(--color-hairline-strong-navy);
@@ -153,10 +158,10 @@
   --frontend-fill: var(--color-fill-frontend-light);
   --backend-fill: var(--color-fill-backend-light);
   --database-fill: var(--color-fill-database-light);
-  --messagebus-fill: var(--color-fill-messagebus-light);
+  --messagebus-fill: var(--color-gold-200);
   --security-fill: var(--color-fill-security-light);
-  --cloud-fill: var(--color-fill-cloud-light);
-  --external-fill: var(--color-fill-external-light);
+  --cloud-fill: var(--color-gray-100);
+  --external-fill: var(--color-white);
 
   --toolbar-bg: var(--color-white);
   --toolbar-border: var(--color-gray-300);
