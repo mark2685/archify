@@ -145,7 +145,7 @@ test('brand discovery resolves model names, aliases, domains, and Chinese channe
     ['GPT', 'openai'],
     ['Gemini', 'google-gemini'],
     ['github.com', 'github'],
-    ['微信', 'wechat'],
+    ['weixin', 'wechat'],
   ]) {
     const result = spawnSync(process.execPath, [cli, 'brands', query, '--json'], {
       cwd: skillRoot,

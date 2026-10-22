@@ -1,4 +1,4 @@
-// 仅分析静态检查器需要的路径子集，不作为通用 SVG 渲染器。
+// Analyzes only the path subset the static checker needs; this is not a general SVG renderer.
 const NUMBER = /[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/y;
 const COMMANDS = /^[MLHVQZACSTmlhvqzacst]$/;
 const ARITY = { M: 2, L: 2, H: 1, V: 1, Q: 4 };
@@ -39,7 +39,7 @@ function tokenize(source) {
   return comma === null ? { ok: true, tokens } : failure(comma, 'trailing comma');
 }
 
-/** 每步消费一个命令或完整参数组；失败不返回部分几何。偏移基于传入的 d 字符串。 */
+/** Each step consumes one command or one complete argument group; a failure returns no partial geometry. Offsets refer to the supplied d string. */
 export function analyzeSvgPath(source) {
   if (typeof source !== 'string') return failure(0, 'path data must be a string');
   const lexed = tokenize(source);
@@ -108,7 +108,7 @@ export function analyzeSvgPath(source) {
     }
     if (upper === 'M') {
       move(end);
-      // moveto 后的额外参数组是 lineto，不能变成额外子路径。
+      // Extra argument groups after a moveto are linetos; they must not become extra subpaths.
       command = relative ? 'l' : 'L';
       continue;
     }
@@ -118,7 +118,7 @@ export function analyzeSvgPath(source) {
     const start = current;
     const cross = (control[0] - start[0]) * (end[1] - start[1]) - (control[1] - start[1]) * (end[0] - start[0]);
     if (Math.abs(cross) <= 1e-9) subpath.straightSegments.push({ start, end });
-    // 保留既有八步 Q 采样；非共线曲线不冒充结构框的直线边界。
+    // Keep the existing eight-step Q sampling; a non-collinear curve never poses as a structural frame's straight edge.
     for (let step = 1; step <= 8; step += 1) {
       const amount = step / 8;
       const remaining = 1 - amount;

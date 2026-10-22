@@ -899,13 +899,13 @@ function bundledTrunkPaths() {
         const probe = axis === 0
           ? { start: [coordinate, last.high], end: [coordinate, segment.low] }
           : { start: [last.high, coordinate], end: [segment.low, coordinate] };
-        // 桥接不在任何逻辑关系中，必须检查它实际增加的墨迹。同簇成员可以共享总线；
-        // 无关路线和已补出的其他桥接一旦交叉、相接或重叠，就保留两段独立主干。
+        // A bridge belongs to no logical relationship, so the ink it actually adds must be checked. Members of one cluster may share the bus;
+        // once an unrelated route or another accepted bridge crosses, touches or overlaps it, the two trunk segments stay separate.
         const box = {
           x: probe.start[0], y: probe.start[1],
           width: probe.end[0] - probe.start[0], height: probe.end[1] - probe.start[1],
         };
-        // 两条线的半宽之和才是描边的接触边界，显式加粗关系也使用实际绘制宽度。
+        // The sum of both half-widths is the real stroke contact boundary; an explicitly widened relationship uses its drawn width too.
         const conflicts = routed.some(({ relationship, points, width }) => !members.has(relationship)
           && points.slice(1).some((end, index) => segmentIntersectsRect(
             { start: points[index], end }, box, (DEFAULT_RELATIONSHIP_STROKE_WIDTH + width) / 2,

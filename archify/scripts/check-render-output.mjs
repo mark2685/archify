@@ -540,14 +540,14 @@ function continuousRoutePoints(segments) {
   const parts = [];
   for (const { start, end } of segments) {
     const previous = parts.at(-1);
-    // 非共线 Q 不参与直线预算；其两端也不能被拼接成一条虚构直线。
+    // A non-collinear Q does not count toward the straight-line budget, and its endpoints must not be joined into an invented straight line.
     if (previous && previous.at(-1)[0] === start[0] && previous.at(-1)[1] === start[1]) {
       previous.push(end);
     } else {
       parts.push([start, end]);
     }
   }
-  // 保留没有直线的子路径位置，避免把前一片段误认作语义终点。
+  // Keep the position of a subpath without straight lines so the previous fragment is not mistaken for a semantic endpoint.
   return parts.length ? parts : [[]];
 }
 

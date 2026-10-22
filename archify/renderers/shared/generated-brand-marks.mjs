@@ -1749,8 +1749,7 @@ export const BRAND_MARKS = Object.freeze([
     "title": "TikTok",
     "category": "channel",
     "aliases": [
-      "douyin",
-      "抖音"
+      "douyin"
     ],
     "domains": [
       "tiktok.com",
@@ -1851,8 +1850,7 @@ export const BRAND_MARKS = Object.freeze([
     "title": "WeChat",
     "category": "channel",
     "aliases": [
-      "weixin",
-      "微信"
+      "weixin"
     ],
     "domains": [
       "weixin.qq.com"

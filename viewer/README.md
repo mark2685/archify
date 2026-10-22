@@ -122,10 +122,10 @@ are part of the interface, not normalized by the extraction.
 | Auto-theme probes | Detached after computed-style sampling, including finally on failure |
 | Download URL/anchor | Anchor appended/clicked/removed synchronously; URL revoked after 1000ms |
 | Raster/card SVG URL | Lives until Image load/draw or error; revoked before toBlob completion, with existing catch cleanup |
-| 录制背景 URL | 从背景加载持续到录制结束，由下文说明的统一终态在成功或失败后释放 |
-| 录制 tracks/rAF | 统一终态停止已创建的 tracks 并取消动画帧回调，晚到事件不重复清理 |
-| 录制定时器 | 统一终态取消录制时长和最终 flush 定时器，防止失败后再次操作编码器 |
-| Toast 定时器 | 保留既有有界回调和状态检查，不增加共享 busy 状态或取消协议 |
+| Recording background URL | Lives from background load until the recording ends; released by the single final-state cleanup described below, on success or failure |
+| Recording tracks/rAF | The final-state cleanup stops created tracks and cancels the animation-frame callback; late events never clean up twice |
+| Recording timers | The final-state cleanup cancels the duration and final-flush timers so a failure never touches the encoder again |
+| Toast timer | Keeps the existing bounded callback and state check; no shared busy state or cancellation protocol is added |
 
 recordWebm retains duration/fps options, defaults, minimums, MIME selection,
 geometry-driven scene and encoder flush timing. This table describes existing
@@ -923,13 +923,13 @@ rasterization, clipboard and recording remain owned by Export. Its existing
 callers use the same paths and return fields. Tests exercise final browser exports;
 isolated clone tests supplement them for restoration and idempotence.
 
-## WebM 录制失败与资源生命周期
+## WebM recording failure and resource lifecycle
 
-`Archify.motion.recordWebm()` 的每次调用独立拥有背景 URL、捕获流、编码器、动画帧和停止定时器。背景加载、画布或流创建、编码器启动、绘制、编码事件以及停止失败时，返回的 Promise 拒绝，资源在同一次终态清理中释放；晚到的事件不会恢复成功状态。正常停止后只有非空 WebM 才能成功返回，`requestData()` 失败仍允许通过 `stop()` 完成最佳努力的最终片段收集。
+Every call to `Archify.motion.recordWebm()` owns its background URL, capture stream, encoder, animation frame and stop timer. When background loading, canvas or stream creation, encoder start, drawing, an encoder event or stopping fails, the returned Promise rejects and the resources are released in one final-state cleanup; a late event never restores success. After a normal stop only a non-empty WebM resolves, and a failed `requestData()` still lets `stop()` complete a best-effort collection of the final chunk.
 
-菜单沿用原有错误提示、失败回执与 WebM 禁用规则；接口调用之间互不清理对方资源。SVG 序列化发生在录制 Promise 之前，其同步异常契约保持不变。修复后的行为仅存在于重新生成的 HTML 中。
+The menu keeps its existing error hints, failure receipts and WebM-disabled rule; calls never clean up each other's resources. SVG serialization happens before the recording Promise and keeps its synchronous exception contract. The repaired behavior exists only in regenerated HTML.
 
-回归入口：在仓库根目录设置 `ARCHIFY_CHROME` 后运行 `node --test test/export-browser.test.mjs`。该套件覆盖真实编码、故障边界、晚到事件、同页重试及并行调用；`node test/webm-artifact.smoke.mjs` 另行验证视频解码与实际帧变化。
+Regression entry point: set `ARCHIFY_CHROME` at the repository root and run `node --test test/export-browser.test.mjs`. That suite covers real encoding, failure boundaries, late events, same-page retries and parallel calls; `node test/webm-artifact.smoke.mjs` separately verifies video decoding and real frame changes.
 
 For required browser, output and package evidence, follow
 [Contributing](../CONTRIBUTING.md#local-setup-and-verification).

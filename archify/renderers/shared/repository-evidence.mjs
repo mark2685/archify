@@ -21,7 +21,7 @@ function evidenceFailure(code, message, { subject = {}, evidence = {}, supported
 }
 
 function runGit(repoRoot, args) {
-  // 固定 SHA 的来源必须读取原始对象，不能使用本地 replacement refs 的替换内容。
+  // A source pinned to a SHA must read the original object, never the content substituted by local replacement refs.
   const result = spawnSync('git', ['--no-replace-objects', '-C', repoRoot, ...args], {
     encoding: 'utf8',
     maxBuffer: MAX_SOURCE_BYTES,

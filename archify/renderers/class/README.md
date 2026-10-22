@@ -94,13 +94,20 @@ dash phase. Its `data-motion-path` carries the source-to-target route so Viewer
 tokens and flow overlays follow the relationship's semantic direction. A bus
 that would cross another type falls back to ordinary routes.
 
-主干还会与完整场景中的其他关系共同检查：同一个主干组可以共享端口和线段。
-主干候选若与其他组或普通关系争用标记空间、重叠走廊或形成内部交叉，
-整组关系回退到现有路由器，以独立端口和走廊重新规划；无冲突的
-其他主干保留。每轮回退后重新检查剩余主干，且只删除冲突组，不反复恢复尝试。
-类型位置、关系种类和方向、显式 `via`、端口、路由及标签位置保持作者的控制。
-此检查决定是否保留自动主干，不承诺固定路线周围满足全部自动间距或任意布局都能成功。
-固定路线之间的冲突和无法绕开的复杂交叉仍遵循现有路由约束，不会修改作者指定的几何。
+A trunk is also checked together with every other relationship in the scene:
+only members of one trunk group may share ports and segments. When a trunk
+candidate competes with another group or an ordinary relationship for marker
+space, overlaps a corridor or forms an internal crossing, the whole group falls
+back to the existing router and is re-planned with independent ports and
+corridors; conflict-free trunks stay. After each fallback round the remaining
+trunks are checked again, and only conflicting groups are removed, never
+restored and retried. Type positions, relationship kinds and directions,
+explicit `via`, ports, routes and label positions stay under the author's
+control. This check decides whether an automatic trunk is kept; it does not
+promise that every automatic clearance holds around fixed routes or that any
+layout succeeds. Conflicts between fixed routes and unavoidable complex
+crossings still follow the existing routing constraints and never modify
+author-specified geometry.
 
 All other relationships use the shared orthogonal router
 (`../architecture/routing.mjs`) and the shared Clean Flow, crossing, corridor,
@@ -109,8 +116,10 @@ rhythm, and label-clearance gates.
 Labels sit on the segment with the most room: above a horizontal run, beside a
 vertical one. `labelAt`, `labelDx`/`labelDy`, and `labelSegment` override it.
 
-`via: []` 与省略 `via` 等价，在主干选择和回退路由前统一按无路径点处理。
-非空 `via` 仍是显式几何；其他路由与标签控制不变，原始 JSON 不会被改写。
+`via: []` is equivalent to omitting `via`: both are treated as "no waypoints"
+before trunk selection and fallback routing. A non-empty `via` remains explicit
+geometry; the other routing and label controls are unchanged and the original
+JSON is never rewritten.
 
 ## Reader and export
 

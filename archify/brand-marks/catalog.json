@@ -98,9 +98,9 @@
     { "id": "wordpress", "category": "business", "simpleIcon": "wordpress", "domains": ["wordpress.org", "wordpress.com"] },
     { "id": "woocommerce", "category": "business", "simpleIcon": "woocommerce", "aliases": ["woo-commerce"], "domains": ["woocommerce.com"] },
 
-    { "id": "wechat", "category": "channel", "simpleIcon": "wechat", "aliases": ["weixin", "微信"], "domains": ["weixin.qq.com"] },
+    { "id": "wechat", "category": "channel", "simpleIcon": "wechat", "aliases": ["weixin"], "domains": ["weixin.qq.com"] },
     { "id": "youtube", "category": "channel", "simpleIcon": "youtube", "domains": ["youtube.com", "youtu.be"] },
-    { "id": "tiktok", "category": "channel", "simpleIcon": "tiktok", "aliases": ["douyin", "抖音"], "domains": ["tiktok.com", "douyin.com"] },
+    { "id": "tiktok", "category": "channel", "simpleIcon": "tiktok", "aliases": ["douyin"], "domains": ["tiktok.com", "douyin.com"] },
     { "id": "x", "category": "channel", "simpleIcon": "x", "aliases": ["twitter"], "domains": ["x.com", "twitter.com"] },
     { "id": "instagram", "category": "channel", "simpleIcon": "instagram", "domains": ["instagram.com"] },
     { "id": "facebook", "category": "channel", "simpleIcon": "facebook", "domains": ["facebook.com"] },

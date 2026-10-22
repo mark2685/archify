@@ -100,11 +100,15 @@ renderer:
   back to the ordinary families and stays unbundled, and anything authored
   (`route`, `via`, `labelAt`) keeps its own line. Logical routes still traverse
   the trunk, so every gate, label, and the layout report see the full geometry.
-  自动补出的主干桥接还会检查无关关系及已接受的其他桥接；出现交叉、接触或
-  重叠时保留分离的主干段，避免把独立关系画成同一条总线。检查按双方描边的
-  半宽之和留出间隔，并计入无关关系的显式 `width`；中心线未相交但描边接触
-  也会阻止桥接。这个回退不移动
-  实体、显式途经点或端口，也不改变关系基数；无障碍的同簇分支仍可共享主干。
+  An automatically added trunk bridge is also checked against unrelated
+  relationships and other accepted bridges: when it would cross, touch or
+  overlap one, the trunk segments stay separate so independent relationships
+  are never drawn as one bus. The check keeps the sum of both stroke
+  half-widths as clearance and counts an unrelated relationship's explicit
+  `width`; touching strokes block a bridge even when the centre lines do not
+  intersect. This fallback moves no entity, explicit waypoint or port and
+  changes no cardinality; unobstructed branches of the same cluster still
+  share the trunk.
 - Entity boxes are opaque obstacles. When a third entity sits between two
   aligned anchors, the shared obstacle grid routes around it, and a route that
   still cannot clear an unrelated entity fails with
@@ -230,7 +234,7 @@ fields, start with `meta.quality_profile: "standard"` so complete field
 visibility remains the priority; promote to `showcase` only after the grouped
 layout is genuinely readable. Include every physical column in
 `entities[].attributes`, keep its SQL type, and preserve the source comment in the
-type string as `SQL_TYPE｜中文备注` when the schema has no separate comment field.
+type string as `SQL_TYPE | comment` when the schema has no separate comment field.
 The renderer shows ERD attribute rows at the default `read` level, so fields do
 not depend on hover or focus. Use cards only for supplementary constraints,
 inferred relationships, and domain rules; never use them to hide the full table.

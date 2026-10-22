@@ -253,7 +253,7 @@ const types = new Map(measuredTypes.map((type) => {
 
 const relationships = asArray(cd.relationships).map((relationship) => {
   if (!Array.isArray(relationship.via) || relationship.via.length) return relationship;
-  // 空路径与省略字段等价，统一主干和普通路由的判断，同时保留作者原始文档。
+  // An empty path equals an omitted field: trunk and ordinary routing share one check while the author's document stays untouched.
   const automatic = { ...relationship };
   delete automatic.via;
   return automatic;
@@ -500,7 +500,7 @@ for (;;) {
     for (let rightIndex = leftIndex + 1; rightIndex < routes.length; rightIndex += 1) {
       const right = routes[rightIndex];
       const rightGroup = busGroups.get(right.relation);
-      // 只有同一主干组可以共享端口和线段；其他路线仍保留各自的关系符号。
+      // Only members of the same trunk group share ports and segments; other routes keep their own relationship markers.
       if ((!leftGroup && !rightGroup) || leftGroup === rightGroup) continue;
       if (!busRouteConflict(left, right)) continue;
       if (leftGroup) rejected.add(leftGroup);
@@ -508,9 +508,9 @@ for (;;) {
     }
   }
   if (!rejected.size) break;
-  // 回退后的独立关系即使共享目标，也不能重新合并成没有语义归属的走廊。
+  // Relationships that fell back stay independent even when they share a target; they must not merge into a corridor with no semantic owner.
   separateFallbackRoutes = true;
-  // 整组回退后重新规划，避免新路线撞到剩余主干；每轮只删除组，次数有界。
+  // Re-plan after a whole group falls back so new routes do not collide with the remaining trunks; each round only removes groups, so the loop is bounded.
   for (const group of rejected) {
     for (const relationship of group) {
       busPaths.delete(relationship);
